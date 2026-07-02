@@ -24,7 +24,7 @@ const Teamcard = [
     Name: "Catherene K. Beyan",
     Position: "General Secretary & HR",
     Biography:
-      "I'm Soloman Borkai, CEO and founder of the Software Vala Libera. We are dedicated to providing software solution for organizations, businesses and other institutions.",
+      " Human Resource management and Secretary at the softwarevala Liberia, ",
   },
   {
     id: 3,
@@ -32,7 +32,7 @@ const Teamcard = [
     Name: "Richard F.J. Kamara",
     Position: "Marketing Director",
     Biography:
-      "I'm Soloman Borkai, CEO and founder of the Software Vala Libera. We are dedicated to providing software solution for organizations, businesses and other institutions.",
+      " CEO and founder of the Software Vala Libera. We are dedicated to providing software solution for organizations, businesses and other institutions.",
   },
   {
     id: 4,
@@ -40,14 +40,14 @@ const Teamcard = [
     Name: "Morris B. Kamara",
     Position: "Lead Full Stack Developer",
     Biography:
-      "I'm Morris B. Kamara, Lead Developer at Software Vala Liberia, building scalable software including web designs, mobile and SaaS platforms.  ",
+      " FullStack Developer at Software Vala Liberia, building scalable software including web designs, mobile and SaaS platforms.  ",
   },
   {
     id: 5,
     img: Gabriel,
     Name: "Gabriel D.L. Jackson, Jr.",
     Position: "Junior Software Developer/Database Administrator",
-    Biography: "Hi, I'm Gabriel a Junior Developer and Database administrator",
+    Biography: " Junior Developer and Database administrator",
   },
   {
     id: 6,
@@ -55,7 +55,7 @@ const Teamcard = [
     Name: "Alexander F. Gayflor Jr.",
     Position: "Lead Grapic Designer",
     Biography:
-      "Hey, I'm Alex, Senior Graphic Designer @ Softwarevala Liberia. Creating Captivating designs, and innovations that brings softwarevala visions to life and clients satisfaction generally.",
+      " Senior Graphic Designer at Softwarevala Liberia. Creating Captivating designs, and innovations that brings softwarevala visions to life and clients satisfaction generally.",
   },
   {
     id: 7,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Mail,
   MapPin,
@@ -8,18 +8,32 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+const initialFormData = {
+  fullName: "",
+  email: "",
+  location: "",
+  phone: "",
+  company: "",
+  service: "",
+  budget: "",
+  contactMethod: "",
+  message: "",
+};
+
 function Contact() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    location: "",
-    phone: "",
-    company: "",
-    service: "",
-    budget: "",
-    contactMethod: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState(initialFormData);
+
+  useEffect(() => {
+    const savedFormData = window.localStorage.getItem("contact-form-data");
+
+    if (savedFormData) {
+      setFormData(JSON.parse(savedFormData));
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("contact-form-data", JSON.stringify(formData));
+  }, [formData]);
 
   const services = [
     "SEO",
@@ -57,23 +71,12 @@ function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // For now, log the data
     console.log("Submitted Data:", formData);
 
     alert("Your request has been submitted successfully!");
 
-    // Reset form after submit
-    setFormData({
-      fullName: "",
-      email: "",
-      location: "",
-      phone: "",
-      company: "",
-      service: "",
-      budget: "",
-      contactMethod: "",
-      message: "",
-    });
+    setFormData(initialFormData);
+    window.localStorage.removeItem("contact-form-data");
   };
 
   return (

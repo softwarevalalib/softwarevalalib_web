@@ -3,10 +3,10 @@ import Alexander from "../images/cards/alexander.jpeg";
 import Alpha from "../images/cards/alpha.jpeg";
 import Catherene from "../images/cards/catherene.jpeg";
 import CEO from "../images/cards/ceo.jpeg";
-import Francis from "../images/cards/Francis.jpeg";
+import Francis from "../images/cards/francis.jpeg";
 import Gabriel from "../images/cards/gabriel.jpeg";
 import Morris from "../images/cards/morris.jpeg";
-import Richard from "../images/cards/Richard.jpeg";
+import Richard from "../images/cards/richard.jpeg";
 import Stephen from "../images/cards/stephen.jpeg";
 
 const Teamcard = [

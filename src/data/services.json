@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Software Development",
+    "description": "Custom software solutions built with modern technologies. From desktop applications to enterprise systems, we create software that meets your specific business needs.",
+    "icon": "💻",
+    "features": [
+      "Custom Applications",
+      "Enterprise Systems",
+      "API Development",
+      "Legacy Modernization"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Web Development",
+    "description": "Responsive, fast, and SEO-optimized websites that work perfectly on all devices. Built with the latest web technologies for optimal performance.",
+    "icon": "🌐",
+    "features": [
+      "Responsive Design",
+      "SEO Optimization",
+      "E-commerce Solutions",
+      "Content Management"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Web Hosting",
+    "description": "Reliable and secure web hosting services with 99.9% uptime. Fast servers optimized for performance and scalability.",
+    "icon": "☁️",
+    "features": [
+      "Cloud Hosting",
+      "Domain Management",
+      "SSL Certificates",
+      "Backup & Security"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Cloud Services",
+    "description": "Scalable cloud infrastructure and services. Migrate to the cloud and leverage powerful cloud technologies.",
+    "icon": "☁️",
+    "features": [
+      "Cloud Migration",
+      "Infrastructure Setup",
+      "SaaS Solutions",
+      "Data Storage"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Network Infrastructure",
+    "description": "Design and implementation of robust network infrastructure for businesses. Secure and efficient network solutions.",
+    "icon": "🔗",
+    "features": [
+      "Network Design",
+      "Server Setup",
+      "Firewall Configuration",
+      "VPN Services"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Digital Marketing",
+    "description": "Strategic digital marketing services to grow your online presence. SEO, social media, and content marketing.",
+    "icon": "📱",
+    "features": [
+      "SEO Services",
+      "Social Media Marketing",
+      "Content Strategy",
+      "Analytics"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Training and Support",
+    "description": "Comprehensive training programs and ongoing technical support for your team. Ensure smooth adoption of new systems.",
+    "icon": "🎓",
+    "features": [
+      "Staff Training",
+      "Documentation",
+      "24/7 Support",
+      "System Orientation"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Cybersecurity Services",
+    "description": "Protect your business with comprehensive cybersecurity solutions. Security audits, monitoring, and incident response.",
+    "icon": "🔒",
+    "features": [
+      "Security Audits",
+      "Threat Monitoring",
+      "Data Protection",
+      "Compliance"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "CCTV Installation",
+    "description": "Professional CCTV and surveillance system installation. Monitor your premises with advanced security cameras.",
+    "icon": "📹",
+    "features": [
+      "System Design",
+      "Installation",
+      "Remote Monitoring",
+      "Maintenance"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Graphic Design",
+    "description": "Creative graphic design services for branding, marketing materials, and digital assets. Professional designs that stand out.",
+    "icon": "🎨",
+    "features": [
+      "Brand Identity",
+      "Marketing Materials",
+      "Web Graphics",
+      "Print Design"
+    ]
+  }
+]

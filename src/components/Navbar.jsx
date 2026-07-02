@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Logo from "../images/logo.jpg";
 
 import {
   AiOutlineClose,
@@ -31,7 +32,7 @@ function Navbar() {
       >
         <div className="w-[90%] mx-auto h-20 flex items-center justify-between">
           {/* Logo */}
-          <img src="" alt="Logo" className="w-32 h-auto md:w-40 rounded" />
+          <img src={Logo} alt="Logo" className="w-32 h-auto md:w-40 rounded" />
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex gap-8 font-semibold">

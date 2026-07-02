@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "SchoolEase Management System",
+    "description": "A comprehensive school management system designed for Liberian educational institutions. Features student enrollment, grade management, and administrative tools.",
+    "image": "School Ease Management.jpg",
+    "link": "https://school-managment-system-liberia.fly.dev/",
+    "technologies": ["React", "Node.js", "MongoDB", "Express"],
+    "category": "Software Development"
+  },
+  {
+    "id": 2,
+    "title": "Liberia Business Directory",
+    "description": "A mobile-first directory app connecting local businesses with customers. Features business listings, reviews, and location-based search.",
+    "image": "Liberia Business .jpg",
+    "link": "/projects/business-directory",
+    "technologies": ["React Native", "Firebase", "Google Maps API"],
+    "category": "Mobile Applications"
+  },
+  {
+    "id": 3,
+    "title": "Healthcare Management System",
+    "description": "Patient management and appointment scheduling system for healthcare facilities. Includes electronic health records and billing modules.",
+    "image": "Healthcare .jpg",
+    "link": "/projects/healthcare-system",
+    "technologies": ["Vue.js", "Laravel", "MySQL", "Redis"],
+    "category": "Software Development"
+  },
+  {
+    "id": 4,
+    "title": "E-commerce Platform",
+    "description": "Full-featured online marketplace for Liberian businesses. Includes payment processing, inventory management, and order tracking.",
+    "image": "E-commerce .jpg",
+    "link": "/projects/ecommerce",
+    "technologies": ["Next.js", "Stripe", "PostgreSQL", "Docker"],
+    "category": "Web Development"
+  },
+  {
+    "id": 5,
+    "title": "Microfinance & Loan Management System",
+    "description": "A microfinance management system with borrower onboarding, loan lifecycle, repayments, and role-based access (admin, branch manager, loan officer, borrower).",
+    "image": "",
+    "link": "https://microfinance-laravel.fly.dev/",
+    "technologies": ["Laravel", "PHP", "MySQL", "Tailwind CSS"],
+    "category": "Software Development"
+  }
+]

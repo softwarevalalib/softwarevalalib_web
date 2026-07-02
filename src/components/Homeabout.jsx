@@ -11,7 +11,7 @@ function Homeabout() {
           Software Vala Liberia
         </h1>
         <div className="w"></div>
-        <p className="px-2 md:text-2xl">
+        <p className="px-2 md:text-xl">
           Software Vala Liberia is a{" "}
           <span className="font-bold text-orange-500 ">FULL STACK</span>{" "}
           development agency based in Liberia. We are passionate about helping

@@ -1,12 +1,17 @@
 import React from "react";
-import ProjectsGrid from "../components/projects/ProjectsGrid";
+import ServicesHeader from "../components/ServicesHeader";
+import ServicesOffered from "../components/ServicesOffered";
+import ServicesContent from "../components/ServicesContent";
+
 import Footer from "../components/Footer";
 function Portfolio() {
   return (
-    <main className="min-h-screen bg-black">
-      <ProjectsGrid />
+    <div className="min-h-screen bg-black">
+      <ServicesHeader />
+      <ServicesOffered />
+      <ServicesContent />
       <Footer />
-    </main>
+    </div>
   );
 }
 

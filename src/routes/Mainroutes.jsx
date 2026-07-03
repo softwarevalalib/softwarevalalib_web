@@ -6,6 +6,7 @@ import Services from "../pages/Services";
 import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
 import Team from "../pages/Team";
+import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
   {
@@ -19,12 +20,10 @@ const router = createBrowserRouter([
         path: "/about",
         element: <About />,
       },
-
       {
         path: "/services",
         element: <Services />,
       },
-
       {
         path: "/projects",
         element: <Projects />,
@@ -36,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/team",
         element: <Team />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

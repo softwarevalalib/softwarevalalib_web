@@ -40,7 +40,7 @@ const Teamcard = [
     Name: "Morris B. Kamara",
     Position: "Lead Full Stack Developer",
     Biography:
-      " FullStack Developer at Software Vala Liberia, building scalable software including web designs, mobile and SaaS platforms.  ",
+      " Lead Developer at Software Vala Liberia, building scalable software including web designs, mobile and SaaS platforms.  ",
   },
   {
     id: 5,

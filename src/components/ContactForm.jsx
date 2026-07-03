@@ -304,7 +304,7 @@ function Contact() {
                   </select>
                   <ChevronDown
                     size={18}
-                    className="pointer-events-none absolute right-4 top-[52px] text-slate-400"
+                    className="pointer-events-none absolute right-4 top-13 text-slate-400"
                   />
                 </div>
               </div>
@@ -334,7 +334,7 @@ function Contact() {
                   </select>
                   <ChevronDown
                     size={18}
-                    className="pointer-events-none absolute right-4 top-[52px] text-slate-400"
+                    className="pointer-events-none absolute right-4 top-13 text-slate-400"
                   />
                 </div>
 
@@ -361,7 +361,7 @@ function Contact() {
                   </select>
                   <ChevronDown
                     size={18}
-                    className="pointer-events-none absolute right-4 top-[52px] text-slate-400"
+                    className="pointer-events-none absolute right-4 top-13 text-slate-400"
                   />
                 </div>
               </div>

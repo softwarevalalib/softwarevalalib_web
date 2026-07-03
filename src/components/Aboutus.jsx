@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import GroupImage from "../images/group.png";
 function Aboutus() {
   return (
@@ -38,9 +39,17 @@ function Aboutus() {
         solutions in Liberia — committed to quality, affordability, and digital
         transformation.
       </p>
+      <div className="text-center mb-10">
+        <Link
+          to="/projects"
+          className="inline-flex rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+        >
+          View our projects
+        </Link>
+      </div>
       <h1 className="text-center uppercase text-3xl font-bold pt-8 pb-5">
         {" "}
-        Our Portfolio
+        Our Projects
       </h1>
     </div>
   );

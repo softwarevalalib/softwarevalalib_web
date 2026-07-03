@@ -30,12 +30,20 @@ export default function Homeheader() {
         </Reveal>
 
         <Reveal delay={0.9}>
-          <button className="text-white bg-orange-500 uppercase px-6 py-2  rounded  :hover cursor-pointer  sm:font-semibold">
+          <a
+            href="mailto:softwarevalaliberiainc@gmail.com"
+            className="inline-flex items-center justify-center text-white bg-orange-500 uppercase px-6 py-2 rounded cursor-pointer sm:font-semibold"
+          >
             Email
-          </button>
-          <button className="text-white bg-green-500 uppercase px-6 py-2 rounded center mx-3 :hover cursor-pointer sm:font-semibold sm:ml-5 ">
-            whatsapp
-          </button>
+          </a>
+          <a
+            href="https://wa.me/231888636071?text=Hi%20SVL%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20services."
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center text-white bg-green-500 uppercase px-6 py-2 rounded mx-3 cursor-pointer sm:font-semibold sm:ml-5"
+          >
+            WhatsApp
+          </a>
         </Reveal>
       </div>
 

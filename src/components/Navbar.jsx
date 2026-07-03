@@ -96,6 +96,10 @@ function Navbar() {
               Services
             </Link>
 
+            <Link to="/projects" onClick={() => setIsOpen(false)}>
+              Projects
+            </Link>
+
             <Link to="/contact" onClick={() => setIsOpen(false)}>
               Contact
             </Link>

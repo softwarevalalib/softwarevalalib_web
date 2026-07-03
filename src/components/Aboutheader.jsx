@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Aboutheader() {
   return (
@@ -32,12 +33,18 @@ function Aboutheader() {
 
           {/* Buttons */}
           <div className="mt-20 gap-10  md:gap-10 flex flex-col md:flex-row items-center justify-center md:mx-10    md:mt-20 text-white">
-            <button className=" bg-orange-500 w-full md:w-68 px-5 py-2 rounded-xl">
+            <Link
+              to="/contact"
+              className="bg-orange-500 w-full md:w-68 px-5 py-2 rounded-xl text-center"
+            >
               Get Started
-            </button>
-            <button className="bg-transparent outline-2 w-full md:w-68 outline-gray-300 px-4 py-2 rounded-xl">
+            </Link>
+            <Link
+              to="/projects"
+              className="bg-transparent outline-2 w-full md:w-68 outline-gray-300 px-4 py-2 rounded-xl text-center"
+            >
               View Projects
-            </button>
+            </Link>
           </div>
         </div>
         {/* seperate */}

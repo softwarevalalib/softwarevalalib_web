@@ -1,50 +1,56 @@
-import React from "react";
 import Bootstrap from "../images/stacks/bootstrap-logo.png";
 import CSS from "../images/stacks/css3-logo.png";
 import Django from "../images/stacks/django-logo.png";
 import HTML from "../images/stacks/html5-logo.png";
 import SQL from "../images/stacks/mysql-logo.png";
 import JS from "../images/stacks/js5-logo.png";
-import PYTHON from "../images/stacks/html5-logo.png";
+import PYTHON from "../images/stacks/python-logo.png";
 import REACT from "../images/stacks/react-logo.png";
 import TAILWIND from "../images/stacks/tailwind-css.png";
 import NEXT from "../images/stacks/next.png";
+import Reveal from "../Animations/Reveal";
 
 const technologies = [
-  Bootstrap,
-  CSS,
-  Django,
-  HTML,
-  SQL,
-  JS,
-  PYTHON,
-  REACT,
-  TAILWIND,
-  NEXT,
+  { src: Bootstrap, name: "Bootstrap" },
+  { src: CSS, name: "CSS3" },
+  { src: Django, name: "Django" },
+  { src: HTML, name: "HTML5" },
+  { src: SQL, name: "MySQL" },
+  { src: JS, name: "JavaScript" },
+  { src: PYTHON, name: "Python" },
+  { src: REACT, name: "React" },
+  { src: TAILWIND, name: "Tailwind CSS" },
+  { src: NEXT, name: "Next.js" },
 ];
 
 function TechStack() {
+  const doubled = [...technologies, ...technologies];
+
   return (
-    <div className="mx-4 pt-10">
-      <h3 className="text-center text-orange-500 uppercase font-bold font-4xl md:text-3xl md:pb-2">
-        our tech stack
-      </h3>
-      <h1 className="text-center  text-[2rem] font-bold py-3">
-        Our Daily Technologies
-      </h1>
-      <section className="overflow-hidden py-10">
+    <section className="section-padding bg-slate-50 overflow-hidden">
+      <div className="section-container mb-10">
+        <Reveal>
+          <p className="section-label text-center">Our Tech Stack</p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h2 className="section-title text-center mt-3">Our Daily Technologies</h2>
+        </Reveal>
+      </div>
+
+      <div className="overflow-hidden py-4">
         <div className="marquee">
-          {[...technologies, ...technologies].map((tech, index) => (
-            <img
-              key={index}
-              src={tech}
-              alt="technology"
-              className="h-16 w-auto mx-10"
-            />
+          {doubled.map((tech, index) => (
+            <div key={`${tech.name}-${index}`} className="flex items-center justify-center mx-8 sm:mx-12">
+              <img
+                src={tech.src}
+                alt={tech.name}
+                className="h-12 sm:h-16 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
+              />
+            </div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 

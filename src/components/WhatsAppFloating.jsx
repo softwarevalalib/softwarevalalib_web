@@ -9,10 +9,10 @@ function WhatsAppFloating() {
       href={whatsappUrl}
       target="_blank"
       rel="noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-transform duration-200 hover:scale-105"
+      className="whatsapp-float fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-transform duration-300 hover:scale-110 active:scale-95"
       aria-label="Chat on WhatsApp"
     >
-      <AiOutlineWhatsApp size={26} />
+      <AiOutlineWhatsApp size={28} />
     </a>
   );
 }

@@ -1,464 +1,249 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiGlobe, FiSmartphone, FiMonitor, FiDatabase } from "react-icons/fi";
+import {
+  FiGlobe, FiSmartphone, FiMonitor, FiDatabase, FiArrowRight,
+  FiBookOpen, FiDollarSign, FiHeart, FiShoppingCart, FiTruck,
+  FiSettings, FiLink,
+} from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
 import projectsData from "../data/projects.json";
 import Footer from "../components/Footer";
+import Reveal from "../Animations/Reveal";
 
-// Use public paths for project images (most reliable for Render)
-// Images should be in public/assets/images/ folder
 function resolveProjectImage(fileName) {
   if (!fileName) return null;
-
-  // Use public path - files are in public/assets/images/
   return `/assets/images/${fileName}`;
+}
+
+const categories = [
+  "All",
+  "Education",
+  "Healthcare",
+  "Finance & Banking",
+  "E-commerce & Retail",
+  "Business Operations",
+  "Hospitality & Mobility",
+  "Financial Integration",
+];
+
+const categoryIcons = {
+  Education: FiBookOpen,
+  Healthcare: FiHeart,
+  "Finance & Banking": FiDollarSign,
+  "E-commerce & Retail": FiShoppingCart,
+  "Business Operations": FiMonitor,
+  "Hospitality & Mobility": FiTruck,
+  "Financial Integration": FiLink,
+  "Web Development": FiGlobe,
+  "Mobile Applications": FiSmartphone,
+  "Software Development": FiMonitor,
+  "Database & Systems": FiDatabase,
+};
+
+const categoryGradients = {
+  Education: "from-blue-600 to-indigo-700",
+  Healthcare: "from-rose-500 to-pink-600",
+  "Finance & Banking": "from-emerald-500 to-teal-600",
+  "E-commerce & Retail": "from-orange-500 to-amber-600",
+  "Business Operations": "from-slate-600 to-slate-800",
+  "Hospitality & Mobility": "from-cyan-500 to-blue-600",
+  "Financial Integration": "from-violet-500 to-purple-600",
+};
+
+function getInitials(title) {
+  return title
+    .split(/[\s&()]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 }
 
 const Projects = () => {
   const [filter, setFilter] = useState("All");
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  const categories = [
-    "All",
-    "Web Development",
-    "Mobile Applications",
-    "Software Development",
-    "Database & Systems",
-  ];
 
   const filteredProjects =
     filter === "All"
       ? projectsData
-      : projectsData.filter((project) => project.category === filter);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.2 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+      : projectsData.filter((p) => p.category === filter);
 
   return (
-    <div style={{ minHeight: "100vh" }}>
-      {/* Hero Section */}
-      <section
-        style={{
-          background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-          padding: "5rem 1rem",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            textAlign: "center",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "clamp(2.5rem, 5vw, 4rem)",
-              fontWeight: "bold",
-              color: "#1f2937",
-              marginBottom: "1.5rem",
-              opacity: 1,
-              transform: "translateY(0)",
-              transition: "all 0.8s ease-out",
-            }}
-          >
-            Our Projects
-          </h1>
-          <p
-            style={{
-              fontSize: "1.25rem",
-              color: "#6b7280",
-              maxWidth: "700px",
-              margin: "0 auto",
-              lineHeight: "1.6",
-              opacity: 1,
-              transform: "translateY(0)",
-              transition: "all 0.8s ease-out 0.2s",
-            }}
-          >
-            Explore our portfolio of successful projects that have helped
-            businesses across Liberia achieve their digital goals
-          </p>
+    <div>
+      <section className="relative bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-20 left-1/4 w-72 h-72 bg-cyan-500/10 blur-[100px] rounded-full" />
+          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-orange-500/10 blur-[100px] rounded-full" />
+        </div>
+        <div className="section-container section-padding relative z-10 text-center">
+          <Reveal>
+            <p className="section-label text-orange-500">Portfolio</p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mt-3">
+              Our Systems & Solutions
+            </h1>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="mt-4 text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+              Explore our portfolio of management systems and digital solutions
+              built for businesses, institutions, and organizations across Liberia.
+            </p>
+          </Reveal>
         </div>
       </section>
 
-      {/* Filter Section */}
-      <section
-        ref={sectionRef}
-        style={{ padding: "3rem 1rem", backgroundColor: "white" }}
-      >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "2rem",
-              transform: isVisible ? "translateY(0)" : "translateY(30px)",
-              opacity: isVisible ? 1 : 0,
-              transition: "all 0.6s ease-out",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "2.5rem",
-                fontWeight: "bold",
-                color: "#1f2937",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Filter by Category
-            </h2>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: "0.75rem",
-              }}
-            >
+      <section className="bg-white py-8 sm:py-10 border-b border-slate-100 sticky top-16 sm:top-20 z-30">
+        <div className="section-container">
+          <Reveal>
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
               {categories.map((category) => (
                 <button
                   key={category}
+                  type="button"
                   onClick={() => setFilter(category)}
-                  style={{
-                    padding: "0.75rem 1.5rem",
-                    borderRadius: "25px",
-                    fontSize: "0.875rem",
-                    fontWeight: "500",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease",
-                    backgroundColor:
-                      filter === category ? "#3b82f6" : "#f3f4f6",
-                    color: filter === category ? "white" : "#374151",
-                    boxShadow:
-                      filter === category
-                        ? "0 4px 15px rgba(59, 130, 246, 0.3)"
-                        : "none",
-                  }}
-                  onMouseOver={(e) => {
-                    if (filter !== category) {
-                      e.target.style.backgroundColor = "#e5e7eb";
-                    }
-                  }}
-                  onMouseOut={(e) => {
-                    if (filter !== category) {
-                      e.target.style.backgroundColor = "#f3f4f6";
-                    }
-                  }}
+                  className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    filter === category
+                      ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  }`}
                 >
                   {category}
                 </button>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Projects Grid */}
-      <section style={{ padding: "3rem 1rem", backgroundColor: "#f8fafc" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-              gap: "2rem",
-              opacity: isVisible ? 1 : 0,
-              transition: "opacity 0.6s ease-out",
-            }}
-          >
-            {filteredProjects.map((project, index) => (
-              <div
-                key={project.id}
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: "20px",
-                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
-                  overflow: "hidden",
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                  transform: isVisible ? "translateY(0)" : "translateY(50px)",
-                  transitionDelay: `${index * 0.1}s`,
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "translateY(-10px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 20px 40px rgba(0, 0, 0, 0.15)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 10px 30px rgba(0, 0, 0, 0.1)";
-                }}
-              >
-                {/* Project Image */}
-                <div
-                  style={{
-                    height: "200px",
-                    position: "relative",
-                    backgroundColor: "#0f172a",
-                    overflow: "hidden",
-                    color: "white",
-                  }}
-                >
-                  {resolveProjectImage(project.image) ? (
-                    <img
-                      src={resolveProjectImage(project.image)}
-                      alt={`${project.title} cover`}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "4rem",
-                        opacity: 0.25,
-                        color: "white",
-                      }}
-                    >
-                      {project.category === "Web Development" && (
-                        <FiGlobe size={64} />
+      <section className="section-padding bg-slate-50">
+        <div className="section-container">
+          <p className="text-center text-sm text-slate-500 mb-8">
+            Showing {filteredProjects.length} of {projectsData.length} systems
+          </p>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={filter}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+            >
+              {filteredProjects.map((project, index) => {
+                const Icon = categoryIcons[project.category] || FiMonitor;
+                const imageSrc = resolveProjectImage(project.image);
+                const gradient = categoryGradients[project.category] || "from-slate-600 to-slate-800";
+                const isExternal = project.link?.startsWith("http");
+
+                return (
+                  <motion.article
+                    key={project.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4) }}
+                    className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 card-hover group flex flex-col"
+                  >
+                    <div className={`relative h-48 sm:h-52 bg-linear-to-br ${gradient} overflow-hidden`}>
+                      {imageSrc ? (
+                        <img
+                          src={imageSrc}
+                          alt={`${project.title} cover`}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+                          <div className="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                            <Icon size={32} className="text-white/80" />
+                          </div>
+                          <span className="text-white/60 text-2xl font-bold tracking-wider">
+                            {getInitials(project.title)}
+                          </span>
+                        </div>
                       )}
-                      {project.category === "Mobile Applications" && (
-                        <FiSmartphone size={64} />
-                      )}
-                      {project.category === "Software Development" && (
-                        <FiMonitor size={64} />
-                      )}
-                      {project.category === "Database & Systems" && (
-                        <FiDatabase size={64} />
+                      <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-orange-600 px-3 py-1 rounded-full text-xs font-semibold">
+                        {project.category}
+                      </span>
+                    </div>
+
+                    <div className="p-5 sm:p-6 flex flex-col flex-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
+                        {project.title}
+                      </h3>
+                      <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-1">
+                        {project.description}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {project.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-lg text-xs font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      {isExternal ? (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-orange-500 font-semibold text-sm hover:text-orange-600 transition-colors group/link"
+                        >
+                          View Live Demo
+                          <FiArrowRight className="transition-transform group-hover/link:translate-x-1" />
+                        </a>
+                      ) : (
+                        <Link
+                          to={project.link || "/contact"}
+                          className="inline-flex items-center gap-1.5 text-orange-500 font-semibold text-sm hover:text-orange-600 transition-colors group/link"
+                        >
+                          Request Demo
+                          <FiArrowRight className="transition-transform group-hover/link:translate-x-1" />
+                        </Link>
                       )}
                     </div>
-                  )}
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "1rem",
-                      right: "1rem",
-                      backgroundColor: "rgba(255, 255, 255, 0.9)",
-                      color: "#3b82f6",
-                      padding: "0.5rem 1rem",
-                      borderRadius: "15px",
-                      fontSize: "0.75rem",
-                      fontWeight: "600",
-                    }}
-                  >
-                    {project.category}
-                  </div>
-                </div>
-
-                {/* Project Content */}
-                <div style={{ padding: "2rem" }}>
-                  <h3
-                    style={{
-                      fontSize: "1.5rem",
-                      fontWeight: "bold",
-                      color: "#1f2937",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    {project.title}
-                  </h3>
-
-                  <p
-                    style={{
-                      color: "#6b7280",
-                      lineHeight: "1.6",
-                      marginBottom: "1.5rem",
-                    }}
-                  >
-                    {project.description}
-                  </p>
-
-                  {/* Technologies */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "0.5rem",
-                      marginBottom: "1.5rem",
-                    }}
-                  >
-                    {project.technologies.map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        style={{
-                          backgroundColor: "#eff6ff",
-                          color: "#3b82f6",
-                          padding: "0.25rem 0.75rem",
-                          borderRadius: "12px",
-                          fontSize: "0.75rem",
-                          fontWeight: "500",
-                        }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* View Project Link */}
-                  <Link
-                    to={project.link || "#"}
-                    style={{
-                      color: "#3b82f6",
-                      textDecoration: "none",
-                      fontWeight: "600",
-                      fontSize: "0.875rem",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      transition: "color 0.2s ease",
-                    }}
-                    onMouseOver={(e) => (e.target.style.color = "#2563eb")}
-                    onMouseOut={(e) => (e.target.style.color = "#3b82f6")}
-                  >
-                    View Project →
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </motion.article>
+                );
+              })}
+            </motion.div>
+          </AnimatePresence>
 
           {filteredProjects.length === 0 && (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "3rem",
-                opacity: isVisible ? 1 : 0,
-                transition: "opacity 0.6s ease-out",
-              }}
-            >
-              <p
-                style={{
-                  color: "#9ca3af",
-                  fontSize: "1.125rem",
-                }}
-              >
-                No projects found in this category.
-              </p>
-            </div>
+            <p className="text-center text-slate-400 py-12 text-lg">
+              No systems found in this category.
+            </p>
           )}
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section
-        style={{
-          padding: "5rem 1rem",
-          backgroundColor: "#3b82f6",
-          textAlign: "center",
-        }}
-      >
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div
-            style={{
-              transform: isVisible ? "translateY(0)" : "translateY(30px)",
-              opacity: isVisible ? 1 : 0,
-              transition: "all 0.6s ease-out 0.4s",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "2.5rem",
-                fontWeight: "bold",
-                color: "white",
-                marginBottom: "1rem",
-              }}
-            >
-              Ready to Start Your Project?
+      <section className="bg-slate-950 section-padding">
+        <div className="section-container text-center">
+          <Reveal>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+              Need a Custom System?
             </h2>
-            <p
-              style={{
-                fontSize: "1.25rem",
-                color: "#dbeafe",
-                marginBottom: "2rem",
-                maxWidth: "700px",
-                margin: "0 auto 2rem auto",
-                lineHeight: "1.6",
-              }}
-            >
-              Let's work together to bring your ideas to life. Contact us today
-              for a free consultation.
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="mt-4 text-slate-300 text-base sm:text-lg max-w-2xl mx-auto">
+              We can build, customize, or integrate any of these systems for your
+              organization. Contact us today for a free consultation.
             </p>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                gap: "1rem",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Link
-                to="/contact"
-                style={{
-                  backgroundColor: "white",
-                  color: "#3b82f6",
-                  padding: "1rem 2rem",
-                  borderRadius: "12px",
-                  fontSize: "1.125rem",
-                  fontWeight: "600",
-                  textDecoration: "none",
-                  transition: "all 0.2s ease",
-                  display: "inline-block",
-                }}
-                onMouseOver={(e) =>
-                  (e.target.style.backgroundColor = "#f3f4f6")
-                }
-                onMouseOut={(e) => (e.target.style.backgroundColor = "white")}
-              >
+          </Reveal>
+          <Reveal delay={0.2}>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/contact" className="btn-primary">
                 Get Started
               </Link>
-              <Link
-                to="/services"
-                style={{
-                  border: "2px solid white",
-                  color: "white",
-                  padding: "1rem 2rem",
-                  borderRadius: "12px",
-                  fontSize: "1.125rem",
-                  fontWeight: "600",
-                  textDecoration: "none",
-                  transition: "all 0.2s ease",
-                  display: "inline-block",
-                  backgroundColor: "transparent",
-                }}
-                onMouseOver={(e) => {
-                  e.target.style.backgroundColor = "white";
-                  e.target.style.color = "#3b82f6";
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.backgroundColor = "transparent";
-                  e.target.style.color = "white";
-                }}
-              >
+              <Link to="/services" className="btn-secondary">
                 View Services
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
+
       <Footer />
     </div>
   );

@@ -1,55 +1,47 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import Reveal from "../Animations/Reveal";
 
 function Aboutheader() {
   return (
-    <div>
-      <div className="bg-slate-950 h-132.5  pt-20 px-5 md:px-8">
-        <div className="hero-text text-2xl text-center px-auto w-full">
-          <span className=" md:text-[3rem]">We Build Your&nbsp;</span>
+    <section className="relative bg-slate-950 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/15 blur-[120px] rounded-full" />
+      </div>
 
-          <div
-            className="word-slider text-orange-500 font-bold md:text-[3rem]
-        md:my[-20px] md:py[-5px]"
-          >
-            <span>Platforms</span>
-            <span>Websites</span>
-            <span>Applications</span>
-            <span>Saas</span>
-            <span className="">Startups</span>
-            <span className="">Network Infra.</span>
+      <div className="section-container section-padding relative z-10 text-center">
+        <Reveal>
+          <div className="hero-text text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+            <span>We Build Your</span>
+            <div className="word-slider font-bold">
+              <span>Platforms</span>
+              <span>Websites</span>
+              <span>Applications</span>
+              <span>SaaS</span>
+              <span>Startups</span>
+              <span>Network Infra.</span>
+            </div>
           </div>
-        </div>
-        {/* <span className=" hidden  text-2xl md:text-[3rem] text-white text-center flex justify-center  lg:block">
-          live in seconds&nbsp;
-        </span> */}
+        </Reveal>
 
-        <div className="block">
-          <p className="text-center  text-white text-sm md:text-xl md:w-200 md:pt-5  mx-auto">
+        <Reveal delay={0.2}>
+          <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mt-8 leading-relaxed">
             We build innovative software solutions that help businesses scale,
             automate processes, and deliver exceptional digital experiences.
           </p>
-          <div className="absolute w-96 h-96 bg-cyan-500/20 blur-[120px] rounded-full "></div>
+        </Reveal>
 
-          {/* Buttons */}
-          <div className="mt-20 gap-10  md:gap-10 flex flex-col md:flex-row items-center justify-center md:mx-10    md:mt-20 text-white">
-            <Link
-              to="/contact"
-              className="bg-orange-500 w-full md:w-68 px-5 py-2 rounded-xl text-center"
-            >
+        <Reveal delay={0.35}>
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link to="/contact" className="btn-primary w-full sm:w-auto">
               Get Started
             </Link>
-            <Link
-              to="/projects"
-              className="bg-transparent outline-2 w-full md:w-68 outline-gray-300 px-4 py-2 rounded-xl text-center"
-            >
+            <Link to="/projects" className="btn-secondary w-full sm:w-auto">
               View Projects
             </Link>
           </div>
-        </div>
-        {/* seperate */}
+        </Reveal>
       </div>
-    </div>
+    </section>
   );
 }
 

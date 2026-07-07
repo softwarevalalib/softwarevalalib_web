@@ -1,40 +1,132 @@
-import React from "react";
 import Team from "../data/Team";
 import Footer from "../components/Footer";
+import Reveal from "../Animations/Reveal";
+
+function getInitials(name) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
+
+function MemberCard({ member, featured = false }) {
+  return (
+    <article
+      className={`bg-white rounded-2xl shadow-sm border border-slate-100 text-center card-hover group ${
+        featured ? "p-8" : "p-6"
+      }`}
+    >
+      <div
+        className={`relative mx-auto mb-4 ${
+          featured ? "w-32 h-32 sm:w-36 sm:h-36" : "w-28 h-28"
+        }`}
+      >
+        {member.img ? (
+          <img
+            src={member.img}
+            alt={member.Name}
+            className="w-full h-full rounded-full object-cover ring-4 ring-slate-100 group-hover:ring-orange-500/30 transition-all duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="w-full h-full rounded-full bg-linear-to-br from-orange-500 to-cyan-600 flex items-center justify-center ring-4 ring-slate-100 group-hover:ring-orange-500/30 transition-all duration-300">
+            <span className={`font-bold text-white ${featured ? "text-3xl" : "text-2xl"}`}>
+              {getInitials(member.Name)}
+            </span>
+          </div>
+        )}
+      </div>
+      <h3 className={`font-bold text-slate-900 ${featured ? "text-xl sm:text-2xl" : "text-lg"}`}>
+        {member.Name}
+      </h3>
+      <p className={`text-orange-500 font-semibold mt-1 ${featured ? "text-base" : "text-sm"}`}>
+        {member.Position}
+      </p>
+      <p className="mt-3 text-sm text-slate-600 leading-relaxed">{member.Biography}</p>
+    </article>
+  );
+}
 
 function TeamCard() {
+  const leadership = Team.filter((m) => m.tier === "leadership");
+  const hr = Team.filter((m) => m.tier === "hr");
+  const team = Team.filter((m) => m.tier === "team");
+
   return (
     <>
-      <div className="lg:px-30 md:px-25 py-10">
-        <h1 className="text-center text-xl md:text-2xl lg:text-3xl font-semibold py-5">
-          The Team of Experience Engineers
-        </h1>
-        <div className="flex flex-col items-center justify-between py-5 gap-7 md:grid md:grid-cols-2 lg:grid-cols-3 md:items-center md:justify-center ">
-          {Team.map((Teammember) => {
-            return (
-              <div
-                key={Teammember.id}
-                className=" py-8 shadow  w-75 h-80 flex flex-col  items-center  transition-all duration-300 rounded-2xl text-center "
-              >
-                <img
-                  src={Teammember.img}
-                  alt=""
-                  className="rounded-full w-25 h-auto  hover:border-2 hover:scale-110 border-slate-950 transition-all duration-150 mb-3 "
-                />
-                <h3 className="text-[1.1rem] font-semibold">
-                  {Teammember.Name}
-                </h3>
-                <p className="text-sm text-gray-500 text-center hover:text-orange-500 transition-all duration-400 font-semibold">
-                  {Teammember.Position}
-                </p>
-                <p className="pt-3 px-auto text-sm text-center px-3 pb-10">
-                  {Teammember.Biography}
-                </p>
-              </div>
-            );
-          })}
+      <section className="relative bg-slate-950 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 right-1/4 w-72 h-72 bg-cyan-500/10 blur-[100px] rounded-full" />
         </div>
-      </div>
+        <div className="section-container section-padding relative z-10 text-center">
+          <Reveal>
+            <p className="section-label text-orange-500">Our People</p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mt-3">
+              The Team of Experienced Engineers
+            </h1>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="mt-4 text-slate-300 text-base sm:text-lg max-w-2xl mx-auto">
+              Meet the talented professionals behind Software Vala Liberia&apos;s success.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section-padding bg-slate-50 space-y-14">
+        {/* Leadership: Founder & Co-Founder */}
+        <div className="section-container">
+          <Reveal>
+            <h2 className="text-center text-sm font-bold uppercase tracking-wider text-orange-500 mb-8">
+              Meet Our Team
+            </h2>
+          </Reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-3xl mx-auto">
+            {leadership.map((member, index) => (
+              <Reveal key={member.id} delay={index * 0.1}>
+                <MemberCard member={member} featured />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        {/* HR */}
+        <div className="section-container">
+          <Reveal>
+            <h2 className="text-center text-sm font-bold uppercase tracking-wider text-orange-500 mb-8">
+              Human Resources
+            </h2>
+          </Reveal>
+          <div className="max-w-sm mx-auto">
+            {hr.map((member, index) => (
+              <Reveal key={member.id} delay={index * 0.1}>
+                <MemberCard member={member} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        {/* Rest of team */}
+        <div className="section-container">
+          <Reveal>
+            <h2 className="text-center text-sm font-bold uppercase tracking-wider text-orange-500 mb-8">
+              Our Team
+            </h2>
+          </Reveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {team.map((member, index) => (
+              <Reveal key={member.id} delay={index * 0.06}>
+                <MemberCard member={member} />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </>
   );

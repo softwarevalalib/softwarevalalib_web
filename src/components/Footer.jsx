@@ -1,108 +1,100 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { AiOutlineWhatsApp } from "react-icons/ai";
 import { FiPhone, FiMapPin, FiMail } from "react-icons/fi";
+import { AiOutlineWhatsApp } from "react-icons/ai";
 
 const WHATSAPP_NUMBER = "231888636071";
 const EMAIL_ADDRESS = "softwarevalaliberiainc@gmail.com";
 const EMAIL_SUBJECT = encodeURIComponent("Website inquiry");
-const EMAIL_BODY = encodeURIComponent(
-  "Hi SVL,\n\nI'd like to learn more about your services.",
-);
+const EMAIL_BODY = encodeURIComponent("Hi SVL,\n\nI'd like to learn more about your services.");
 const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=Hi%20SVL%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20services.`;
 const mailtoUrl = `mailto:${EMAIL_ADDRESS}?subject=${EMAIL_SUBJECT}&body=${EMAIL_BODY}`;
 
+const quickLinks = [
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+  { label: "Services", to: "/services" },
+  { label: "Projects", to: "/projects" },
+  { label: "Contact", to: "/contact" },
+  { label: "Team", to: "/team" },
+];
+
+const services = [
+  "Mobile App Development",
+  "SEO & Digital Marketing",
+  "Management Systems",
+  "CCTV Installation",
+  "Web Hosting & Maintenance",
+  "Graphic Design",
+];
+
 function Footer() {
   return (
-    <>
-      <div className="relative bg-slate-950 text-white px-5 flex flex-wrap justify-between items-start py-16 gap-10 md:px-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/20 blur-[120px] rounded-full pointer-events-none"></div>
+    <footer className="relative bg-slate-950 text-white overflow-hidden">
+      <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <nav className="flex flex-col p-2 gap-2 z-10">
-          <h3 className="text-orange-500 font-bold">Quick Links</h3>
-          <Link className="hover:text-cyan-400" to="/">
-            Home
-          </Link>
-          <Link className="hover:text-cyan-400" to="/about">
-            About
-          </Link>
-          <Link className="hover:text-cyan-400" to="/services">
-            Services
-          </Link>
-          <Link className="hover:text-cyan-400" to="/contact">
-            Contact
-          </Link>
-          <Link className="hover:text-cyan-400" to="/team">
-            Team
-          </Link>
-        </nav>
-
-        <div className="z-10">
-          <h3 className="text-orange-500 font-bold">Our Services</h3>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li>Mobile App Development</li>
-            <li>SEO</li>
-            <li>Management System</li>
-            <li>CCTV Camera Installation</li>
-            <li>Electricity</li>
-            <li>Web Hosting & Maintenance</li>
-          </ul>
-        </div>
-
-        <div className="z-10 pb-10">
-          <h3 className="text-orange-500 font-bold">Contact</h3>
-          <ul className="mt-4 space-y-3 text-sm">
-            <li className="flex items-center gap-2">
-              <FiPhone />
-              <a className="hover:text-cyan-400" href="tel:+231889552016">
-                + 231 889 552 016
-              </a>
-            </li>
-            <li className="flex items-center gap-2">
-              <AiOutlineWhatsApp />
-              <a
-                className="hover:text-cyan-400"
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
+      <div className="section-container section-padding relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          <nav className="flex flex-col gap-3">
+            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider">Quick Links</h3>
+            {quickLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="text-slate-400 hover:text-cyan-400 transition-colors duration-300 text-sm"
               >
-                Chat on WhatsApp
-              </a>
-            </li>
-            <li className="flex items-center gap-2">
-              <FiMail />
-              <a className="hover:text-cyan-400" href={mailtoUrl}>
-                {EMAIL_ADDRESS}
-              </a>
-            </li>
-          </ul>
-        </div>
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
-        <div className="z-10 pb-10">
-          <h3 className="text-orange-500 font-bold" target="_blank">
-            Our Office
-          </h3>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li className="flex items-center gap-2">
-              <FiMapPin />
+          <div>
+            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Our Services</h3>
+            <ul className="space-y-2">
+              {services.map((service) => (
+                <li key={service} className="text-slate-400 text-sm">{service}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Contact</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center gap-3 text-slate-400">
+                <FiPhone className="text-orange-500 shrink-0" />
+                <a href="tel:+231889552016" className="hover:text-cyan-400 transition-colors">
+                  +231 889 552 016
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-slate-400">
+                <AiOutlineWhatsApp className="text-green-500 shrink-0" />
+                <a href={whatsappUrl} target="_blank" rel="noreferrer" className="hover:text-cyan-400 transition-colors">
+                  Chat on WhatsApp
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-slate-400">
+                <FiMail className="text-orange-500 shrink-0" />
+                <a href={mailtoUrl} className="hover:text-cyan-400 transition-colors break-all">
+                  {EMAIL_ADDRESS}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Our Office</h3>
+            <div className="flex items-start gap-3 text-slate-400 text-sm">
+              <FiMapPin className="text-orange-500 shrink-0 mt-0.5" />
               <span>ELWA Junction, Monrovia, Liberia</span>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="bg-slate-950 text-white text-center pb-5">
-        <p>© {new Date().getFullYear()} SVL. All Rights Reserved.</p>
+
+      <div className="border-t border-white/5 py-6 text-center text-slate-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} Software Vala Liberia. All Rights Reserved.</p>
       </div>
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 transition-transform duration-200 hover:scale-105"
-        aria-label="Chat on WhatsApp"
-      >
-        <AiOutlineWhatsApp size={26} />
-      </a>
-    </>
+    </footer>
   );
 }
 

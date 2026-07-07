@@ -4,9 +4,9 @@ import ServicesOffered from "../components/ServicesOffered";
 import ServicesContent from "../components/ServicesContent";
 
 import Footer from "../components/Footer";
-function Portfolio() {
+function Services() {
   return (
-    <div className="min-h-screen bg-black">
+    <div>
       <ServicesHeader />
       <ServicesOffered />
       <ServicesContent />
@@ -15,4 +15,4 @@ function Portfolio() {
   );
 }
 
-export default Portfolio;
+export default Services;

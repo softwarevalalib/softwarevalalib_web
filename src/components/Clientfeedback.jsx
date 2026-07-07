@@ -1,42 +1,47 @@
-import React from "react";
 import testimonials from "../data/testimonials";
+import Reveal from "../Animations/Reveal";
 
 function Clientfeedback() {
+  const doubled = [...testimonials, ...testimonials];
+
   return (
-    <div className="py-16 px-4">
-      <h3 className="uppercase text-center sm:text-2xl  pb-10 font-semibold text-orange-500">
-        Clients Testimonials
-      </h3>
-      <h1 className="text-center text-4xl md:text-5xl font-bold ">
-        Our Clients Feedbacks
-      </h1>
+    <section className="section-padding bg-white overflow-hidden">
+      <div className="section-container mb-10">
+        <Reveal>
+          <p className="section-label text-center">Client Testimonials</p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h2 className="section-title text-center mt-3">Our Clients Feedbacks</h2>
+        </Reveal>
+      </div>
 
-      {/* Clients Testimonials */}
-      <section className="overflow-hidden pt-10 pb-0">
-        <div className="slider-track flex ">
-          {[...testimonials, ...testimonials].map((item) => (
+      <div className="overflow-hidden">
+        <div className="slider-track flex gap-4 sm:gap-6">
+          {doubled.map((item, index) => (
             <div
-              key={`${item.id}-${Math.random()}`}
-              className=" mx-4 bg-white rounded-xl shadow p-6 w-87.5 md:w-125 my-2"
+              key={`${item.id}-${index}`}
+              className="shrink-0 w-[280px] sm:w-[340px] md:w-[400px] bg-white rounded-2xl shadow-md border border-slate-100 p-6 card-hover"
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-16 h-16 rounded-full object-cover mb-4"
-              />
-
-              <p className="text-gray-600 mb-4 block wrap-break-word">
-                "{item.feedback}"
+              <div className="flex items-center gap-4 mb-4">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-14 h-14 rounded-full object-cover ring-2 ring-orange-500/20"
+                />
+                <div>
+                  <h3 className="font-bold text-slate-900">{item.name}</h3>
+                  <p className="text-sm text-slate-500">{item.company}</p>
+                </div>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed mb-3">
+                &ldquo;{item.feedback}&rdquo;
               </p>
-
-              <h3 className="font-bold">{item.name}</h3>
-              <p>{item.company}</p>
-              <p className="text-sm text-cyan-700">{item.location}</p>
+              <p className="text-xs text-cyan-600 font-medium">{item.location}</p>
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 

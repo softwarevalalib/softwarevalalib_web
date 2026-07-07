@@ -1,48 +1,136 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
-/* @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=swap");
-
-@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"); */
-
-.header-font {
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
-  font-weight: 700;
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --color-brand: #f97316;
+  --color-brand-dark: #ea580c;
+  --color-surface: #020617;
+  --color-surface-light: #0f172a;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #f97316 transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Layout utilities ── */
+.section-container {
+  width: min(90%, 1200px);
+  margin-inline: auto;
+}
+
+.section-padding {
+  padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  background-color: #f97316;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #ea580c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  background: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: white;
+  color: #0f172a;
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+/* ── Section headings ── */
+.section-label {
+  color: #f97316;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+}
+
+.section-title {
+  font-weight: 800;
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  line-height: 1.15;
+  color: #0f172a;
+}
+
+/* ── Card hover ── */
+.card-hover {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Testimonial slider ── */
 .slider-track {
   width: max-content;
-  animation: scrollLeft 160s linear infinite;
+  animation: scrollLeft 80s linear infinite;
 }
 
 @keyframes scrollLeft {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .slider-track:hover {
   animation-play-state: paused;
 }
 
+/* ── Tech marquee ── */
 .marquee {
   display: flex;
   width: max-content;
-  animation: scroll-left 20s linear infinite;
+  animation: scroll-left 25s linear infinite;
 }
 
 .marquee:hover {
@@ -50,113 +138,86 @@
 }
 
 @keyframes scroll-left {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
+/* ── About hero word slider ── */
 .hero-text {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-
   font-weight: 700;
   color: white;
+  gap: 0.25rem;
 }
 
 .word-slider {
-  height: 80px;
+  height: clamp(48px, 10vw, 80px);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .word-slider span {
-  height: 80px;
-  line-height: 80px;
-  animation: slideWords 8s infinite;
+  height: clamp(48px, 10vw, 80px);
+  line-height: clamp(48px, 10vw, 80px);
+  animation: slideWords 10s infinite;
   text-align: center;
+  color: #f97316;
 }
 
 @keyframes slideWords {
-  0%,
-  20% {
-    transform: translateY(0);
-  }
-
-  25%,
-  45% {
-    transform: translateY(-80px);
-  }
-
-  50%,
-  70% {
-    transform: translateY(-160px);
-  }
-
-  75%,
-  95% {
-    transform: translateY(-240px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
+  0%, 16% { transform: translateY(0); }
+  20%, 36% { transform: translateY(calc(-1 * clamp(48px, 10vw, 80px))); }
+  40%, 56% { transform: translateY(calc(-2 * clamp(48px, 10vw, 80px))); }
+  60%, 76% { transform: translateY(calc(-3 * clamp(48px, 10vw, 80px))); }
+  80%, 96% { transform: translateY(calc(-4 * clamp(48px, 10vw, 80px))); }
+  100% { transform: translateY(0); }
 }
 
-.bg {
-  background-color: #00274c;
+/* ── WhatsApp pulse ── */
+@keyframes whatsapp-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+  50% { box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
 }
 
-.red {
-  background-color: #c10020;
+.whatsapp-float {
+  animation: whatsapp-pulse 2.5s ease-in-out infinite;
 }
 
-/* Responsive scrollbar styling */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: #f97316 transparent;
+/* ── Gradient text ── */
+.gradient-text {
+  background: linear-gradient(135deg, #f97316, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* ── Scrollbar ── */
 @media (max-width: 1023px) {
-  html {
-    scrollbar-width: none;
-  }
-
-  html::-webkit-scrollbar {
-    display: none;
-    width: 0;
-    height: 0;
-  }
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; width: 0; height: 0; }
 }
 
 @media (min-width: 1024px) {
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: #f97316 transparent;
-  }
-
-  html::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  html::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
+  html::-webkit-scrollbar { width: 8px; height: 8px; }
+  html::-webkit-scrollbar-track { background: transparent; }
   html::-webkit-scrollbar-thumb {
     background-color: #f97316;
     border-radius: 9999px;
     border: 2px solid transparent;
     background-clip: padding-box;
   }
+  html::-webkit-scrollbar-thumb:hover { background-color: #ea580c; }
+}
 
-  html::-webkit-scrollbar-thumb:hover {
-    background-color: #ea580c;
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .slider-track, .marquee, .word-slider span, .whatsapp-float {
+    animation: none !important;
   }
+  .card-hover:hover { transform: none; }
 }

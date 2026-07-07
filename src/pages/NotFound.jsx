@@ -1,21 +1,27 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function NotFound() {
   return (
-    <div className="mx-auto my-20 max-w-xl rounded-3xl border border-slate-200 bg-slate-50 p-10 text-center shadow-lg">
-      <h1 className="text-4xl font-bold text-slate-900">Ooops chief! 😢</h1>
-      <p className="mt-4 text-slate-600">
-        The page you are trying to reach was not found. Click the button below
-        to return home.
-      </p>
-      <Link
-        to="/"
-        className="mt-8 inline-flex rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+    <section className="min-h-[70vh] flex items-center justify-center section-padding bg-slate-50">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="section-container max-w-lg text-center"
       >
-        Go Back Please 😌
-      </Link>
-    </div>
+        <p className="text-8xl sm:text-9xl font-extrabold gradient-text">404</p>
+        <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-slate-900">
+          Page Not Found
+        </h1>
+        <p className="mt-4 text-slate-600 text-base sm:text-lg">
+          The page you are looking for doesn&apos;t exist or has been moved.
+        </p>
+        <Link to="/" className="btn-primary mt-8">
+          Back to Home
+        </Link>
+      </motion.div>
+    </section>
   );
 }
 

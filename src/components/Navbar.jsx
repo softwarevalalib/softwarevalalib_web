@@ -1,116 +1,101 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../images/logo.jpg";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { useEffect, useState } from "react";
 
-import {
-  AiOutlineClose,
-  AiOutlineMenu,
-  AiOutlineMoon,
-  AiOutlineSun,
-} from "react-icons/ai";
-import React, { useEffect, useState } from "react";
-import Topbar from "./Topbar";
+const navLinks = [
+  { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
+  { label: "Services", path: "/services" },
+  { label: "Projects", path: "/projects" },
+  { label: "Contact", path: "/contact" },
+  { label: "Team", path: "/team" },
+];
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = window.localStorage.getItem("site-theme");
-      return savedTheme ? JSON.parse(savedTheme) : false;
-    }
-    return false;
-  });
+  const location = useLocation();
 
   useEffect(() => {
-    window.localStorage.setItem("site-theme", JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  const isActive = (path) =>
+    path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
 
   return (
-    <>
-      {/* <Topbar /> */}
-      <header
-        className={`sticky top-0 z-50 shadow-lg transition-colors duration-300 ${isDarkMode ? "bg-slate-950 text-white" : "bg-white text-slate-900"}`}
+    <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/20">
+      <div className="section-container h-16 sm:h-20 flex items-center justify-between">
+        <Link to="/" className="shrink-0 transition-transform duration-300 hover:scale-105">
+          <img src={Logo} alt="Software Vala Liberia" className="w-28 sm:w-36 h-auto rounded" />
+        </Link>
+
+        <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+          {navLinks.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`relative px-3 lg:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                isActive(item.path)
+                  ? "text-orange-500 bg-orange-500/10"
+                  : "text-slate-300 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <button
+          type="button"
+          className="md:hidden p-2 text-white rounded-lg hover:bg-white/10 transition-colors"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+        >
+          {isOpen ? <AiOutlineClose size={26} /> : <AiOutlineMenu size={26} />}
+        </button>
+      </div>
+
+      {/* Mobile overlay */}
+      <div
+        className={`md:hidden fixed inset-0 top-16 sm:top-20 z-40 transition-all duration-500 ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+        }`}
       >
-        <div className="w-[90%] mx-auto h-20 flex items-center justify-between">
-          {/* Logo */}
-          <img src={Logo} alt="Logo" className="w-32 h-auto md:w-40 rounded" />
-
-          {/* Desktop Menu */}
-          <nav className="hidden md:flex gap-8 font-semibold">
-            {["Home", "About", "Services", "Projects", "Contact", "Team"].map(
-              (item) => (
-                <Link
-                  key={item}
-                  to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                  className={`relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full ${isDarkMode ? "text-slate-900 md:text-white" : "text-slate-900"}`}
-                >
-                  {item}
-                </Link>
-              ),
-            )}
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setIsDarkMode((prev) => !prev)}
-              className={`rounded-full p-2 transition-colors duration-300 ${isDarkMode ? "bg-slate-700 text-white" : "bg-slate-200 text-slate-900"}`}
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? (
-                <AiOutlineSun size={20} />
-              ) : (
-                <AiOutlineMoon size={20} />
-              )}
-            </button>
-
-            {/* Mobile Menu Button */}
-            <div
-              className="md:hidden cursor-pointer"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? (
-                <AiOutlineClose size={28} />
-              ) : (
-                <AiOutlineMenu size={28} />
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
         <div
-          className={`md:hidden fixed top-20 left-0 w-50 h-full bg-white shadow-lg transition-all duration-500 ${
-            isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+        <nav
+          className={`relative bg-slate-950 border-t border-white/10 p-6 flex flex-col gap-1 transition-transform duration-500 ${
+            isOpen ? "translate-y-0" : "-translate-y-4"
           }`}
         >
-          <nav className="flex flex-col p-6 gap-6 text-lg font-medium text-slate-900">
-            <Link to="/" onClick={() => setIsOpen(false)}>
-              Home
+          {navLinks.map((item, i) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setIsOpen(false)}
+              className={`px-4 py-3 rounded-xl text-lg font-medium transition-all duration-300 ${
+                isActive(item.path)
+                  ? "text-orange-500 bg-orange-500/10"
+                  : "text-slate-300 hover:text-white hover:bg-white/5"
+              }`}
+              style={{ transitionDelay: isOpen ? `${i * 50}ms` : "0ms" }}
+            >
+              {item.label}
             </Link>
-
-            <Link to="/about" onClick={() => setIsOpen(false)}>
-              About
-            </Link>
-
-            <Link to="/services" onClick={() => setIsOpen(false)}>
-              Services
-            </Link>
-
-            <Link to="/projects" onClick={() => setIsOpen(false)}>
-              Projects
-            </Link>
-
-            <Link to="/contact" onClick={() => setIsOpen(false)}>
-              Contact
-            </Link>
-
-            <Link to="/team" onClick={() => setIsOpen(false)}>
-              Team
-            </Link>
-          </nav>
-        </div>
-      </header>
-    </>
+          ))}
+        </nav>
+      </div>
+    </header>
   );
 }
 

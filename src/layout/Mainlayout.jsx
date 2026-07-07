@@ -2,14 +2,15 @@ import Navbar from "../components/Navbar";
 import WhatsAppFloating from "../components/WhatsAppFloating";
 import ScrollToTop from "../components/ScrollToTop";
 import { Outlet } from "react-router-dom";
-import React from "react";
 
 function Mainlayout() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-white">
       <Navbar />
       <ScrollToTop />
-      <Outlet />
+      <main className="flex-1">
+        <Outlet />
+      </main>
       <WhatsAppFloating />
     </div>
   );

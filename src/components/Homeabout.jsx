@@ -2,7 +2,7 @@ import Reveal from "../Animations/Reveal";
 
 function Homeabout() {
   return (
-    <section className="bg-slate-50 section-padding">
+    <section className="bg-slate-50 dark:bg-slate-900 section-padding transition-colors duration-300">
       <div className="section-container">
         <Reveal>
           <p className="section-label text-center">About Us</p>
@@ -13,7 +13,7 @@ function Homeabout() {
           </h2>
         </Reveal>
         <Reveal delay={0.2}>
-          <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto text-center">
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto text-center">
             Software Vala Liberia is a{" "}
             <span className="font-bold text-orange-500">FULL STACK</span>{" "}
             development agency based in Liberia. We are passionate about helping

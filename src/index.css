@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --color-brand: #f97316;
@@ -26,6 +28,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
+  background-color: #020617;
+  color: #f1f5f9;
 }
 
 /* ── Layout utilities ── */
@@ -85,6 +95,16 @@ body {
   transform: translateY(-2px);
 }
 
+html.dark .btn-secondary {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+html.dark .btn-secondary:hover {
+  background: white;
+  color: #0f172a;
+}
+
 /* ── Section headings ── */
 .section-label {
   color: #f97316;
@@ -99,6 +119,10 @@ body {
   font-size: clamp(1.75rem, 5vw, 3rem);
   line-height: 1.15;
   color: #0f172a;
+}
+
+html.dark .section-title {
+  color: #f8fafc;
 }
 
 /* ── Card hover ── */

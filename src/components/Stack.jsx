@@ -27,7 +27,7 @@ function TechStack() {
   const doubled = [...technologies, ...technologies];
 
   return (
-    <section className="section-padding bg-slate-50 overflow-hidden">
+    <section className="section-padding bg-slate-50 dark:bg-slate-900 overflow-hidden transition-colors duration-300">
       <div className="section-container mb-10">
         <Reveal>
           <p className="section-label text-center">Our Tech Stack</p>

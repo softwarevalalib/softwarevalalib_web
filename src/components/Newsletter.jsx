@@ -1,14 +1,43 @@
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import Reveal from "../Animations/Reveal";
+import { sendToCompany } from "../utils/sendEmail";
 
 function Newsletter() {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState({ type: "", message: "" });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email.trim()) return;
-    alert("Thanks! You will receive updates from us.");
-    setEmail("");
+
+    setIsSubmitting(true);
+    setStatus({ type: "", message: "" });
+
+    try {
+      await sendToCompany({
+        subject: "Newsletter Subscription",
+        fields: {
+          form_type: "Newsletter",
+          subscriber_email: email,
+          message: `New newsletter subscriber: ${email}`,
+        },
+      });
+
+      setStatus({
+        type: "success",
+        message: "Thanks! You've been subscribed to our newsletter.",
+      });
+      setEmail("");
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message: error.message || "Subscription failed. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -25,15 +54,34 @@ function Newsletter() {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full sm:flex-1 border border-slate-700 bg-slate-900 rounded-xl h-11 px-4 text-white placeholder:text-slate-500 outline-none focus:border-orange-500 transition-colors duration-300"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (status.message) setStatus({ type: "", message: "" });
+              }}
+              className="w-full sm:flex-1 border border-slate-700 bg-slate-900 rounded-xl h-11 px-4 text-white placeholder:text-slate-500 outline-none focus:border-orange-500 transition-colors duration-300 disabled:opacity-60"
               placeholder="Enter your email"
               required
+              disabled={isSubmitting}
             />
-            <button type="submit" className="btn-primary w-full sm:w-auto shrink-0">
-              Subscribe
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-primary w-full sm:w-auto shrink-0 disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
+            >
+              {isSubmitting && <Loader2 size={16} className="animate-spin" />}
+              {isSubmitting ? "Subscribing..." : "Subscribe"}
             </button>
           </form>
+
+          {status.message && (
+            <p
+              className={`mt-4 text-center text-sm ${
+                status.type === "success" ? "text-green-400" : "text-red-400"
+              }`}
+            >
+              {status.message}
+            </p>
+          )}
         </Reveal>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import React from "react";
+import { COMPANY_EMAIL } from "../config/company";
 
 export default function Topbar() {
   return (
@@ -6,7 +7,7 @@ export default function Topbar() {
       <p className="uppercase text-orange-500 font-semibold">
         Software Vala Liberia, Inc.
       </p>
-      <p>Email Address: softwarevalaliberiainc@gmail.com</p>
+      <p>Email Address: {COMPANY_EMAIL}</p>
       <p>Location: ELWA Junction, Paynesville City, Monrovia, Liberia</p>
       <p className="list-none flex items-center justify-between gap-2 ">
         <li>Facebook</li>

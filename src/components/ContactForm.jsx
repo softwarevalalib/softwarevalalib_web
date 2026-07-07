@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Mail, MapPin, Phone, Briefcase, Send, ChevronDown } from "lucide-react";
+import { Mail, MapPin, Phone, Briefcase, Send, ChevronDown, Loader2 } from "lucide-react";
 import Reveal from "../Animations/Reveal";
+import { COMPANY_EMAIL } from "../config/company";
+import { sendToCompany } from "../utils/sendEmail";
 
 const initialFormData = {
   fullName: "",
@@ -16,6 +18,8 @@ const initialFormData = {
 
 function Contact() {
   const [formData, setFormData] = useState(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState({ type: "", message: "" });
 
   useEffect(() => {
     const saved = window.localStorage.getItem("contact-form-data");
@@ -42,13 +46,45 @@ function Contact() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (status.message) setStatus({ type: "", message: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Your request has been submitted successfully!");
-    setFormData(initialFormData);
-    window.localStorage.removeItem("contact-form-data");
+    setIsSubmitting(true);
+    setStatus({ type: "", message: "" });
+
+    try {
+      await sendToCompany({
+        subject: `New Project Request — ${formData.fullName}`,
+        fields: {
+          form_type: "Contact Form",
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          location: formData.location || "Not provided",
+          company: formData.company || "Not provided",
+          service: formData.service,
+          budget: formData.budget || "Not specified",
+          contact_method: formData.contactMethod || "Not specified",
+          message: formData.message,
+        },
+      });
+
+      setStatus({
+        type: "success",
+        message: "Your request has been sent successfully! We'll get back to you soon.",
+      });
+      setFormData(initialFormData);
+      window.localStorage.removeItem("contact-form-data");
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message: error.message || "Something went wrong. Please try again or email us directly.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const inputClass =
@@ -89,7 +125,7 @@ function Contact() {
 
               <div className="mt-8 space-y-4">
                 {[
-                  { icon: Mail, title: "Email Us", value: "softwarevalaliberiainc@gmail.com", href: "mailto:softwarevalaliberiainc@gmail.com" },
+                  { icon: Mail, title: "Email Us", value: COMPANY_EMAIL, href: `mailto:${COMPANY_EMAIL}` },
                   { icon: Phone, title: "Call / WhatsApp", value: "+231 889 552 016", href: "tel:+231889552016" },
                   { icon: MapPin, title: "Location", value: "ELWA Junction, Monrovia, Liberia" },
                   { icon: Briefcase, title: "Services We Offer", value: "Web development, software development, mobile apps, SEO, database management, CCTV, solar installation, and more." },
@@ -121,37 +157,49 @@ function Contact() {
                 Fill out the form below and we&apos;ll get back to you as soon as possible.
               </p>
 
+              {status.message && (
+                <div
+                  className={`mt-4 rounded-xl px-4 py-3 text-sm ${
+                    status.type === "success"
+                      ? "bg-green-500/10 border border-green-500/30 text-green-300"
+                      : "bg-red-500/10 border border-red-500/30 text-red-300"
+                  }`}
+                >
+                  {status.message}
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="mt-8 space-y-5">
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
                     <label htmlFor="fullName" className="mb-1.5 block text-sm font-medium text-slate-200">Full Name</label>
-                    <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" required className={inputClass} />
+                    <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" required disabled={isSubmitting} className={inputClass} />
                   </div>
                   <div>
                     <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-200">Email Address</label>
-                    <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required className={inputClass} />
+                    <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required disabled={isSubmitting} className={inputClass} />
                   </div>
                 </div>
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
                     <label htmlFor="location" className="mb-1.5 block text-sm font-medium text-slate-200">Location</label>
-                    <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} placeholder="City / Country" className={inputClass} />
+                    <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} placeholder="City / Country" disabled={isSubmitting} className={inputClass} />
                   </div>
                   <div>
                     <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-slate-200">Phone / WhatsApp</label>
-                    <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone number" required className={inputClass} />
+                    <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone number" required disabled={isSubmitting} className={inputClass} />
                   </div>
                 </div>
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
                     <label htmlFor="company" className="mb-1.5 block text-sm font-medium text-slate-200">Company Name</label>
-                    <input type="text" id="company" name="company" value={formData.company} onChange={handleChange} placeholder="Optional" className={inputClass} />
+                    <input type="text" id="company" name="company" value={formData.company} onChange={handleChange} placeholder="Optional" disabled={isSubmitting} className={inputClass} />
                   </div>
                   <div className="relative">
                     <label htmlFor="service" className="mb-1.5 block text-sm font-medium text-slate-200">Service Needed</label>
-                    <select id="service" name="service" value={formData.service} onChange={handleChange} required className={`${inputClass} appearance-none`}>
+                    <select id="service" name="service" value={formData.service} onChange={handleChange} required disabled={isSubmitting} className={`${inputClass} appearance-none`}>
                       <option value="">Select a service</option>
                       {services.map((s) => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -162,7 +210,7 @@ function Contact() {
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="relative">
                     <label htmlFor="budget" className="mb-1.5 block text-sm font-medium text-slate-200">Estimated Budget</label>
-                    <select id="budget" name="budget" value={formData.budget} onChange={handleChange} className={`${inputClass} appearance-none`}>
+                    <select id="budget" name="budget" value={formData.budget} onChange={handleChange} disabled={isSubmitting} className={`${inputClass} appearance-none`}>
                       <option value="">Select budget range</option>
                       {budgetOptions.map((b) => <option key={b} value={b}>{b}</option>)}
                     </select>
@@ -170,7 +218,7 @@ function Contact() {
                   </div>
                   <div className="relative">
                     <label htmlFor="contactMethod" className="mb-1.5 block text-sm font-medium text-slate-200">Preferred Contact</label>
-                    <select id="contactMethod" name="contactMethod" value={formData.contactMethod} onChange={handleChange} className={`${inputClass} appearance-none`}>
+                    <select id="contactMethod" name="contactMethod" value={formData.contactMethod} onChange={handleChange} disabled={isSubmitting} className={`${inputClass} appearance-none`}>
                       <option value="">Choose method</option>
                       {contactMethods.map((m) => <option key={m} value={m}>{m}</option>)}
                     </select>
@@ -180,12 +228,12 @@ function Contact() {
 
                 <div>
                   <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-slate-200">Project Description</label>
-                  <textarea id="message" name="message" rows="5" value={formData.message} onChange={handleChange} placeholder="Tell us about your project..." required className={`${inputClass} resize-none`} />
+                  <textarea id="message" name="message" rows="5" value={formData.message} onChange={handleChange} placeholder="Tell us about your project..." required disabled={isSubmitting} className={`${inputClass} resize-none`} />
                 </div>
 
-                <button type="submit" className="btn-primary w-full">
-                  <Send size={18} />
-                  Submit Request
+                <button type="submit" disabled={isSubmitting} className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed">
+                  {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                  {isSubmitting ? "Sending..." : "Submit Request"}
                 </button>
               </form>
             </div>

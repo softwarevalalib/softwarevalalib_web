@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Reveal from "../Animations/Reveal";
+import { COMPANY_EMAIL } from "../config/company";
 
 export default function Homeheader() {
   return (
@@ -36,7 +37,7 @@ export default function Homeheader() {
 
           <Reveal delay={0.5}>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <a href="mailto:softwarevalaliberiainc@gmail.com" className="btn-primary">
+              <a href={`mailto:${COMPANY_EMAIL}`} className="btn-primary">
                 Email Us
               </a>
               <a

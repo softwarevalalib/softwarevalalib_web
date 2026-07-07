@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 function NotFound() {
   return (
-    <section className="min-h-[70vh] flex items-center justify-center section-padding bg-slate-50">
+    <section className="min-h-[70vh] flex items-center justify-center section-padding bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -11,10 +11,10 @@ function NotFound() {
         className="section-container max-w-lg text-center"
       >
         <p className="text-8xl sm:text-9xl font-extrabold gradient-text">404</p>
-        <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-slate-900">
+        <h1 className="mt-4 text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
           Page Not Found
         </h1>
-        <p className="mt-4 text-slate-600 text-base sm:text-lg">
+        <p className="mt-4 text-slate-600 dark:text-slate-300 text-base sm:text-lg">
           The page you are looking for doesn&apos;t exist or has been moved.
         </p>
         <Link to="/" className="btn-primary mt-8">

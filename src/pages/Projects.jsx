@@ -93,7 +93,7 @@ const Projects = () => {
         </div>
       </section>
 
-      <section className="bg-white py-8 sm:py-10 border-b border-slate-100 sticky top-16 sm:top-20 z-30">
+      <section className="bg-white dark:bg-slate-950 py-8 sm:py-10 border-b border-slate-100 dark:border-slate-800 sticky top-16 sm:top-20 z-30 transition-colors duration-300">
         <div className="section-container">
           <Reveal>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
@@ -105,7 +105,7 @@ const Projects = () => {
                   className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
                     filter === category
                       ? "bg-orange-500 text-white shadow-lg shadow-orange-500/25"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                   }`}
                 >
                   {category}
@@ -116,9 +116,9 @@ const Projects = () => {
         </div>
       </section>
 
-      <section className="section-padding bg-slate-50">
+      <section className="section-padding bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <div className="section-container">
-          <p className="text-center text-sm text-slate-500 mb-8">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-8">
             Showing {filteredProjects.length} of {projectsData.length} systems
           </p>
 
@@ -143,7 +143,7 @@ const Projects = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4) }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 card-hover group flex flex-col"
+                    className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 card-hover group flex flex-col"
                   >
                     <div className={`relative h-48 sm:h-52 bg-linear-to-br ${gradient} overflow-hidden`}>
                       {imageSrc ? (
@@ -168,10 +168,10 @@ const Projects = () => {
                     </div>
 
                     <div className="p-5 sm:p-6 flex flex-col flex-1">
-                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">
                         {project.title}
                       </h3>
-                      <p className="text-slate-600 text-sm leading-relaxed mb-4 flex-1">
+                      <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4 flex-1">
                         {project.description}
                       </p>
                       <div className="flex flex-wrap gap-1.5 mb-4">

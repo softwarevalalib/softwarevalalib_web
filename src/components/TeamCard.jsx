@@ -15,7 +15,7 @@ function getInitials(name) {
 function MemberCard({ member, featured = false }) {
   return (
     <article
-      className={`bg-white rounded-2xl shadow-sm border border-slate-100 text-center card-hover group ${
+      className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 text-center card-hover group ${
         featured ? "p-8" : "p-6"
       }`}
     >
@@ -38,13 +38,13 @@ function MemberCard({ member, featured = false }) {
           </div>
         )}
       </div>
-      <h3 className={`font-bold text-slate-900 ${featured ? "text-xl sm:text-2xl" : "text-lg"}`}>
+      <h3 className={`font-bold text-slate-900 dark:text-white ${featured ? "text-xl sm:text-2xl" : "text-lg"}`}>
         {member.Name}
       </h3>
       <p className={`text-orange-500 font-semibold mt-1 ${featured ? "text-base" : "text-sm"}`}>
         {member.Position}
       </p>
-      <p className="mt-3 text-sm text-slate-600 leading-relaxed">{member.Biography}</p>
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{member.Biography}</p>
     </article>
   );
 }
@@ -77,7 +77,7 @@ function TeamCard() {
         </div>
       </section>
 
-      <section className="section-padding bg-slate-50 space-y-14">
+      <section className="section-padding bg-slate-50 dark:bg-slate-900 space-y-14 transition-colors duration-300">
         {/* Leadership: Founder & Co-Founder */}
         <div className="section-container">
           <Reveal>

@@ -5,7 +5,7 @@ function Clientfeedback() {
   const doubled = [...testimonials, ...testimonials];
 
   return (
-    <section className="section-padding bg-white overflow-hidden">
+    <section className="section-padding bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
       <div className="section-container mb-10">
         <Reveal>
           <p className="section-label text-center">Client Testimonials</p>
@@ -20,7 +20,7 @@ function Clientfeedback() {
           {doubled.map((item, index) => (
             <div
               key={`${item.id}-${index}`}
-              className="shrink-0 w-[280px] sm:w-[340px] md:w-[400px] bg-white rounded-2xl shadow-md border border-slate-100 p-6 card-hover"
+              className="shrink-0 w-[280px] sm:w-[340px] md:w-[400px] bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6 card-hover"
             >
               <div className="flex items-center gap-4 mb-4">
                 <img
@@ -29,11 +29,11 @@ function Clientfeedback() {
                   className="w-14 h-14 rounded-full object-cover ring-2 ring-orange-500/20"
                 />
                 <div>
-                  <h3 className="font-bold text-slate-900">{item.name}</h3>
-                  <p className="text-sm text-slate-500">{item.company}</p>
+                  <h3 className="font-bold text-slate-900 dark:text-white">{item.name}</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{item.company}</p>
                 </div>
               </div>
-              <p className="text-slate-600 text-sm leading-relaxed mb-3">
+              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-3">
                 &ldquo;{item.feedback}&rdquo;
               </p>
               <p className="text-xs text-cyan-600 font-medium">{item.location}</p>

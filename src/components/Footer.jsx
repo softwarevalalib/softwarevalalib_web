@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import { FiPhone, FiMapPin, FiMail } from "react-icons/fi";
 import { AiOutlineWhatsApp } from "react-icons/ai";
 
+import { COMPANY_EMAIL } from "../config/company";
+
 const WHATSAPP_NUMBER = "231888636071";
-const EMAIL_ADDRESS = "softwarevalaliberiainc@gmail.com";
+const EMAIL_ADDRESS = COMPANY_EMAIL;
 const EMAIL_SUBJECT = encodeURIComponent("Website inquiry");
 const EMAIL_BODY = encodeURIComponent("Hi SVL,\n\nI'd like to learn more about your services.");
 const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=Hi%20SVL%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20services.`;

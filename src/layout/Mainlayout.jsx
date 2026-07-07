@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 function Mainlayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
       <Navbar />
       <ScrollToTop />
       <main className="flex-1">

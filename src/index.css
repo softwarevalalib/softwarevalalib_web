@@ -1,12 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Sora", "Inter", system-ui, sans-serif;
   --color-brand: #f97316;
   --color-brand-dark: #ea580c;
+  --color-brand-soft: #fb923c;
+  --color-accent: #06b6d4;
   --color-surface: #020617;
   --color-surface-light: #0f172a;
 }
@@ -240,8 +243,252 @@ html.dark .section-title {
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .slider-track, .marquee, .word-slider span, .whatsapp-float {
+  .slider-track, .marquee, .word-slider span, .whatsapp-float, .marquee-ticker {
     animation: none !important;
   }
   .card-hover:hover { transform: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   DIGTEK-STYLE DESIGN SYSTEM ADDITIONS
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Display font for big headings ── */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ── Eyebrow / section label (pill style) ── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: var(--color-brand);
+  border-radius: 9999px;
+}
+
+/* ── Section heading ── */
+.section-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 4.5vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #0f172a;
+}
+html.dark .section-heading {
+  color: #f8fafc;
+}
+.section-heading .accent {
+  color: var(--color-brand);
+}
+
+/* ── Glass card ── */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+html.dark .glass {
+  background: rgba(255, 255, 255, 0.04);
+}
+.glass-light {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ── Gradient text ── */
+.gradient-brand {
+  background: linear-gradient(135deg, #f97316, #fb923c 40%, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Marquee ticker (digtek "THE BEST SOLUTION" strip) ── */
+.marquee-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 28s linear infinite;
+  will-change: transform;
+}
+.marquee-ticker:hover {
+  animation-play-state: paused;
+}
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── Floating shapes (parallax decorative blobs) ── */
+.float-shape {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(2px);
+  pointer-events: none;
+  will-change: transform;
+}
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-22px) translateX(10px); }
+}
+@keyframes float-soft-rev {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(18px) translateX(-12px); }
+}
+
+/* ── Star rating ── */
+.star {
+  color: #fbbf24;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
+}
+
+/* ── Case study / testimonial carousel track ── */
+.carousel-track {
+  display: flex;
+  width: max-content;
+  gap: 1.5rem;
+  animation: scrollLeft 60s linear infinite;
+}
+.carousel-track:hover {
+  animation-play-state: paused;
+}
+
+/* ── Pricing toggle pill ── */
+.toggle-pill {
+  position: relative;
+  display: inline-flex;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 9999px;
+  padding: 4px;
+}
+html:not(.dark) .toggle-pill {
+  background: rgba(15,23,42,0.06);
+  border-color: rgba(15,23,42,0.08);
+}
+.toggle-pill button {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #cbd5e1;
+  transition: color 0.3s ease;
+}
+html:not(.dark) .toggle-pill button {
+  color: #64748b;
+}
+.toggle-pill button.active {
+  color: #fff;
+}
+html:not(.dark) .toggle-pill button.active {
+  color: #0f172a;
+}
+.toggle-pill .slider-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  border-radius: 9999px;
+  background: #f97316;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 8px 20px rgba(249,115,22,0.4);
+}
+.toggle-pill .slider-thumb.right {
+  transform: translateX(100%);
+}
+
+/* ── Skill / progress bar fill animation ── */
+@keyframes fill-bar {
+  from { width: 0; }
+}
+
+/* ── Back to top button ── */
+.back-to-top {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.25rem;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  background: #f97316;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(249,115,22,0.4);
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+}
+.back-to-top:hover {
+  transform: translateY(-3px);
+  background: #ea580c;
+}
+
+/* ── Smooth page background ambient orbs ── */
+.ambient {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+/* ── Nav mega menu fade ── */
+.mega-panel {
+  transform-origin: top center;
+  animation: mega-in 0.25s ease both;
+}
+@keyframes mega-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Hover lift for interactive cards ── */
+.lift {
+  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 50px rgba(2,6,23,0.18);
+}
+html.dark .lift:hover {
+  box-shadow: 0 24px 50px rgba(0,0,0,0.5);
+}
+
+/* ── Underline link grow ── */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 0;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* ── Ping ring for badges ── */
+@keyframes ping-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  80%, 100% { transform: scale(1.8); opacity: 0; }
 }

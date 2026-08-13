@@ -100,11 +100,9 @@ function Contact() {
       <div className="section-container section-padding relative z-10">
         <Reveal>
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <span className="inline-block rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1 text-sm font-medium text-orange-500">
-              Contact Us
-            </span>
-            <h1 className="mt-5 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
-              Let&apos;s Build Something Great Together
+            <span className="eyebrow text-orange-400">Contact Us</span>
+            <h1 className="section-heading text-white mt-3">
+              Let&apos;s Build Something <span className="gradient-brand">Great Together</span>
             </h1>
             <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
               Tell us about your project, business needs, or service request.

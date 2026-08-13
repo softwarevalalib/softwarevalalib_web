@@ -48,8 +48,8 @@ function Newsletter() {
             onSubmit={handleSubmit}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto"
           >
-            <h3 className="text-center sm:text-left uppercase text-sm sm:text-base font-semibold tracking-wider whitespace-nowrap">
-              Subscribe to our Newsletter
+            <h3 className="text-center sm:text-left text-sm sm:text-base font-semibold tracking-wider whitespace-nowrap">
+              Subscribe to our <span className="text-orange-400">Newsletter</span>
             </h3>
             <input
               type="email"

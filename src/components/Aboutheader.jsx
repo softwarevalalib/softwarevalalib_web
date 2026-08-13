@@ -1,30 +1,25 @@
 import { Link } from "react-router-dom";
 import Reveal from "../Animations/Reveal";
+import FloatingShapes from "./FloatingShapes";
 
-function Aboutheader() {
+export default function Aboutheader() {
   return (
     <section className="relative bg-slate-950 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/15 blur-[120px] rounded-full" />
-      </div>
-
+      <FloatingShapes variant="hero" />
       <div className="section-container section-padding relative z-10 text-center">
         <Reveal>
-          <div className="hero-text text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-            <span>We Build Your</span>
-            <div className="word-slider font-bold">
-              <span>Platforms</span>
-              <span>Websites</span>
-              <span>Applications</span>
-              <span>SaaS</span>
-              <span>Startups</span>
-              <span>Network Infra.</span>
-            </div>
-          </div>
+          <span className="eyebrow text-orange-400">About Company</span>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <h1 className="section-heading text-white mt-4">
+            We Build Your{" "}
+            <span className="block text-orange-500 mt-1">Digital Future</span>
+          </h1>
         </Reveal>
 
         <Reveal delay={0.2}>
-          <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mt-8 leading-relaxed">
+          <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mt-6 leading-relaxed">
             We build innovative software solutions that help businesses scale,
             automate processes, and deliver exceptional digital experiences.
           </p>
@@ -44,5 +39,3 @@ function Aboutheader() {
     </section>
   );
 }
-
-export default Aboutheader;

@@ -3,10 +3,12 @@ import pc1 from "../images/pc1.png";
 import pc2 from "../images/pc2.png";
 import pc3 from "../images/pc3.png";
 import Reveal from "../Animations/Reveal";
+import FloatingShapes from "./FloatingShapes";
 
-function ServicesHeader() {
+export default function ServicesHeader() {
   return (
     <section className="relative bg-slate-950 overflow-hidden">
+      <FloatingShapes variant="hero" />
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 right-0 w-80 h-80 bg-orange-500/10 blur-[100px] rounded-full" />
       </div>
@@ -40,12 +42,15 @@ function ServicesHeader() {
         </div>
 
         <Reveal>
-          <h1 className="text-center font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-orange-500">
-            Our Services
+          <span className="eyebrow text-orange-400">What We Offer</span>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <h1 className="section-heading text-white text-center mt-3">
+            Our <span className="gradient-brand">Services</span>
           </h1>
         </Reveal>
         <Reveal delay={0.15}>
-          <p className="text-white text-center mt-4 mb-2 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed text-slate-300">
+          <p className="text-slate-300 text-center mt-4 mb-2 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
             Comprehensive technology solutions designed to help your business thrive
             in Liberia&apos;s digital economy
           </p>
@@ -54,5 +59,3 @@ function ServicesHeader() {
     </section>
   );
 }
-
-export default ServicesHeader;

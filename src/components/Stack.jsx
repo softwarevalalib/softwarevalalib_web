@@ -30,10 +30,10 @@ function TechStack() {
     <section className="section-padding bg-slate-50 dark:bg-slate-900 overflow-hidden transition-colors duration-300">
       <div className="section-container mb-10">
         <Reveal>
-          <p className="section-label text-center">Our Tech Stack</p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2 className="section-title text-center mt-3">Our Daily Technologies</h2>
+          <div className="max-w-2xl mx-auto text-center">
+            <span className="eyebrow">Our Tech Stack</span>
+            <h2 className="section-heading mt-3">Our Daily Technologies</h2>
+          </div>
         </Reveal>
       </div>
 

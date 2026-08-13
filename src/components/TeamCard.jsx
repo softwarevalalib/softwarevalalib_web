@@ -62,11 +62,11 @@ function TeamCard() {
         </div>
         <div className="section-container section-padding relative z-10 text-center">
           <Reveal>
-            <p className="section-label text-orange-500">Our People</p>
+            <span className="eyebrow text-orange-400">Our People</span>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mt-3">
-              The Team of Experienced Engineers
+            <h1 className="section-heading text-white mt-3">
+              The Team of Experienced <span className="gradient-brand">Engineers</span>
             </h1>
           </Reveal>
           <Reveal delay={0.2}>

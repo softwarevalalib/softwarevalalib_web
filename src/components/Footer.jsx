@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiPhone, FiMapPin, FiMail } from "react-icons/fi";
 import { AiOutlineWhatsApp } from "react-icons/ai";
+import { FiFacebook, FiInstagram, FiYoutube, FiTwitter, FiArrowRight } from "react-icons/fi";
 
 import { COMPANY_EMAIL } from "../config/company";
+import Logo from "../images/logo.jpg";
+import post1 from "../visuals/project1.jpg";
+import post2 from "../visuals/project2.jpg";
 
 const WHATSAPP_NUMBER = "231888636071";
 const EMAIL_ADDRESS = COMPANY_EMAIL;
@@ -29,6 +33,28 @@ const services = [
   "Graphic Design",
 ];
 
+const recentPosts = [
+  {
+    img: post1,
+    title: "Importers achieve savings through the First Sale rule!",
+    date: "Sep 6, 2024",
+    to: "/contact",
+  },
+  {
+    img: post2,
+    title: "Transid Named a Finalist For Year'25 Best Choice Award",
+    date: "Sep 6, 2024",
+    to: "/contact",
+  },
+];
+
+const socials = [
+  { icon: FiFacebook, label: "Facebook", href: "#" },
+  { icon: FiInstagram, label: "Instagram", href: "#" },
+  { icon: FiTwitter, label: "Twitter", href: "#" },
+  { icon: FiYoutube, label: "YouTube", href: "#" },
+];
+
 function Footer() {
   return (
     <footer className="relative bg-slate-950 text-white overflow-hidden">
@@ -37,19 +63,42 @@ function Footer() {
 
       <div className="section-container section-padding relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          {/* Brand */}
+          <div>
+            <img src={Logo} alt="Software Vala Liberia" className="w-36 rounded" />
+            <p className="mt-4 text-sm text-slate-400 leading-relaxed">
+              Full-stack software development agency in Monrovia, Liberia — building
+              websites, apps, and systems that move businesses forward.
+            </p>
+            <div className="mt-5 flex items-center gap-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="grid place-items-center w-9 h-9 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-colors duration-300"
+                >
+                  <s.icon size={16} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick links */}
           <nav className="flex flex-col gap-3">
             <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider">Quick Links</h3>
             {quickLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className="text-slate-400 hover:text-cyan-400 transition-colors duration-300 text-sm"
+                className="link-underline text-slate-400 hover:text-cyan-400 transition-colors duration-300 text-sm w-fit"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
+          {/* Services */}
           <div>
             <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Our Services</h3>
             <ul className="space-y-2">
@@ -59,9 +108,10 @@ function Footer() {
             </ul>
           </div>
 
+          {/* Contact + recent posts */}
           <div>
-            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Contact</h3>
-            <ul className="space-y-3 text-sm">
+            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Get In Touch</h3>
+            <ul className="space-y-3 text-sm mb-6">
               <li className="flex items-center gap-3 text-slate-400">
                 <FiPhone className="text-orange-500 shrink-0" />
                 <a href="tel:+231889552016" className="hover:text-cyan-400 transition-colors">
@@ -80,15 +130,28 @@ function Footer() {
                   {EMAIL_ADDRESS}
                 </a>
               </li>
+              <li className="flex items-start gap-3 text-slate-400">
+                <FiMapPin className="text-orange-500 shrink-0 mt-0.5" />
+                <span>ELWA Junction, Monrovia, Liberia</span>
+              </li>
             </ul>
-          </div>
 
-          <div>
-            <h3 className="text-orange-500 font-bold text-sm uppercase tracking-wider mb-4">Our Office</h3>
-            <div className="flex items-start gap-3 text-slate-400 text-sm">
-              <FiMapPin className="text-orange-500 shrink-0 mt-0.5" />
-              <span>ELWA Junction, Monrovia, Liberia</span>
-            </div>
+            <h4 className="text-white font-semibold text-sm mb-3">Recent Posts</h4>
+            <ul className="space-y-3">
+              {recentPosts.map((post) => (
+                <li key={post.title}>
+                  <Link to={post.to} className="flex items-center gap-3 group">
+                    <img src={post.img} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-xs text-slate-400 group-hover:text-orange-400 transition-colors line-clamp-2 leading-snug">
+                        {post.title}
+                      </p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">{post.date}</p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

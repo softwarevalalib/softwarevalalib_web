@@ -8,6 +8,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import projectsData from "../data/projects.json";
 import Footer from "../components/Footer";
+import CTABanner from "../components/CTABanner";
 import Reveal from "../Animations/Reveal";
 
 function resolveProjectImage(fileName) {
@@ -77,11 +78,11 @@ const Projects = () => {
         </div>
         <div className="section-container section-padding relative z-10 text-center">
           <Reveal>
-            <p className="section-label text-orange-500">Portfolio</p>
+            <span className="eyebrow text-orange-400">Portfolio</span>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mt-3">
-              Our Systems & Solutions
+            <h1 className="section-heading text-white mt-3">
+              Our Systems &amp; <span className="gradient-brand">Solutions</span>
             </h1>
           </Reveal>
           <Reveal delay={0.2}>
@@ -93,7 +94,7 @@ const Projects = () => {
         </div>
       </section>
 
-      <section className="bg-white dark:bg-slate-950 py-8 sm:py-10 border-b border-slate-100 dark:border-slate-800 sticky top-16 sm:top-20 z-30 transition-colors duration-300">
+      <section className="bg-white dark:bg-slate-950 py-8 sm:py-10 border-b border-slate-100 dark:border-slate-800 sticky top-16 md:top-28 z-30 transition-colors duration-300">
         <div className="section-container">
           <Reveal>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
@@ -143,9 +144,9 @@ const Projects = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.4) }}
-                    className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 card-hover group flex flex-col"
+                    className="lift bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-700 group flex flex-col"
                   >
-                    <div className={`relative h-48 sm:h-52 bg-linear-to-br ${gradient} overflow-hidden`}>
+                    <div className={`relative h-48 sm:h-52 bg-gradient-to-br ${gradient} overflow-hidden`}>
                       {imageSrc ? (
                         <img
                           src={imageSrc}
@@ -178,7 +179,7 @@ const Projects = () => {
                         {project.technologies.map((tech) => (
                           <span
                             key={tech}
-                            className="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-lg text-xs font-medium"
+                            className="bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-300 px-2.5 py-1 rounded-lg text-xs font-medium"
                           >
                             {tech}
                           </span>
@@ -244,6 +245,7 @@ const Projects = () => {
         </div>
       </section>
 
+      <CTABanner />
       <Footer />
     </div>
   );

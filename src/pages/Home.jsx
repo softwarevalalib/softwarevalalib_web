@@ -1,18 +1,33 @@
-import React from "react";
-import Homeheader from "../components/Homeheader";
-import Homeabout from "../components/Homeabout";
+import Homehero from "../components/Homehero";
+import MarqueeTicker from "../components/MarqueeTicker";
+import HomeServices from "../components/HomeServices";
+import TrustStrip from "../components/TrustStrip";
+import HomeAbout from "../components/HomeAbout";
+import CaseStudies from "../components/CaseStudies";
+import Stats from "../components/Stats";
+import WhyChooseUs from "../components/WhyChooseUs";
+import Pricing from "../components/Pricing";
 import Clientfeedback from "../components/Clientfeedback";
-import Stack from "../components/Stack";
+import BlogNews from "../components/BlogNews";
+import CTABanner from "../components/CTABanner";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 
 function Home() {
   return (
     <>
-      <Homeheader />
-      <Homeabout />
+      <Homehero />
+      <MarqueeTicker />
+      <HomeServices />
+      <TrustStrip />
+      <HomeAbout />
+      <CaseStudies />
+      <Stats />
+      <WhyChooseUs />
+      <Pricing />
       <Clientfeedback />
-      <Stack />
+      <BlogNews />
+      <CTABanner />
       <Newsletter />
       <Footer />
     </>

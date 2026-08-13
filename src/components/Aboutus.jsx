@@ -7,12 +7,12 @@ function Aboutus() {
     <section className="section-padding bg-white dark:bg-slate-950 transition-colors duration-300">
       <div className="section-container">
         <Reveal>
-          <p className="section-label text-center">Our Story</p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2 className="section-title text-center mt-3 uppercase">
-            Software Vala Liberia
-          </h2>
+          <div className="max-w-2xl mx-auto text-center">
+            <span className="eyebrow">Our Story</span>
+            <h2 className="section-heading mt-3 uppercase">
+              Software Vala Liberia
+            </h2>
+          </div>
         </Reveal>
 
         <div className="mt-10 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -27,7 +27,7 @@ function Aboutus() {
               </p>
               <p>
                 Software Development, Web Development, Web Hosting, Cloud Services,
-                Network Infrastructure, Digital marketing, Training & Support,
+                Network Infrastructure, Digital marketing, Training &amp; Support,
                 Cybersecurity Services, CCTV Installation, Graphic Design and Solar
                 Energy.
               </p>
@@ -45,9 +45,9 @@ function Aboutus() {
               <img
                 src={GroupImage}
                 alt="Software Vala Liberia team"
-                className="w-full rounded-2xl shadow-xl object-cover aspect-4/3"
+                className="w-full rounded-3xl shadow-xl object-cover aspect-4/3"
               />
-              <div className="absolute -bottom-4 -right-4 w-full h-full rounded-2xl border-2 border-orange-500/30 -z-10" />
+              <div className="absolute -bottom-4 -right-4 w-full h-full rounded-3xl border-2 border-orange-500/30 -z-10" />
             </div>
           </Reveal>
         </div>

@@ -2,7 +2,7 @@ import Homehero from "../components/Homehero";
 import MarqueeTicker from "../components/MarqueeTicker";
 import HomeServices from "../components/HomeServices";
 import TrustStrip from "../components/TrustStrip";
-import HomeAbout from "../components/HomeAbout";
+import HomeAbout from "../components/Homeabout";
 import CaseStudies from "../components/CaseStudies";
 import Stats from "../components/Stats";
 import WhyChooseUs from "../components/WhyChooseUs";

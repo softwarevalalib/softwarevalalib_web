@@ -14,7 +14,7 @@ export default function Stats() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-slate-950 section-padding">
+    <section className="relative overflow-hidden bg-[#00274c] section-padding">
       <FloatingShapes variant="soft" />
       <div className="section-container relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">

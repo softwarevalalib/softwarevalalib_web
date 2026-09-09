@@ -4,7 +4,7 @@ import Reveal from "../Animations/Reveal";
 
 function Aboutus() {
   return (
-    <section className="section-padding bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="section-padding bg-white transition-colors duration-300">
       <div className="section-container">
         <Reveal>
           <div className="max-w-2xl mx-auto text-center">
@@ -17,7 +17,7 @@ function Aboutus() {
 
         <div className="mt-10 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <Reveal direction="left" delay={0.2}>
-            <div className="space-y-5 text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+            <div className="space-y-5 text-slate-600 text-base sm:text-lg leading-relaxed">
               <p>
                 Software Vala Liberia is a leading global software company with a
                 growing footprint in Liberia. Our platform offers over 20 software
@@ -47,13 +47,13 @@ function Aboutus() {
                 alt="Software Vala Liberia team"
                 className="w-full rounded-3xl shadow-xl object-cover aspect-4/3"
               />
-              <div className="absolute -bottom-4 -right-4 w-full h-full rounded-3xl border-2 border-orange-500/30 -z-10" />
+              <div className="absolute -bottom-4 -right-4 w-full h-full rounded-3xl border-2 border-[#c10020]/30 -z-10" />
             </div>
           </Reveal>
         </div>
 
         <Reveal delay={0.4}>
-          <p className="mt-10 text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto text-center">
+          <p className="mt-10 text-slate-600 text-base sm:text-lg leading-relaxed max-w-4xl mx-auto text-center">
             Based in Paynesville, Monrovia, Liberia, we understand the unique challenges
             and opportunities that come with operating in Liberia&apos;s growing digital
             economy. Our team combines international expertise with local knowledge to

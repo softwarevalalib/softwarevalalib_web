@@ -3,171 +3,266 @@
     "id": 1,
     "title": "School Management System",
     "description": "A complete school administration platform for enrollment, attendance, grading, timetables, fee collection, and parent-teacher communication.",
-    "image": "",
+    "image": "school-management.png",
     "link": "https://school-managment-system-liberia.fly.dev/",
-    "technologies": ["React", "Node.js", "MongoDB", "Express"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Express"
+    ],
     "category": "Education"
   },
   {
     "id": 2,
     "title": "University Management System",
     "description": "An end-to-end university management solution covering admissions, course registration, faculty management, examinations, and student records.",
-    "image": "",
+    "image": "university-management.svg",
     "link": "/contact",
-    "technologies": ["Laravel", "MySQL", "React", "REST API"],
+    "technologies": [
+      "Laravel",
+      "MySQL",
+      "React",
+      "REST API"
+    ],
     "category": "Education"
   },
   {
     "id": 3,
     "title": "Financial Management System",
     "description": "A robust financial management platform for budgeting, accounting, expense tracking, invoicing, and financial reporting across departments.",
-    "image": "",
+    "image": "financial-management.png",
     "link": "/contact",
-    "technologies": ["PHP", "MySQL", "JavaScript", "Chart.js"],
+    "technologies": [
+      "PHP",
+      "MySQL",
+      "JavaScript",
+      "Chart.js"
+    ],
     "category": "Finance & Banking"
   },
   {
     "id": 4,
     "title": "Loan and Savings System",
     "description": "A microfinance and savings management system with borrower onboarding, loan lifecycle tracking, repayments, and role-based access control.",
-    "image": "",
+    "image": "loan-savings.png",
     "link": "https://microfinance-laravel.fly.dev/",
-    "technologies": ["Laravel", "PHP", "MySQL", "Tailwind CSS"],
+    "technologies": [
+      "Laravel",
+      "PHP",
+      "MySQL",
+      "Tailwind CSS"
+    ],
     "category": "Finance & Banking"
   },
   {
     "id": 5,
     "title": "Hospital Management System",
     "description": "A comprehensive hospital management solution for patient records, appointments, billing, lab results, and departmental workflows.",
-    "image": "",
+    "image": "hospital-management.png",
     "link": "/contact",
-    "technologies": ["Vue.js", "Laravel", "MySQL", "Redis"],
+    "technologies": [
+      "Vue.js",
+      "Laravel",
+      "MySQL",
+      "Redis"
+    ],
     "category": "Healthcare"
   },
   {
     "id": 6,
     "title": "Clinic and Pharmacy Management System",
     "description": "A clinic and pharmacy management platform for patient visits, prescriptions, inventory, dispensing, and sales tracking.",
-    "image": "",
+    "image": "clinic-pharmacy.svg",
     "link": "/contact",
-    "technologies": ["React", "Node.js", "PostgreSQL", "Express"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "PostgreSQL",
+      "Express"
+    ],
     "category": "Healthcare"
   },
   {
     "id": 7,
     "title": "Inventory Management System",
     "description": "A smart inventory management system for stock tracking, purchase orders, supplier management, and real-time warehouse reporting.",
-    "image": "",
+    "image": "inventory-management.svg",
     "link": "/contact",
-    "technologies": ["React", "Laravel", "MySQL", "Barcode API"],
+    "technologies": [
+      "React",
+      "Laravel",
+      "MySQL",
+      "Barcode API"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 8,
     "title": "Ride Booking System (Taxi)",
     "description": "A ride-hailing and taxi booking platform with real-time driver tracking, fare estimation, trip history, and payment integration.",
-    "image": "",
+    "image": "ride-booking.png",
     "link": "/contact",
-    "technologies": ["React Native", "Node.js", "MongoDB", "Google Maps API"],
+    "technologies": [
+      "React Native",
+      "Node.js",
+      "MongoDB",
+      "Google Maps API"
+    ],
     "category": "Hospitality & Mobility"
   },
   {
     "id": 9,
     "title": "Hotel Management System",
     "description": "A full hotel management solution for reservations, room allocation, guest check-in/out, billing, and housekeeping coordination.",
-    "image": "",
+    "image": "hotel-management.png",
     "link": "/contact",
-    "technologies": ["React", "PHP", "MySQL", "Payment Gateway"],
+    "technologies": [
+      "React",
+      "PHP",
+      "MySQL",
+      "Payment Gateway"
+    ],
     "category": "Hospitality & Mobility"
   },
   {
     "id": 10,
     "title": "Church Management System",
     "description": "A church administration platform for member management, tithes and offerings, events, departments, and communication tools.",
-    "image": "",
+    "image": "church-management.svg",
     "link": "/contact",
-    "technologies": ["Laravel", "MySQL", "React", "SMS API"],
+    "technologies": [
+      "Laravel",
+      "MySQL",
+      "React",
+      "SMS API"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 11,
     "title": "Assets and Document Management System",
     "description": "A centralized system for tracking organizational assets, document storage, version control, and secure access management.",
-    "image": "",
+    "image": "assets-documents.svg",
     "link": "/contact",
-    "technologies": ["React", "Node.js", "AWS S3", "PostgreSQL"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "AWS S3",
+      "PostgreSQL"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 12,
     "title": "Ticketing System",
     "description": "A support and service ticketing platform for issue tracking, priority management, agent assignment, and resolution workflows.",
-    "image": "",
+    "image": "ticketing-system.svg",
     "link": "/contact",
-    "technologies": ["React", "Laravel", "MySQL", "WebSockets"],
+    "technologies": [
+      "React",
+      "Laravel",
+      "MySQL",
+      "WebSockets"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 13,
     "title": "SaaS Management System",
     "description": "A multi-tenant SaaS management platform for subscription billing, user provisioning, analytics, and tenant administration.",
-    "image": "",
+    "image": "saas-management.svg",
     "link": "/contact",
-    "technologies": ["Next.js", "Node.js", "PostgreSQL", "Stripe"],
+    "technologies": [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "Stripe"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 14,
     "title": "Office Management System",
     "description": "An office management solution for employee records, leave management, internal communications, and daily administrative tasks.",
-    "image": "",
+    "image": "office-management.svg",
     "link": "/contact",
-    "technologies": ["React", "Laravel", "MySQL", "Email API"],
+    "technologies": [
+      "React",
+      "Laravel",
+      "MySQL",
+      "Email API"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 15,
     "title": "E-commerce Application and Website",
     "description": "A full-featured e-commerce platform with product catalogs, shopping cart, secure checkout, order tracking, and admin dashboard.",
-    "image": "",
+    "image": "ecommerce.png",
     "link": "/contact",
-    "technologies": ["Next.js", "Stripe", "PostgreSQL", "Docker"],
+    "technologies": [
+      "Next.js",
+      "Stripe",
+      "PostgreSQL",
+      "Docker"
+    ],
     "category": "E-commerce & Retail"
   },
   {
     "id": 16,
     "title": "POS System",
     "description": "A point-of-sale system for retail businesses with sales processing, receipt printing, inventory sync, and daily sales reporting.",
-    "image": "",
+    "image": "pos-system.png",
     "link": "/contact",
-    "technologies": ["React", "Node.js", "SQLite", "Thermal Printer API"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "SQLite",
+      "Thermal Printer API"
+    ],
     "category": "E-commerce & Retail"
   },
   {
     "id": 17,
     "title": "Verification System",
     "description": "A secure verification platform for identity validation, document authentication, QR code verification, and audit trails.",
-    "image": "",
+    "image": "verification-system.svg",
     "link": "/contact",
-    "technologies": ["React", "Node.js", "MongoDB", "QR API"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "QR API"
+    ],
     "category": "Business Operations"
   },
   {
     "id": 18,
     "title": "QuickBooks Integration & Setup",
     "description": "Professional QuickBooks setup, configuration, and integration services for seamless accounting, invoicing, and financial data sync.",
-    "image": "",
+    "image": "quickbooks-integration.svg",
     "link": "/contact",
-    "technologies": ["QuickBooks API", "OAuth 2.0", "Node.js", "REST API"],
+    "technologies": [
+      "QuickBooks API",
+      "OAuth 2.0",
+      "Node.js",
+      "REST API"
+    ],
     "category": "Financial Integration"
   },
   {
     "id": 19,
     "title": "ZohoBooks Integration & Setup",
     "description": "End-to-end ZohoBooks integration and setup for automated bookkeeping, expense management, and financial reporting workflows.",
-    "image": "",
+    "image": "zohobooks-integration.svg",
     "link": "/contact",
-    "technologies": ["Zoho Books API", "OAuth 2.0", "Node.js", "Webhooks"],
+    "technologies": [
+      "Zoho Books API",
+      "OAuth 2.0",
+      "Node.js",
+      "Webhooks"
+    ],
     "category": "Financial Integration"
   }
 ]

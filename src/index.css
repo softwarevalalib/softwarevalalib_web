@@ -1,17 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-display: "Sora", "Inter", system-ui, sans-serif;
-  --color-brand: #f97316;
-  --color-brand-dark: #ea580c;
-  --color-brand-soft: #fb923c;
-  --color-accent: #06b6d4;
-  --color-surface: #020617;
-  --color-surface-light: #0f172a;
+  --color-brand: #c10020;
+  --color-brand-dark: #a0001a;
+  --color-navy: #00274c;
+  --color-navy-dark: #001a33;
+  --color-navy-light: #0a3a66;
+  --color-accent: #c10020;
+  --color-surface: #00274c;
+  --color-surface-light: #f8fafc;
 }
 
 *,
@@ -23,7 +23,8 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #f97316 transparent;
+  scrollbar-color: #c10020 transparent;
+  color-scheme: light;
 }
 
 body {
@@ -33,46 +34,75 @@ body {
   overflow-x: hidden;
   background-color: #ffffff;
   color: #0f172a;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-html.dark body {
-  background-color: #020617;
-  color: #f1f5f9;
+img {
+  max-width: 100%;
+  height: auto;
 }
 
-/* ── Layout utilities ── */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #c10020;
+  outline-offset: 2px;
+}
+
 .section-container {
-  width: min(90%, 1200px);
+  width: min(92%, 1200px);
   margin-inline: auto;
 }
 
 .section-padding {
-  padding-block: clamp(3rem, 8vw, 6rem);
+  padding-block: clamp(3rem, 7vw, 5.5rem);
 }
 
-/* ── Buttons ── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.025em;
-  background-color: #f97316;
+  background-color: #c10020;
   color: white;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  background-color: #ea580c;
+  background-color: #a0001a;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.35);
+  box-shadow: 0 8px 25px rgba(193, 0, 32, 0.35);
+}
+
+.btn-navy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  background-color: #00274c;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-navy:hover {
+  background-color: #001a33;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 39, 76, 0.35);
 }
 
 .btn-secondary {
@@ -80,11 +110,11 @@ html.dark body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
   font-size: 0.875rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   color: white;
   background: transparent;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -93,55 +123,102 @@ html.dark body {
 
 .btn-secondary:hover {
   background: white;
-  color: #0f172a;
+  color: #00274c;
   border-color: white;
   transform: translateY(-2px);
 }
 
-html.dark .btn-secondary {
-  border-color: rgba(255, 255, 255, 0.3);
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 2px solid #00274c;
+  color: #00274c;
+  background: transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background: #00274c;
   color: white;
+  transform: translateY(-2px);
 }
 
-html.dark .btn-secondary:hover {
-  background: white;
-  color: #0f172a;
-}
-
-/* ── Section headings ── */
-.section-label {
-  color: #f97316;
+.section-label,
+.eyebrow {
+  color: #c10020;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  letter-spacing: 0.12em;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
 }
 
-.section-title {
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: #c10020;
+  border-radius: 9999px;
+}
+
+.section-title,
+.section-heading {
+  font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-size: clamp(1.75rem, 4.5vw, 3rem);
   line-height: 1.15;
-  color: #0f172a;
+  letter-spacing: -0.02em;
+  color: #00274c;
 }
 
-html.dark .section-title {
-  color: #f8fafc;
+/* Allow Tailwind text-* utilities to win on dark band headings */
+.section-heading.text-white,
+.section-title.text-white {
+  color: #ffffff;
 }
 
-/* ── Card hover ── */
-.card-hover {
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+.section-heading .accent,
+.section-title .accent {
+  color: #c10020;
 }
 
-.card-hover:hover {
+.font-display {
+  font-family: var(--font-display);
+}
+
+.card-hover,
+.lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.card-hover:hover,
+.lift:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 39, 76, 0.12);
 }
 
-/* ── Testimonial slider ── */
-.slider-track {
+.slider-track,
+.carousel-track {
+  display: flex;
   width: max-content;
   animation: scrollLeft 80s linear infinite;
+}
+
+.carousel-track {
+  gap: 1.5rem;
+  animation-duration: 60s;
 }
 
 @keyframes scrollLeft {
@@ -149,11 +226,11 @@ html.dark .section-title {
   to { transform: translateX(-50%); }
 }
 
-.slider-track:hover {
+.slider-track:hover,
+.carousel-track:hover {
   animation-play-state: paused;
 }
 
-/* ── Tech marquee ── */
 .marquee {
   display: flex;
   width: max-content;
@@ -169,7 +246,21 @@ html.dark .section-title {
   to { transform: translateX(-50%); }
 }
 
-/* ── About hero word slider ── */
+.marquee-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 28s linear infinite;
+}
+
+.marquee-ticker:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .hero-text {
   display: flex;
   flex-wrap: wrap;
@@ -192,7 +283,7 @@ html.dark .section-title {
   line-height: clamp(48px, 10vw, 80px);
   animation: slideWords 10s infinite;
   text-align: center;
-  color: #f97316;
+  color: #c10020;
 }
 
 @keyframes slideWords {
@@ -204,7 +295,6 @@ html.dark .section-title {
   100% { transform: translateY(0); }
 }
 
-/* ── WhatsApp pulse ── */
 @keyframes whatsapp-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
   50% { box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
@@ -214,126 +304,28 @@ html.dark .section-title {
   animation: whatsapp-pulse 2.5s ease-in-out infinite;
 }
 
-/* ── Gradient text ── */
-.gradient-text {
-  background: linear-gradient(135deg, #f97316, #06b6d4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Scrollbar ── */
-@media (max-width: 1023px) {
-  html { scrollbar-width: none; }
-  html::-webkit-scrollbar { display: none; width: 0; height: 0; }
-}
-
-@media (min-width: 1024px) {
-  html::-webkit-scrollbar { width: 8px; height: 8px; }
-  html::-webkit-scrollbar-track { background: transparent; }
-  html::-webkit-scrollbar-thumb {
-    background-color: #f97316;
-    border-radius: 9999px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-  html::-webkit-scrollbar-thumb:hover { background-color: #ea580c; }
-}
-
-/* ── Reduced motion ── */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .slider-track, .marquee, .word-slider span, .whatsapp-float, .marquee-ticker {
-    animation: none !important;
-  }
-  .card-hover:hover { transform: none; }
-}
-
-/* ════════════════════════════════════════════════════════════
-   DIGTEK-STYLE DESIGN SYSTEM ADDITIONS
-   ════════════════════════════════════════════════════════════ */
-
-/* ── Display font for big headings ── */
-.font-display {
-  font-family: var(--font-display);
-}
-
-/* ── Eyebrow / section label (pill style) ── */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-brand);
-}
-.eyebrow::before {
-  content: "";
-  width: 28px;
-  height: 2px;
-  background: var(--color-brand);
-  border-radius: 9999px;
-}
-
-/* ── Section heading ── */
-.section-heading {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.75rem, 4.5vw, 3rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: #0f172a;
-}
-html.dark .section-heading {
-  color: #f8fafc;
-}
-.section-heading .accent {
-  color: var(--color-brand);
-}
-
-/* ── Glass card ── */
-.glass {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-html.dark .glass {
-  background: rgba(255, 255, 255, 0.04);
-}
-.glass-light {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-/* ── Gradient text ── */
+.gradient-text,
 .gradient-brand {
-  background: linear-gradient(135deg, #f97316, #fb923c 40%, #06b6d4);
+  background: linear-gradient(135deg, #c10020, #e11d48 45%, #ff6b81);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ── Marquee ticker (digtek "THE BEST SOLUTION" strip) ── */
-.marquee-ticker {
-  display: flex;
-  width: max-content;
-  animation: ticker-scroll 28s linear infinite;
-  will-change: transform;
-}
-.marquee-ticker:hover {
-  animation-play-state: paused;
-}
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-/* ── Floating shapes (parallax decorative blobs) ── */
+.glass-light {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 39, 76, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
 .float-shape {
   position: absolute;
   border-radius: 9999px;
@@ -341,105 +333,7 @@ html.dark .glass {
   pointer-events: none;
   will-change: transform;
 }
-@keyframes float-soft {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-22px) translateX(10px); }
-}
-@keyframes float-soft-rev {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(18px) translateX(-12px); }
-}
 
-/* ── Star rating ── */
-.star {
-  color: #fbbf24;
-  filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
-}
-
-/* ── Case study / testimonial carousel track ── */
-.carousel-track {
-  display: flex;
-  width: max-content;
-  gap: 1.5rem;
-  animation: scrollLeft 60s linear infinite;
-}
-.carousel-track:hover {
-  animation-play-state: paused;
-}
-
-/* ── Pricing toggle pill ── */
-.toggle-pill {
-  position: relative;
-  display: inline-flex;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 9999px;
-  padding: 4px;
-}
-html:not(.dark) .toggle-pill {
-  background: rgba(15,23,42,0.06);
-  border-color: rgba(15,23,42,0.08);
-}
-.toggle-pill button {
-  position: relative;
-  z-index: 1;
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: #cbd5e1;
-  transition: color 0.3s ease;
-}
-html:not(.dark) .toggle-pill button {
-  color: #64748b;
-}
-.toggle-pill button.active {
-  color: #fff;
-}
-html:not(.dark) .toggle-pill button.active {
-  color: #0f172a;
-}
-.toggle-pill .slider-thumb {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  width: calc(50% - 4px);
-  border-radius: 9999px;
-  background: #f97316;
-  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  box-shadow: 0 8px 20px rgba(249,115,22,0.4);
-}
-.toggle-pill .slider-thumb.right {
-  transform: translateX(100%);
-}
-
-/* ── Skill / progress bar fill animation ── */
-@keyframes fill-bar {
-  from { width: 0; }
-}
-
-/* ── Back to top button ── */
-.back-to-top {
-  position: fixed;
-  bottom: 5.5rem;
-  right: 1.25rem;
-  z-index: 45;
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.9rem;
-  background: #f97316;
-  color: #fff;
-  box-shadow: 0 10px 25px rgba(249,115,22,0.4);
-  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
-}
-.back-to-top:hover {
-  transform: translateY(-3px);
-  background: #ea580c;
-}
-
-/* ── Smooth page background ambient orbs ── */
 .ambient {
   position: absolute;
   border-radius: 9999px;
@@ -447,32 +341,20 @@ html:not(.dark) .toggle-pill button.active {
   pointer-events: none;
 }
 
-/* ── Nav mega menu fade ── */
 .mega-panel {
   transform-origin: top center;
   animation: mega-in 0.25s ease both;
 }
+
 @keyframes mega-in {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ── Hover lift for interactive cards ── */
-.lift {
-  transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease, border-color 0.4s ease;
-}
-.lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 50px rgba(2,6,23,0.18);
-}
-html.dark .lift:hover {
-  box-shadow: 0 24px 50px rgba(0,0,0,0.5);
-}
-
-/* ── Underline link grow ── */
 .link-underline {
   position: relative;
 }
+
 .link-underline::after {
   content: "";
   position: absolute;
@@ -483,12 +365,100 @@ html.dark .lift:hover {
   background: currentColor;
   transition: width 0.3s ease;
 }
+
 .link-underline:hover::after {
   width: 100%;
 }
 
-/* ── Ping ring for badges ── */
-@keyframes ping-ring {
-  0% { transform: scale(0.9); opacity: 0.7; }
-  80%, 100% { transform: scale(1.8); opacity: 0; }
+.back-to-top {
+  position: fixed;
+  bottom: 5.5rem;
+  right: 1.25rem;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  background: #c10020;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(193, 0, 32, 0.4);
+  transition: transform 0.3s ease, opacity 0.3s ease, background 0.3s ease;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  background: #a0001a;
+}
+
+.star {
+  color: #fbbf24;
+}
+
+.toggle-pill {
+  position: relative;
+  display: inline-flex;
+  background: rgba(0, 39, 76, 0.06);
+  border: 1px solid rgba(0, 39, 76, 0.1);
+  border-radius: 9999px;
+  padding: 4px;
+}
+.toggle-pill button {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #64748b;
+  transition: color 0.3s ease;
+}
+.toggle-pill button.active {
+  color: #fff;
+}
+.toggle-pill .slider-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: calc(50% - 4px);
+  border-radius: 9999px;
+  background: #c10020;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 20px rgba(193, 0, 32, 0.35);
+}
+.toggle-pill .slider-thumb.right {
+  transform: translateX(100%);
+}
+
+@media (max-width: 1023px) {
+  html { scrollbar-width: none; }
+  html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+}
+
+@media (min-width: 1024px) {
+  html::-webkit-scrollbar { width: 8px; height: 8px; }
+  html::-webkit-scrollbar-track { background: transparent; }
+  html::-webkit-scrollbar-thumb {
+    background-color: #c10020;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  html::-webkit-scrollbar-thumb:hover { background-color: #a0001a; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .slider-track,
+  .marquee,
+  .marquee-ticker,
+  .carousel-track,
+  .word-slider span,
+  .whatsapp-float {
+    animation: none !important;
+  }
+  .card-hover:hover,
+  .lift:hover {
+    transform: none;
+  }
 }

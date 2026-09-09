@@ -88,19 +88,19 @@ function Contact() {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition-all duration-300 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30 placeholder:text-slate-500";
+    "w-full rounded-xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition-all duration-300 focus:border-[#c10020] focus:ring-1 focus:ring-[#c10020]/30 placeholder:text-slate-500";
 
   return (
-    <section className="relative min-h-screen bg-slate-950 text-white overflow-hidden">
+    <section className="relative min-h-screen bg-[#00274c] text-white overflow-hidden">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-20 left-10 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute bottom-10 right-10 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
+        <div className="absolute bottom-10 right-10 h-80 w-80 rounded-full bg-[#c10020]/10 blur-3xl" />
       </div>
 
       <div className="section-container section-padding relative z-10">
         <Reveal>
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <span className="eyebrow text-orange-400">Contact Us</span>
+            <span className="eyebrow text-[#e11d48]">Contact Us</span>
             <h1 className="section-heading text-white mt-3">
               Let&apos;s Build Something <span className="gradient-brand">Great Together</span>
             </h1>
@@ -128,14 +128,14 @@ function Contact() {
                   { icon: MapPin, title: "Location", value: "ELWA Junction, Monrovia, Liberia" },
                   { icon: Briefcase, title: "Services We Offer", value: "Web development, software development, mobile apps, SEO, database management, CCTV, solar installation, and more." },
                 ].map((item) => (
-                  <div key={item.title} className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition-colors duration-300 hover:border-orange-500/30">
-                    <div className="rounded-lg bg-orange-500/10 p-2.5 text-orange-400 shrink-0">
+                  <div key={item.title} className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition-colors duration-300 hover:border-[#c10020]/30">
+                    <div className="rounded-lg bg-[#c10020]/10 p-2.5 text-[#e11d48] shrink-0">
                       <item.icon size={18} />
                     </div>
                     <div>
                       <h3 className="font-medium text-sm">{item.title}</h3>
                       {item.href ? (
-                        <a href={item.href} className="mt-1 text-sm text-slate-300 hover:text-orange-400 transition-colors break-all">
+                        <a href={item.href} className="mt-1 text-sm text-slate-300 hover:text-[#e11d48] transition-colors break-all">
                           {item.value}
                         </a>
                       ) : (

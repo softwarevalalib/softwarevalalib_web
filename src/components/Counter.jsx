@@ -8,13 +8,13 @@ export default function Counter({ end, suffix = "", prefix = "", decimals = 0, l
 
   return (
     <div ref={ref} className="flex flex-col items-center text-center">
-      <span className="font-display text-4xl sm:text-5xl font-extrabold gradient-brand tabular-nums">
+      <span className="font-display text-4xl sm:text-5xl font-extrabold text-[#ff6b81] tabular-nums">
         {prefix}
         {display}
         {suffix}
       </span>
       {label && (
-        <span className="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">{label}</span>
+        <span className="mt-2 text-sm font-medium text-white/75">{label}</span>
       )}
     </div>
   );

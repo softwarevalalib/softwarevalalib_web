@@ -6,7 +6,7 @@ function Clientfeedback() {
   const doubled = [...testimonials, ...testimonials];
 
   return (
-    <section className="section-padding bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
+    <section className="section-padding bg-white overflow-hidden transition-colors duration-300">
       <div className="section-container mb-10">
         <Reveal>
           <div className="max-w-2xl mx-auto text-center">
@@ -16,7 +16,7 @@ function Clientfeedback() {
             </h2>
             <div className="mt-3 flex items-center justify-center gap-2">
               <StarRating count={5} />
-              <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">15k+ reviews</span>
+              <span className="text-sm font-semibold text-slate-500 ">15k+ reviews</span>
             </div>
           </div>
         </Reveal>
@@ -27,24 +27,24 @@ function Clientfeedback() {
           {doubled.map((item, index) => (
             <article
               key={`${item.id}-${index}`}
-              className="lift shrink-0 w-[300px] sm:w-[360px] md:w-[400px] bg-white dark:bg-slate-800 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700 p-6"
+              className="lift shrink-0 w-[300px] sm:w-[360px] md:w-[400px] bg-white rounded-2xl shadow-md border border-slate-100 p-6"
             >
               <StarRating count={5} className="mb-3" />
-              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-4">
+              <p className="text-slate-600 text-sm leading-relaxed mb-4">
                 &ldquo;{item.feedback}&rdquo;
               </p>
               <div className="flex items-center gap-4">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-12 h-12 rounded-full object-cover ring-2 ring-orange-500/20"
+                  className="w-12 h-12 rounded-full object-cover ring-2 ring-[#c10020]/20"
                 />
                 <div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm">{item.name}</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">{item.company}</p>
+                  <h3 className="font-bold text-slate-900 text-sm">{item.name}</h3>
+                  <p className="text-xs text-slate-500 ">{item.company}</p>
                 </div>
               </div>
-              <p className="text-xs text-cyan-600 dark:text-cyan-400 font-medium mt-3">{item.location}</p>
+              <p className="text-xs text-cyan-600 font-medium mt-3">{item.location}</p>
             </article>
           ))}
         </div>

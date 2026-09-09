@@ -8,19 +8,19 @@ import FloatingShapes from "./FloatingShapes";
  */
 export default function CTABanner() {
   return (
-    <section className="relative overflow-hidden bg-slate-950 section-padding">
+    <section className="relative overflow-hidden bg-[#00274c] section-padding">
       <FloatingShapes variant="soft" />
       <div className="section-container relative z-10">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-orange-500/15 via-slate-900 to-cyan-500/10 px-8 py-14 sm:px-16 sm:py-20 text-center">
-            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-orange-500/30 blur-3xl" />
-            <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-cyan-500/30 blur-3xl" />
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#c10020]/20 via-[#00274c] to-[#001a33] px-8 py-14 sm:px-16 sm:py-20 text-center">
+            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-[#c10020]/30 blur-3xl" />
+            <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-white/10 blur-3xl" />
             <div className="relative z-10 max-w-2xl mx-auto">
-              <span className="eyebrow text-orange-400">Let&apos;s Connect</span>
+              <span className="eyebrow text-[#e11d48]">Let&apos;s Connect</span>
               <h2 className="section-heading text-white mt-3">
                 Stay Connected With Cutting Edge <span className="gradient-brand">IT</span>
               </h2>
-              <p className="mt-4 text-slate-300 text-base sm:text-lg">
+              <p className="mt-4 text-white/80 text-base sm:text-lg">
                 Tell us about your project and our specialists will help you choose the
                 right solution — fast, affordable, and built to last.
               </p>

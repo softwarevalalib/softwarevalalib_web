@@ -28,7 +28,7 @@ export default function MarqueeTicker({
   );
 
   return (
-    <div className="relative overflow-hidden bg-slate-950 py-4 border-y border-white/5">
+    <div className="relative overflow-hidden bg-[#00274c] py-4 border-y border-white/10">
       <div className="marquee-ticker">
         <Row />
         <Row />

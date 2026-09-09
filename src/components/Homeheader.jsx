@@ -7,13 +7,13 @@ export default function Homeheader() {
     <section className="relative bg-slate-950 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 right-10 w-72 h-72 bg-cyan-500/15 blur-[100px] rounded-full" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-orange-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-[#c10020]/10 blur-[120px] rounded-full" />
       </div>
 
       <div className="section-container section-padding relative z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
         <div className="text-white flex-1 text-center lg:text-left">
           <Reveal delay={0.1}>
-            <span className="inline-block text-orange-500 uppercase bg-white/10 backdrop-blur-sm rounded-full font-semibold px-4 py-1.5 text-xs sm:text-sm tracking-wider mb-4">
+            <span className="inline-block text-[#c10020] uppercase bg-white/10 backdrop-blur-sm rounded-full font-semibold px-4 py-1.5 text-xs sm:text-sm tracking-wider mb-4">
               The Name of Trust
             </span>
           </Reveal>
@@ -21,7 +21,7 @@ export default function Homeheader() {
           <Reveal delay={0.2}>
             <h1 className="uppercase text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
               Software Vala{" "}
-              <span className="block text-orange-500 text-4xl sm:text-6xl lg:text-7xl xl:text-8xl mt-1">
+              <span className="block text-[#c10020] text-4xl sm:text-6xl lg:text-7xl xl:text-8xl mt-1">
                 Liberia
               </span>
             </h1>

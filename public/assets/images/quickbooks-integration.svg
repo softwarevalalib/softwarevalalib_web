@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00274c"/>
+      <stop offset="55%" stop-color="#0a3a66"/>
+      <stop offset="100%" stop-color="#001a33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c10020"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg)"/>
+  <circle cx="980" cy="120" r="180" fill="#c10020" opacity="0.12"/>
+  <circle cx="140" cy="640" r="220" fill="#ffffff" opacity="0.04"/>
+  <rect x="80" y="70" width="180" height="8" rx="4" fill="url(#accent)"/>
+  <text x="80" y="130" fill="#ffffff" opacity="0.7" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="600" letter-spacing="4">INTEGRATION</text>
+  <text x="80" y="300" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">QuickBooks Integration</text>
+  <text x="80" y="420" fill="#ffffff" opacity="0.65" font-family="Arial, Helvetica, sans-serif" font-size="22">Software Vala Liberia</text>
+  <text x="80" y="455" fill="#c10020" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="3">THE NAME OF TRUST</text>
+  <g transform="translate(980 520) scale(4.2)" fill="#ffffff" opacity="0.18">
+    <path d="M8 7h3v3H8V7zm5 0h3v3h-3V7zM8 14h3v3H8v-3zm5 0h3v3h-3v-3zM11 10h2v4h-2v-4z"/>
+  </g>
+  <rect x="80" y="640" width="220" height="44" rx="12" fill="#c10020"/>
+  <text x="190" y="668" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700">SVL SYSTEM</text>
+</svg>

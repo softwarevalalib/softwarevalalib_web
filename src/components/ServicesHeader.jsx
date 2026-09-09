@@ -7,10 +7,10 @@ import FloatingShapes from "./FloatingShapes";
 
 export default function ServicesHeader() {
   return (
-    <section className="relative bg-slate-950 overflow-hidden">
+    <section className="relative bg-[#00274c] overflow-hidden">
       <FloatingShapes variant="hero" />
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 right-0 w-80 h-80 bg-orange-500/10 blur-[100px] rounded-full" />
+        <div className="absolute top-20 right-0 w-80 h-80 bg-[#c10020]/20 blur-[100px] rounded-full" />
       </div>
 
       <div className="section-container section-padding relative z-10">
@@ -42,7 +42,7 @@ export default function ServicesHeader() {
         </div>
 
         <Reveal>
-          <span className="eyebrow text-orange-400">What We Offer</span>
+          <span className="eyebrow text-[#ff6b81]">What We Offer</span>
         </Reveal>
         <Reveal delay={0.1}>
           <h1 className="section-heading text-white text-center mt-3">
@@ -50,7 +50,7 @@ export default function ServicesHeader() {
           </h1>
         </Reveal>
         <Reveal delay={0.15}>
-          <p className="text-slate-300 text-center mt-4 mb-2 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-white/80 text-center mt-4 mb-2 text-sm sm:text-base md:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed">
             Comprehensive technology solutions designed to help your business thrive
             in Liberia&apos;s digital economy
           </p>

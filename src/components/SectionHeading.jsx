@@ -19,7 +19,7 @@ export default function SectionHeading({
     <Reveal>
       <div className={`max-w-2xl ${alignment} ${className}`}>
         {eyebrow && (
-          <span className={`eyebrow ${dark ? "text-orange-400" : ""}`}>
+          <span className={`eyebrow ${dark ? "text-[#e11d48]" : ""}`}>
             {eyebrow}
           </span>
         )}
@@ -29,7 +29,7 @@ export default function SectionHeading({
         {subtitle && (
           <p
             className={`mt-4 text-base sm:text-lg leading-relaxed ${
-              dark ? "text-slate-300" : "text-slate-600 dark:text-slate-300"
+              dark ? "text-slate-300" : "text-slate-600 "
             }`}
           >
             {subtitle}

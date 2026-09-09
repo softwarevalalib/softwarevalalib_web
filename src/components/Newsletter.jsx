@@ -41,15 +41,15 @@ function Newsletter() {
   };
 
   return (
-    <section className="bg-slate-950 text-white section-padding">
+    <section className="bg-[#00274c] text-white section-padding">
       <div className="section-container">
         <Reveal>
           <form
             onSubmit={handleSubmit}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto"
           >
-            <h3 className="text-center sm:text-left text-sm sm:text-base font-semibold tracking-wider whitespace-nowrap">
-              Subscribe to our <span className="text-orange-400">Newsletter</span>
+            <h3 className="text-center sm:text-left text-sm sm:text-base font-semibold tracking-wider whitespace-nowrap text-white">
+              Subscribe to our <span className="text-[#ff6b81]">Newsletter</span>
             </h3>
             <input
               type="email"
@@ -58,7 +58,7 @@ function Newsletter() {
                 setEmail(e.target.value);
                 if (status.message) setStatus({ type: "", message: "" });
               }}
-              className="w-full sm:flex-1 border border-slate-700 bg-slate-900 rounded-xl h-11 px-4 text-white placeholder:text-slate-500 outline-none focus:border-orange-500 transition-colors duration-300 disabled:opacity-60"
+              className="w-full sm:flex-1 border border-white/20 bg-white/10 rounded-xl h-11 px-4 text-white placeholder:text-white/50 outline-none focus:border-[#c10020] transition-colors duration-300 disabled:opacity-60"
               placeholder="Enter your email"
               required
               disabled={isSubmitting}

@@ -4,22 +4,22 @@ import FloatingShapes from "./FloatingShapes";
 
 export default function Aboutheader() {
   return (
-    <section className="relative bg-slate-950 overflow-hidden">
+    <section className="relative bg-[#00274c] overflow-hidden">
       <FloatingShapes variant="hero" />
       <div className="section-container section-padding relative z-10 text-center">
         <Reveal>
-          <span className="eyebrow text-orange-400">About Company</span>
+          <span className="eyebrow text-[#ff6b81]">About Company</span>
         </Reveal>
 
         <Reveal delay={0.1}>
           <h1 className="section-heading text-white mt-4">
             We Build Your{" "}
-            <span className="block text-orange-500 mt-1">Digital Future</span>
+            <span className="block text-[#c10020] mt-1">Digital Future</span>
           </h1>
         </Reveal>
 
         <Reveal delay={0.2}>
-          <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mt-6 leading-relaxed">
+          <p className="text-white/80 text-sm sm:text-base md:text-lg max-w-3xl mx-auto mt-6 leading-relaxed">
             We build innovative software solutions that help businesses scale,
             automate processes, and deliver exceptional digital experiences.
           </p>

@@ -7,11 +7,11 @@ import { Outlet } from "react-router-dom";
 
 function Mainlayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen flex flex-col bg-white text-[#0f172a]">
       <Topbar />
       <Navbar />
       <ScrollToTop />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <Outlet />
       </main>
       <WhatsAppFloating />

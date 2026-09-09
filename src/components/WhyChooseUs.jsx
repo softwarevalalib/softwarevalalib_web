@@ -15,7 +15,7 @@ const REASONS = [
  */
 export default function WhyChooseUs() {
   return (
-    <section className="section-padding bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="section-padding bg-white transition-colors duration-300">
       <div className="section-container">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <Reveal direction="left">
@@ -25,8 +25,8 @@ export default function WhyChooseUs() {
                 alt="Software Vala Liberia team"
                 className="w-full rounded-3xl shadow-xl object-cover aspect-[4/3]"
               />
-              <div className="absolute -bottom-5 -left-5 w-full h-full rounded-3xl border-2 border-orange-500/30 -z-10" />
-              <div className="absolute -top-5 -right-5 w-24 h-24 rounded-2xl bg-orange-500/15 blur-2xl" />
+              <div className="absolute -bottom-5 -left-5 w-full h-full rounded-3xl border-2 border-[#c10020]/30 -z-10" />
+              <div className="absolute -top-5 -right-5 w-24 h-24 rounded-2xl bg-[#c10020]/15 blur-2xl" />
             </div>
           </Reveal>
 
@@ -35,7 +35,7 @@ export default function WhyChooseUs() {
             <h2 className="section-heading mt-3">
               Let&apos;s make something <span className="accent">awesome</span> together
             </h2>
-            <p className="mt-4 text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+            <p className="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed">
               We combine international engineering standards with deep local knowledge
               to deliver software, websites, and systems that truly work for your
               business in Liberia and beyond.
@@ -45,10 +45,10 @@ export default function WhyChooseUs() {
               {REASONS.map((r) => (
                 <li
                   key={r}
-                  className="flex items-center gap-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 px-4 py-3"
+                  className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3"
                 >
-                  <FiCheckCircle className="text-orange-500 shrink-0" size={20} />
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                  <FiCheckCircle className="text-[#c10020] shrink-0" size={20} />
+                  <span className="text-sm font-medium text-slate-700 ">
                     {r}
                   </span>
                 </li>

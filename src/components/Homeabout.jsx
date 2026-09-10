@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Reveal from "../Animations/Reveal";
-import Software from "../images/Software.png";
+import Logo from "../images/logo.jpg";
 
 const SKILLS = [
   { label: "Web & Software Development", value: 95 },
@@ -59,9 +59,9 @@ export default function HomeAbout() {
           <Reveal direction="right" delay={0.1}>
             <div className="relative">
               <img
-                src={Software}
-                alt="Software Vala Liberia solutions"
-                className="w-full rounded-3xl shadow-xl object-cover"
+                src={Logo}
+                alt="Software Vala Liberia logo"
+                className="w-full rounded-3xl shadow-xl object-contain bg-white p-6 sm:p-10"
               />
               <div className="absolute -bottom-5 -right-5 w-24 h-24 rounded-2xl bg-cyan-500/20 blur-2xl" />
               <div className="absolute inset-0 rounded-3xl ring-1 ring-white/10" />

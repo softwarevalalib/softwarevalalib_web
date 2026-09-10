@@ -35,8 +35,8 @@ const Teamcard = [
     id: 4,
     img: Stephen,
     Name: "Stephen S. Kettor",
-    Position: "Member of the Electrical Department",
-    Biography: "Member of the Electrical Department at Software Vala Liberia.",
+    Position: "Office Assistant/Maintenance",
+    Biography: "Office Assistant/Maintenance at Software Vala Liberia.",
     tier: "team",
   },
 ];

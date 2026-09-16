@@ -7,9 +7,9 @@ import FloatingShapes from "./FloatingShapes";
  */
 export default function Stats() {
   const stats = [
-    { end: 500, suffix: "+", label: "Total Projects Delivered" },
-    { end: 300, suffix: "M+", label: "Investment Generated" },
-    { end: 1000, suffix: "+", label: "Brands That Trust Us" },
+    { end: 150, suffix: "+", label: "Total Projects Completed & Delivered" },
+    { end: 100000, suffix: "+", label: "Investment To Be Generated" },
+    { end: 200, suffix: "+", label: "Brands That Trust Us" },
     { end: 98, suffix: "%", label: "Client Satisfaction" },
   ];
 

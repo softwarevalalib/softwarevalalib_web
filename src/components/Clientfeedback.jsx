@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
-import testimonials from "../data/testimonials";
 import Reveal from "../Animations/Reveal";
 import StarRating from "./StarRating";
 import { fetchReviews, submitReview } from "../utils/feedbackApi";
@@ -76,7 +75,6 @@ function Clientfeedback() {
       const reviews = await fetchReviews();
       setLiveReviews(reviews);
     } catch {
-      // Keep showing static testimonials if the API is unavailable
       if (!silent) setLiveReviews([]);
     } finally {
       if (!silent) setLoading(false);
@@ -89,16 +87,15 @@ function Clientfeedback() {
     return () => clearInterval(timer);
   }, []);
 
-  const displayItems = useMemo(() => {
-    if (liveReviews.length > 0) return liveReviews;
-    return testimonials;
-  }, [liveReviews]);
-
-  const doubled = useMemo(() => [...displayItems, ...displayItems], [displayItems]);
+  const displayItems = liveReviews;
+  const doubled = useMemo(
+    () => (displayItems.length > 1 ? [...displayItems, ...displayItems] : displayItems),
+    [displayItems]
+  );
   const reviewCountLabel =
     liveReviews.length > 0
-      ? `${liveReviews.length}+ live review${liveReviews.length === 1 ? "" : "s"}`
-      : "Trusted client reviews";
+      ? `${liveReviews.length} live review${liveReviews.length === 1 ? "" : "s"}`
+      : "Be the first to leave a review";
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -165,11 +162,19 @@ function Clientfeedback() {
       </div>
 
       <div className="overflow-hidden" aria-live="polite">
-        <div className="carousel-track">
-          {doubled.map((item, index) => (
-            <ReviewCard key={`${item.id}-${index}`} item={item} />
-          ))}
-        </div>
+        {loading && displayItems.length === 0 ? (
+          <p className="text-center text-sm text-slate-500 py-8">Loading reviews…</p>
+        ) : displayItems.length === 0 ? (
+          <p className="text-center text-sm text-slate-500 py-8 px-4">
+            No client reviews yet. Use the form below to share the first one.
+          </p>
+        ) : (
+          <div className={displayItems.length > 1 ? "carousel-track" : "flex justify-center gap-6 px-4"}>
+            {doubled.map((item, index) => (
+              <ReviewCard key={`${item.id}-${index}`} item={item} />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="section-container mt-14">

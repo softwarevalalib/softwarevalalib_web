@@ -18,8 +18,8 @@ const navLinks = [
     ],
   },
   { label: "Services", path: "/services" },
-  { label: "Projects", path: "/projects" },
-  { label: "Team", path: "/team" },
+  { label: "Projects", path: "/projects", hideOnMd: true },
+  { label: "Team", path: "/team", hideOnMd: true },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -44,7 +44,7 @@ function Navbar() {
     path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
 
   const linkClass = (path) =>
-    `relative px-3 lg:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+    `relative px-2.5 lg:px-3 xl:px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 whitespace-nowrap ${
       isActive(path)
         ? "text-[#c10020] bg-[#c10020]/10"
         : "text-[#00274c]/80 hover:text-[#00274c] hover:bg-[#00274c]/5"
@@ -66,7 +66,7 @@ function Navbar() {
         </Link>
 
         <nav
-          className="hidden md:flex items-center justify-center gap-1 lg:gap-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="hidden md:flex items-center justify-center gap-0.5 lg:gap-1 xl:gap-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[min(58vw,640px)]"
           aria-label="Primary"
         >
           {navLinks.map((item) =>
@@ -81,6 +81,7 @@ function Navbar() {
                   type="button"
                   className={`${linkClass(item.children[0].path)} flex items-center gap-1`}
                   aria-expanded={openDropdown === item.label}
+                  aria-haspopup="true"
                   onClick={() =>
                     setOpenDropdown((prev) => (prev === item.label ? null : item.label))
                   }
@@ -88,6 +89,7 @@ function Navbar() {
                   {item.label}
                   <ChevronDown
                     size={14}
+                    aria-hidden="true"
                     className={`transition-transform duration-300 ${
                       openDropdown === item.label ? "rotate-180" : ""
                     }`}
@@ -114,7 +116,11 @@ function Navbar() {
                 )}
               </div>
             ) : (
-              <Link key={item.path} to={item.path} className={linkClass(item.path)}>
+              <Link
+                key={item.path + item.label}
+                to={item.path}
+                className={`${linkClass(item.path)} ${item.hideOnMd ? "hidden lg:inline-flex" : ""}`}
+              >
                 {item.label}
               </Link>
             )

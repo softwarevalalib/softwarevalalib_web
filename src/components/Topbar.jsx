@@ -1,4 +1,3 @@
-import { Link, useLocation } from "react-router-dom";
 import {
   FiFacebook,
   FiInstagram,
@@ -12,20 +11,22 @@ import {
   COMPANY_PHONE,
   FACEBOOK_URL,
   X_URL,
+  INSTAGRAM_URL,
+  YOUTUBE_URL,
 } from "../config/company";
 
 const SOCIALS = [
   { icon: FiFacebook, label: "Facebook", href: FACEBOOK_URL },
   { icon: FaXTwitter, label: "X", href: X_URL },
-  { icon: FiInstagram, label: "Instagram", href: "#" },
-  { icon: FiYoutube, label: "YouTube", href: "#" },
+  { icon: FiInstagram, label: "Instagram", href: INSTAGRAM_URL },
+  { icon: FiYoutube, label: "YouTube", href: YOUTUBE_URL },
 ];
 
 export default function Topbar() {
   return (
     <div className="hidden md:block bg-[#00274c] text-white text-sm">
-      <div className="section-container h-11 flex items-center justify-between gap-4">
-        <p className="font-semibold uppercase tracking-wide text-white/90 shrink-0">
+      <div className="section-container h-11 flex items-center justify-between gap-3 lg:gap-4">
+        <p className="font-semibold uppercase tracking-wide text-white/90 shrink-0 text-xs lg:text-sm">
           Software Vala Liberia, Inc.
         </p>
 
@@ -49,17 +50,18 @@ export default function Topbar() {
           </a>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0" role="list" aria-label="Social media">
           {SOCIALS.map((s) => (
             <a
               key={s.label}
               href={s.href}
-              target={s.href.startsWith("http") ? "_blank" : undefined}
-              rel={s.href.startsWith("http") ? "noreferrer" : undefined}
-              aria-label={s.label}
-              className="text-white/70 hover:text-[#c10020] transition-colors duration-300"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Software Vala Liberia on ${s.label}`}
+              className="grid place-items-center w-8 h-8 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-300"
+              role="listitem"
             >
-              <s.icon size={15} />
+              <s.icon size={15} aria-hidden="true" />
             </a>
           ))}
         </div>

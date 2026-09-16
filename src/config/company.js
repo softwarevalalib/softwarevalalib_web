@@ -4,3 +4,7 @@ export const COMPANY_WHATSAPP = "231888636071";
 export const COMPANY_ADDRESS = "ELWA Junction, Monrovia, Liberia";
 export const FACEBOOK_URL = "https://web.facebook.com/softwarevalalib";
 export const X_URL = "https://x.com/softwarevalalib";
+export const INSTAGRAM_URL = "https://www.instagram.com/softwarevalaliberia";
+export const YOUTUBE_URL = "https://www.youtube.com/channel/UCKEiKwsSzSVXtFee2eZfW3w";
+export const YOUTUBE_SHOWREEL_ID = "Q66yHp1hUi4";
+export const YOUTUBE_SHOWREEL_URL = `https://youtu.be/${YOUTUBE_SHOWREEL_ID}`;

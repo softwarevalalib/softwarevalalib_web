@@ -9,6 +9,8 @@ import {
   COMPANY_ADDRESS,
   FACEBOOK_URL,
   X_URL,
+  INSTAGRAM_URL,
+  YOUTUBE_URL,
 } from "../config/company";
 import Logo from "../images/logo.jpg";
 
@@ -36,8 +38,8 @@ const services = [
 const socials = [
   { icon: FiFacebook, label: "Facebook", href: FACEBOOK_URL },
   { icon: FaXTwitter, label: "X", href: X_URL },
-  { icon: FiInstagram, label: "Instagram", href: "#" },
-  { icon: FiYoutube, label: "YouTube", href: "#" },
+  { icon: FiInstagram, label: "Instagram", href: INSTAGRAM_URL },
+  { icon: FiYoutube, label: "YouTube", href: YOUTUBE_URL },
 ];
 
 function Footer() {
@@ -57,17 +59,18 @@ function Footer() {
               Full-stack software development agency in Monrovia, Liberia — building
               websites, apps, and systems that move businesses forward.
             </p>
-            <div className="mt-5 flex items-center gap-3">
+            <div className="mt-5 flex items-center gap-3" role="list" aria-label="Social media">
               {socials.map((s) => (
                 <a
                   key={s.label}
                   href={s.href}
-                  target={s.href.startsWith("http") ? "_blank" : undefined}
-                  rel={s.href.startsWith("http") ? "noreferrer" : undefined}
-                  aria-label={s.label}
-                  className="grid place-items-center w-9 h-9 rounded-full bg-white/5 border border-white/10 text-white/80 hover:bg-[#c10020] hover:text-white hover:border-[#c10020] transition-colors duration-300"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Software Vala Liberia on ${s.label}`}
+                  className="grid place-items-center w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white/80 hover:bg-[#c10020] hover:text-white hover:border-[#c10020] transition-colors duration-300"
+                  role="listitem"
                 >
-                  <s.icon size={16} />
+                  <s.icon size={16} aria-hidden="true" />
                 </a>
               ))}
             </div>

@@ -29,6 +29,15 @@ Visitors can submit ratings and reviews on the homepage. Submissions are stored 
 - API: `GET/POST /api/feedback`
 - Table: `client_feedback`
 
+## SVL Training Academy
+
+Integrated Academy experience at `/academy` with course catalogue, course detail pages, multi-course enrollment, live course ratings, and enrollment admin.
+
+- Routes: `/academy`, `/academy/courses/:slug`, `/academy/enroll`, `/academy/admin`
+- APIs: `GET/POST /api/academy/ratings`, `GET/POST /api/academy/enroll`
+- Assets: `public/assets/academy/` (logo, information sheet PDF, course placeholders)
+- Env: `DATABASE_URL` (required), `ACADEMY_ADMIN_KEY` (for `/academy/admin`)
+
 ## Production Build
 
 ```bash

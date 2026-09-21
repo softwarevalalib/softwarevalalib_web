@@ -20,6 +20,7 @@ const mailtoUrl = `mailto:${COMPANY_EMAIL}?subject=${encodeURIComponent("Website
 const quickLinks = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
+  { label: "Academy", to: "/academy" },
   { label: "Services", to: "/services" },
   { label: "Projects", to: "/projects" },
   { label: "Contact", to: "/contact" },

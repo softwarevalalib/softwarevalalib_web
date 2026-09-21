@@ -3,6 +3,7 @@ import Topbar from "../components/Topbar";
 import WhatsAppFloating from "../components/WhatsAppFloating";
 import BackToTop from "../components/BackToTop";
 import ScrollToTop from "../components/ScrollToTop";
+import AcademyEnrollFloat from "../components/academy/AcademyEnrollFloat";
 import { Outlet } from "react-router-dom";
 
 function Mainlayout() {
@@ -17,6 +18,7 @@ function Mainlayout() {
       <main id="main-content" className="flex-1" tabIndex={-1}>
         <Outlet />
       </main>
+      <AcademyEnrollFloat />
       <WhatsAppFloating />
       <BackToTop />
     </div>

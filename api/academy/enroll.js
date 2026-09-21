@@ -1,23 +1,12 @@
-import { neon } from "@neondatabase/serverless";
+import {
+  getSql,
+  setCors,
+  cleanText,
+  requireAdmin,
+  parseBody,
+} from "./_lib.js";
 
-function getSql() {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL is not configured");
-  return neon(url);
-}
-
-function setCors(res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-academy-admin-key");
-}
-
-function cleanText(value, max) {
-  if (typeof value !== "string") return "";
-  return value.replace(/\s+/g, " ").trim().slice(0, max);
-}
-
-function isAdmin(req) {
+function isLegacyAdmin(req) {
   const key = process.env.ACADEMY_ADMIN_KEY;
   if (!key) return false;
   return req.headers["x-academy-admin-key"] === key;
@@ -31,7 +20,8 @@ export default async function handler(req, res) {
     const sql = getSql();
 
     if (req.method === "GET") {
-      if (!isAdmin(req)) {
+      const sessionAdmin = await requireAdmin(req, sql).catch(() => null);
+      if (!sessionAdmin && !isLegacyAdmin(req)) {
         return res.status(401).json({ error: "Unauthorized" });
       }
       const rows = await sql`
@@ -45,14 +35,15 @@ export default async function handler(req, res) {
           COUNT(*)::int AS total,
           COUNT(*) FILTER (WHERE status = 'pending')::int AS pending,
           COUNT(*) FILTER (WHERE status = 'approved')::int AS approved,
-          COUNT(*) FILTER (WHERE status = 'enrolled')::int AS enrolled
+          COUNT(*) FILTER (WHERE status = 'enrolled')::int AS enrolled,
+          COUNT(*) FILTER (WHERE status = 'rejected')::int AS rejected
         FROM academy_enrollments
       `;
       return res.status(200).json({ enrollments: rows, stats: stats[0] });
     }
 
     if (req.method === "POST") {
-      const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+      const body = parseBody(req);
       if (body.website) return res.status(200).json({ ok: true });
 
       const fullName = cleanText(body.fullName, 100);

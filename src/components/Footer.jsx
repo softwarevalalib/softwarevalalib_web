@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FiPhone, FiMapPin, FiMail, FiFacebook, FiInstagram, FiYoutube } from "react-icons/fi";
 import { AiOutlineWhatsApp } from "react-icons/ai";
 import { FaXTwitter } from "react-icons/fa6";
@@ -44,6 +44,9 @@ const socials = [
 ];
 
 function Footer() {
+  const { pathname } = useLocation();
+  const showAcademyLogin = pathname.startsWith("/academy");
+
   return (
     <footer className="relative bg-[#00274c] text-white overflow-hidden">
       <div className="absolute top-0 left-0 w-96 h-96 bg-[#c10020]/15 blur-[120px] rounded-full pointer-events-none" />
@@ -90,6 +93,14 @@ function Footer() {
                 {link.label}
               </Link>
             ))}
+            {showAcademyLogin ? (
+              <Link
+                to="/academy/login"
+                className="mt-2 inline-flex w-fit items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-[#c10020] hover:border-[#c10020] transition-colors"
+              >
+                Admin Login
+              </Link>
+            ) : null}
           </nav>
 
           <div>

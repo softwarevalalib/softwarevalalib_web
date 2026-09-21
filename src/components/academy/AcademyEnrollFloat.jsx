@@ -2,19 +2,23 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { trackAcademyEvent } from "../../utils/academyApi";
 
-/** Floating ENROLL NOW CTA — Academy routes only. */
+/** Floating ENROLL NOW CTA — Academy learner routes only. */
 export default function AcademyEnrollFloat() {
   const location = useLocation();
   const [visible, setVisible] = useState(false);
-  const isAcademy = location.pathname.startsWith("/academy");
+  const path = location.pathname;
+  const isAcademyLearner =
+    path.startsWith("/academy") &&
+    !path.startsWith("/academy/admin") &&
+    !path.startsWith("/academy/login");
 
   useEffect(() => {
-    if (!isAcademy) return undefined;
+    if (!isAcademyLearner) return undefined;
     const t = setTimeout(() => setVisible(true), 600);
     return () => clearTimeout(t);
-  }, [isAcademy]);
+  }, [isAcademyLearner]);
 
-  if (!isAcademy) return null;
+  if (!isAcademyLearner) return null;
 
   return (
     <Link

@@ -4,9 +4,8 @@ import Reveal from "../Animations/Reveal";
 import Footer from "../components/Footer";
 import CourseCatalogue from "../components/academy/CourseCatalogue";
 import AccordionFAQ from "../components/academy/AccordionFAQ";
-import AcademyImage from "../components/academy/AcademyImage";
+import AcademyHeroBackdrop from "../components/academy/AcademyHeroBackdrop";
 import CourseCard from "../components/academy/CourseCard";
-import Logo from "../images/logo.jpg";
 import academyCourses from "../data/academyCourses";
 import {
   ACADEMY_ASSETS,
@@ -27,13 +26,6 @@ import {
   FAQ_ITEMS,
 } from "../data/academyMeta";
 import { trackAcademyEvent } from "../utils/academyApi";
-
-const HERO_HIGHLIGHTS = [
-  "100% Online",
-  "Practical & Project-Based",
-  "Professional Certification",
-  "Career-Focused Training",
-];
 
 const PAGE_TITLE =
   "SVL Training Academy | Professional IT & ICT Training in Liberia";
@@ -118,90 +110,49 @@ export default function Academy() {
 
   return (
     <div className="bg-white">
-      {/* Hero */}
-      <section
-        className="relative overflow-hidden bg-[#00274c]"
-        aria-labelledby="academy-hero-heading"
-      >
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute top-16 left-1/4 w-72 h-72 bg-[#c10020]/20 blur-[100px] rounded-full" />
-          <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-white/5 blur-[100px] rounded-full" />
-        </div>
-
-        <div className="section-container section-padding relative z-10">
+      {/* Hero — sliding online-learning photos + Academy logo (top-right) */}
+      <AcademyHeroBackdrop>
+        <div className="max-w-2xl text-white pr-20 sm:pr-28">
           <Reveal>
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mb-8">
-              <img
-                src={Logo}
-                alt="Software Vala Liberia"
-                className="h-14 sm:h-16 w-auto object-contain rounded-lg bg-white/95 p-1.5"
-              />
-              <span className="hidden sm:block h-10 w-px bg-white/20" aria-hidden="true" />
-              <AcademyImage
-                src={ACADEMY_ASSETS.logo}
-                alt="SVL Training Academy"
-                className="h-14 sm:h-16 w-auto object-contain rounded-lg bg-white/95 p-1.5"
-              />
+            <span className="eyebrow text-[#ff6b81]">SVL TRAINING ACADEMY</span>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1
+              id="academy-hero-heading"
+              className="section-heading text-white mt-4 drop-shadow-sm"
+            >
+              Learn Practical Skills. Build Real Projects.{" "}
+              <span className="text-[#ff6b81]">Advance Your Career.</span>
+            </h1>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <p className="mt-5 text-white/90 text-base sm:text-lg leading-relaxed max-w-xl">
+              Live online IT &amp; ICT programmes for students, professionals,
+              institutional staff, and TVET learners across Liberia.
+            </p>
+          </Reveal>
+          <Reveal delay={0.24}>
+            <div className="mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Link
+                to="/academy/enroll"
+                className="btn-primary w-full sm:w-auto"
+                onClick={() =>
+                  trackAcademyEvent("enroll_click", { source: "hero" })
+                }
+              >
+                Enroll Now
+              </Link>
+              <a
+                href="#courses"
+                onClick={scrollToCourses}
+                className="btn-secondary w-full sm:w-auto"
+              >
+                Explore Courses
+              </a>
             </div>
           </Reveal>
-
-          <div className="max-w-3xl mx-auto text-center text-white">
-            <Reveal delay={0.05}>
-              <span className="eyebrow text-[#c10020]">SVL TRAINING ACADEMY</span>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <h1
-                id="academy-hero-heading"
-                className="section-heading text-white mt-4"
-              >
-                Learn Practical Skills. Build Real Projects.{" "}
-                <span className="text-[#c10020]">Advance Your Career.</span>
-              </h1>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="mt-5 text-white/85 text-base sm:text-lg leading-relaxed">
-                SVL Training Academy — the professional training arm of Software Vala
-                Liberia — delivers live online IT &amp; ICT programmes designed for
-                students, professionals, and career changers across Liberia.
-              </p>
-            </Reveal>
-
-            <Reveal delay={0.3}>
-              <ul className="mt-8 flex flex-wrap justify-center gap-2 sm:gap-3 list-none p-0">
-                {HERO_HIGHLIGHTS.map((item) => (
-                  <li
-                    key={item}
-                    className="rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white/95"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-
-            <Reveal delay={0.4}>
-              <div className="mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                <Link
-                  to="/academy/enroll"
-                  className="btn-primary w-full sm:w-auto"
-                  onClick={() =>
-                    trackAcademyEvent("enroll_click", { source: "hero" })
-                  }
-                >
-                  Enroll Now
-                </Link>
-                <a
-                  href="#courses"
-                  onClick={scrollToCourses}
-                  className="btn-secondary w-full sm:w-auto"
-                >
-                  Explore Courses
-                </a>
-              </div>
-            </Reveal>
-          </div>
         </div>
-      </section>
+      </AcademyHeroBackdrop>
 
       {/* Programme comparison */}
       <section className="section-padding bg-slate-50" aria-labelledby="programme-heading">

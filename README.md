@@ -31,12 +31,13 @@ Visitors can submit ratings and reviews on the homepage. Submissions are stored 
 
 ## SVL Training Academy
 
-Integrated Academy experience at `/academy` with course catalogue, course detail pages, multi-course enrollment, live course ratings, and enrollment admin.
+Integrated Academy experience at `/academy` with course catalogue, course detail pages, multi-course enrollment, live course ratings, analytics tracking, and an admin dashboard.
 
-- Routes: `/academy`, `/academy/courses/:slug`, `/academy/enroll`, `/academy/admin`
-- APIs: `GET/POST /api/academy/ratings`, `GET/POST /api/academy/enroll`
-- Assets: `public/assets/academy/` (logo, information sheet PDF, course placeholders)
-- Env: `DATABASE_URL` (required), `ACADEMY_ADMIN_KEY` (for `/academy/admin`)
+- Routes: `/academy`, `/academy/courses/:slug`, `/academy/enroll`, `/academy/login`, `/academy/admin`
+- APIs: `/api/academy/ratings`, `/api/academy/enroll`, `/api/academy/insights`, `/api/academy/dashboard`, `/api/academy/auth`
+- Assets: `public/assets/academy/` (logo, information sheet PDF, hero slides, course placeholders)
+- Env: `DATABASE_URL` (required). Bootstrap admin with `ACADEMY_ADMIN_EMAIL` + `ACADEMY_ADMIN_PASSWORD` if no admin row exists.
+- Admin login: email/password → session token. Reset password under Admin → Settings.
 
 ## Production Build
 

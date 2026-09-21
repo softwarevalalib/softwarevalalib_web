@@ -6,6 +6,26 @@ export const ACADEMY_ASSETS = {
   placeholderImage: "/assets/academy/courses/digital-skills.svg",
 };
 
+/** Full-bleed hero slideshow backgrounds (public assets). */
+export const HERO_SLIDES = [
+  {
+    src: "/assets/academy/hero/students-online.png",
+    alt: "Student learning online with a laptop",
+  },
+  {
+    src: "/assets/academy/hero/professionals-online.png",
+    alt: "Professionals learning online in the workplace",
+  },
+  {
+    src: "/assets/academy/hero/institutional-online.png",
+    alt: "Institutional staff working and learning online",
+  },
+  {
+    src: "/assets/academy/hero/tvet-online.png",
+    alt: "TVET personnel learning online in a technical setting",
+  },
+];
+
 export const ACADEMY_FILTERS = [
   "All Courses",
   "Foundation Certificate",

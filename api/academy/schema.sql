@@ -45,3 +45,45 @@ CREATE INDEX IF NOT EXISTS academy_enrollments_created_idx
   ON academy_enrollments (created_at DESC);
 
 CREATE SEQUENCE IF NOT EXISTS academy_enrollment_seq START 1;
+
+CREATE TABLE IF NOT EXISTS academy_admins (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  name TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS academy_admin_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  admin_id UUID NOT NULL REFERENCES academy_admins(id) ON DELETE CASCADE,
+  token TEXT NOT NULL UNIQUE,
+  expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS academy_admin_sessions_token_idx ON academy_admin_sessions (token);
+
+CREATE TABLE IF NOT EXISTS academy_events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_name TEXT NOT NULL,
+  path TEXT,
+  course_id TEXT,
+  course_code TEXT,
+  source TEXT,
+  visitor_id TEXT,
+  session_id TEXT,
+  referrer TEXT,
+  country TEXT,
+  region TEXT,
+  city TEXT,
+  timezone TEXT,
+  user_agent TEXT,
+  metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS academy_events_name_created_idx ON academy_events (event_name, created_at DESC);
+CREATE INDEX IF NOT EXISTS academy_events_created_idx ON academy_events (created_at DESC);
+CREATE INDEX IF NOT EXISTS academy_events_visitor_idx ON academy_events (visitor_id, created_at DESC);

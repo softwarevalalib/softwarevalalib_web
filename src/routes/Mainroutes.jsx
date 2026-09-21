@@ -12,7 +12,13 @@ import NotFound from "../pages/NotFound";
 const Academy = lazy(() => import("../pages/Academy"));
 const AcademyCourse = lazy(() => import("../pages/AcademyCourse"));
 const AcademyEnroll = lazy(() => import("../pages/AcademyEnroll"));
-const AcademyAdmin = lazy(() => import("../pages/AcademyAdmin"));
+const AcademyLogin = lazy(() => import("../pages/AcademyLogin"));
+const AdminLayout = lazy(() => import("../components/admin/AdminLayout"));
+const AdminOverview = lazy(() => import("../pages/admin/AdminOverview"));
+const AdminEnrollments = lazy(() => import("../pages/admin/AdminEnrollments"));
+const AdminRatings = lazy(() => import("../pages/admin/AdminRatings"));
+const AdminInsights = lazy(() => import("../pages/admin/AdminInsights"));
+const AdminSettings = lazy(() => import("../pages/admin/AdminSettings"));
 
 function AcademyFallback() {
   return (
@@ -35,12 +41,23 @@ const router = createBrowserRouter([
       { path: "/academy", element: withAcademySuspense(<Academy />) },
       { path: "/academy/courses/:slug", element: withAcademySuspense(<AcademyCourse />) },
       { path: "/academy/enroll", element: withAcademySuspense(<AcademyEnroll />) },
-      { path: "/academy/admin", element: withAcademySuspense(<AcademyAdmin />) },
+      { path: "/academy/login", element: withAcademySuspense(<AcademyLogin />) },
       { path: "/services", element: <Services /> },
       { path: "/projects", element: <Projects /> },
       { path: "/contact", element: <Contact /> },
       { path: "/team", element: <Team /> },
       { path: "*", element: <NotFound /> },
+    ],
+  },
+  {
+    path: "/academy/admin",
+    element: withAcademySuspense(<AdminLayout />),
+    children: [
+      { index: true, element: withAcademySuspense(<AdminOverview />) },
+      { path: "enrollments", element: withAcademySuspense(<AdminEnrollments />) },
+      { path: "ratings", element: withAcademySuspense(<AdminRatings />) },
+      { path: "insights", element: withAcademySuspense(<AdminInsights />) },
+      { path: "settings", element: withAcademySuspense(<AdminSettings />) },
     ],
   },
 ]);

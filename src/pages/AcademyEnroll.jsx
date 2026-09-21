@@ -96,29 +96,34 @@ export default function AcademyEnroll() {
     []
   );
 
+  const preselectedFromUrl = useMemo(() => {
+    if (!preselectCode) return [];
+    const match = getCourseByCode(preselectCode);
+    return match && match.status === "published" ? [match.code] : [];
+  }, [preselectCode]);
+
   const [form, setForm] = useState(initialForm);
-  const [selectedCodes, setSelectedCodes] = useState([]);
+  const [manualCodes, setManualCodes] = useState([]);
+  const [removedCodes, setRemovedCodes] = useState([]);
   const [checklist, setChecklist] = useState([]);
   const [courseQuery, setCourseQuery] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(null);
 
+  const selectedCodes = useMemo(() => {
+    const next = new Set([
+      ...preselectedFromUrl.filter((code) => !removedCodes.includes(code)),
+      ...manualCodes,
+    ]);
+    return Array.from(next);
+  }, [preselectedFromUrl, manualCodes, removedCodes]);
+
   useEffect(() => {
     document.title = "Enroll | SVL Training Academy";
     trackAcademyEvent("enrollment_started", {
       course: preselectCode || undefined,
     });
-  }, [preselectCode]);
-
-  useEffect(() => {
-    if (!preselectCode) return;
-    const match = getCourseByCode(preselectCode);
-    if (match && match.status === "published") {
-      setSelectedCodes((prev) =>
-        prev.includes(match.code) ? prev : [...prev, match.code]
-      );
-    }
   }, [preselectCode]);
 
   const filteredCatalogue = useMemo(() => {
@@ -133,10 +138,7 @@ export default function AcademyEnroll() {
   }, [courseQuery, publishedCourses]);
 
   const selectedCourses = useMemo(
-    () =>
-      selectedCodes
-        .map((code) => getCourseByCode(code))
-        .filter(Boolean),
+    () => selectedCodes.map((code) => getCourseByCode(code)).filter(Boolean),
     [selectedCodes]
   );
 
@@ -148,16 +150,20 @@ export default function AcademyEnroll() {
 
   const addSelected = () => {
     if (!checklist.length) return;
-    setSelectedCodes((prev) => {
+    setManualCodes((prev) => {
       const next = new Set(prev);
       checklist.forEach((code) => next.add(code));
       return Array.from(next);
     });
+    setRemovedCodes((prev) => prev.filter((code) => !checklist.includes(code)));
     setChecklist([]);
   };
 
   const removeCourse = (code) => {
-    setSelectedCodes((prev) => prev.filter((c) => c !== code));
+    setManualCodes((prev) => prev.filter((c) => c !== code));
+    if (preselectedFromUrl.includes(code)) {
+      setRemovedCodes((prev) => (prev.includes(code) ? prev : [...prev, code]));
+    }
   };
 
   const handleChange = (e) => {
@@ -190,14 +196,11 @@ export default function AcademyEnroll() {
       });
       // Honeypot filled → API returns { ok: true } without a reference
       if (!data.referenceNumber) {
-        setForm(initialForm);
-        setSelectedCodes([]);
         setSuccess({
           referenceNumber: "SVL-ACA-000000",
           fullName: form.fullName,
           courseCodes: selectedCodes,
           submittedAt: new Date().toISOString(),
-          _bot: true,
         });
         return;
       }
@@ -213,7 +216,7 @@ export default function AcademyEnroll() {
     }
   };
 
-  if (success && !success._bot) {
+  if (success) {
     const submittedCourses = (success.courseCodes || selectedCodes)
       .map((code) => getCourseByCode(code)?.title || code)
       .join(", ");
@@ -314,9 +317,9 @@ export default function AcademyEnroll() {
 
       <section className="section-padding !pt-10">
         <div className="section-container max-w-3xl">
-          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+          <form onSubmit={handleSubmit} className="relative space-y-6" noValidate>
             {/* Honeypot — hidden from humans */}
-            <div className="absolute -left-[9999px] opacity-0 h-0 overflow-hidden" aria-hidden="true">
+            <div className="absolute -left-[9999px] top-0 opacity-0 h-0 w-0 overflow-hidden" aria-hidden="true">
               <label htmlFor="website">Website</label>
               <input
                 id="website"

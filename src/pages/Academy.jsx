@@ -149,6 +149,12 @@ export default function Academy() {
               >
                 Explore Courses
               </a>
+              <Link
+                to="/academy/verify"
+                className="inline-flex items-center justify-center rounded-full border-2 border-white/80 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white hover:text-[#00274c] transition-colors w-full sm:w-auto"
+              >
+                Verify Certificate
+              </Link>
             </div>
           </Reveal>
         </div>

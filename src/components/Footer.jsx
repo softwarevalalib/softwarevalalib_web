@@ -94,12 +94,20 @@ function Footer() {
               </Link>
             ))}
             {showAcademyLogin ? (
-              <Link
-                to="/academy/login"
-                className="mt-2 inline-flex w-fit items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-[#c10020] hover:border-[#c10020] transition-colors"
-              >
-                Admin Login
-              </Link>
+              <>
+                <Link
+                  to="/academy/portal/login"
+                  className="mt-2 inline-flex w-fit items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-[#c10020] hover:border-[#c10020] transition-colors"
+                >
+                  Portal Login
+                </Link>
+                <Link
+                  to="/academy/login"
+                  className="mt-2 inline-flex w-fit items-center justify-center rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-wide text-white hover:bg-[#c10020] hover:border-[#c10020] transition-colors"
+                >
+                  Admin Login
+                </Link>
+              </>
             ) : null}
           </nav>
 

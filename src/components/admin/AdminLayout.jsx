@@ -11,6 +11,13 @@ import {
   X,
   GraduationCap,
   Bot,
+  School,
+  BookOpen,
+  ClipboardList,
+  CalendarCheck,
+  Wallet,
+  Award,
+  UserCog,
 } from "lucide-react";
 import {
   clearAdminSession,
@@ -22,7 +29,15 @@ import {
 
 const NAV = [
   { to: "/academy/admin", end: true, label: "Overview", icon: LayoutDashboard },
-  { to: "/academy/admin/enrollments", label: "Students", icon: Users },
+  { to: "/academy/admin/enrollments", label: "Applications", icon: Users },
+  { to: "/academy/admin/portal", end: true, label: "Academy Portal", icon: School },
+  { to: "/academy/admin/portal/students", label: "Portal Students", icon: GraduationCap },
+  { to: "/academy/admin/portal/instructors", label: "Instructors", icon: UserCog },
+  { to: "/academy/admin/portal/courses", label: "Courses", icon: BookOpen },
+  { to: "/academy/admin/portal/grades", label: "Grades", icon: ClipboardList },
+  { to: "/academy/admin/portal/attendance", label: "Attendance", icon: CalendarCheck },
+  { to: "/academy/admin/portal/fees", label: "Fees Payments", icon: Wallet },
+  { to: "/academy/admin/portal/certificates", label: "Certificates", icon: Award },
   { to: "/academy/admin/ratings", label: "Ratings", icon: Star },
   { to: "/academy/admin/insights", label: "Insights", icon: LineChart },
   { to: "/academy/admin/assistant", end: true, label: "AI Assistant", icon: Bot },

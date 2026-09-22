@@ -16,7 +16,8 @@ function isAcademyLearnerPath(path) {
   return (
     path.startsWith("/academy") &&
     !path.startsWith("/academy/admin") &&
-    !path.startsWith("/academy/login")
+    !path.startsWith("/academy/login") &&
+    !path.startsWith("/academy/portal")
   );
 }
 

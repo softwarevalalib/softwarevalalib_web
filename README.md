@@ -31,12 +31,13 @@ Visitors can submit ratings and reviews on the homepage. Submissions are stored 
 
 ## SVL Training Academy
 
-Integrated Academy experience at `/academy` with course catalogue, course detail pages, multi-course enrollment, live course ratings, analytics tracking, AI Admissions Assistant, and an admin dashboard.
+Integrated Academy experience at `/academy` with course catalogue, enrollment, AI assistant, admin dashboard, and a full Academy Portal for students and instructors.
 
-- Routes: `/academy`, `/academy/courses/:slug`, `/academy/enroll`, `/academy/login`, `/academy/admin`
-- APIs: `/api/academy/ratings`, `/enroll`, `/insights`, `/dashboard`, `/auth`, `/assistant`, `/assistant-admin`, `/admission`
-- AI Assistant: floating chat (bottom-left) on Academy learner pages; retrieval-grounded course advice + conversational enrollment
-- Admission letters: server-side PDF (`pdf-lib`), secure token download, admin generate/resend
+- Routes: `/academy`, `/academy/verify`, `/academy/portal/login`, `/academy/admin`, `/academy/admin/portal/*`, `/academy/portal/student`, `/academy/portal/instructor`
+- APIs: `/api/academy/ratings`, `/enroll`, `/insights`, `/dashboard`, `/auth`, `/assistant`, `/admission`, `/portal`
+- Academy Portal: admin approves enrollments, issues usernames/passwords; manages courses, instructors, grades, attendance, fees (40/30/30), certificates
+- Certificate verify: public `/academy/verify` (hero CTA) using certificate ID + email
+- Admission letters: official template from `public/assets/academy/templates/admission_letter_master.pdf`
 - Env: `DATABASE_URL` (required). Optional: `OPENAI_API_KEY`, `RESEND_API_KEY`, `ACADEMY_FROM_EMAIL`. Bootstrap admin with `ACADEMY_ADMIN_EMAIL` + `ACADEMY_ADMIN_PASSWORD`.
 
 ## Production Build

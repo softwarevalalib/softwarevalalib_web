@@ -14,6 +14,7 @@ const AcademyCourse = lazy(() => import("../pages/AcademyCourse"));
 const AcademyEnroll = lazy(() => import("../pages/AcademyEnroll"));
 const AcademyLogin = lazy(() => import("../pages/AcademyLogin"));
 const AcademyApplicationsRedirect = lazy(() => import("../pages/AcademyApplicationsRedirect"));
+const AcademyVerifyCertificate = lazy(() => import("../pages/AcademyVerifyCertificate"));
 const AdminLayout = lazy(() => import("../components/admin/AdminLayout"));
 const AdminOverview = lazy(() => import("../pages/admin/AdminOverview"));
 const AdminEnrollments = lazy(() => import("../pages/admin/AdminEnrollments"));
@@ -26,6 +27,44 @@ const AdminAssistantInsights = lazy(() => import("../pages/admin/assistant/Admin
 const AdminUnanswered = lazy(() => import("../pages/admin/assistant/AdminUnanswered"));
 const AdminAdmissionDocuments = lazy(() => import("../pages/admin/assistant/AdminAdmissionDocuments"));
 const AdminAssistantSettings = lazy(() => import("../pages/admin/assistant/AdminAssistantSettings"));
+const AdminPortalOverview = lazy(() => import("../pages/admin/portal/AdminPortalOverview"));
+const AdminPortalStudents = lazy(() => import("../pages/admin/portal/AdminPortalStudents"));
+const AdminPortalInstructors = lazy(() => import("../pages/admin/portal/AdminPortalInstructors"));
+const AdminPortalCourses = lazy(() => import("../pages/admin/portal/AdminPortalCourses"));
+const AdminPortalGrades = lazy(() =>
+  import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.default }))
+);
+const AdminPortalAttendance = lazy(() =>
+  import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.AdminPortalAttendance }))
+);
+const AdminPortalFees = lazy(() =>
+  import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.AdminPortalFees }))
+);
+const AdminPortalCertificates = lazy(() =>
+  import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.AdminPortalCertificates }))
+);
+const PortalLogin = lazy(() => import("../pages/portal/PortalLogin"));
+const PortalLayout = lazy(() => import("../components/portal/PortalLayout"));
+const StudentDashboard = lazy(() => import("../pages/portal/StudentPages"));
+const StudentGrades = lazy(() =>
+  import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentGrades }))
+);
+const StudentAttendance = lazy(() =>
+  import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentAttendance }))
+);
+const StudentFees = lazy(() =>
+  import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentFees }))
+);
+const StudentCertificates = lazy(() =>
+  import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentCertificates }))
+);
+const InstructorDashboard = lazy(() => import("../pages/portal/InstructorPages"));
+const InstructorCourses = lazy(() =>
+  import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorCourses }))
+);
+const InstructorStudents = lazy(() =>
+  import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorStudents }))
+);
 
 function AcademyFallback() {
   return (
@@ -48,8 +87,10 @@ const router = createBrowserRouter([
       { path: "/academy", element: withAcademySuspense(<Academy />) },
       { path: "/academy/courses/:slug", element: withAcademySuspense(<AcademyCourse />) },
       { path: "/academy/enroll", element: withAcademySuspense(<AcademyEnroll />) },
+      { path: "/academy/verify", element: withAcademySuspense(<AcademyVerifyCertificate />) },
       { path: "/academy/applications", element: withAcademySuspense(<AcademyApplicationsRedirect />) },
       { path: "/academy/login", element: withAcademySuspense(<AcademyLogin />) },
+      { path: "/academy/portal/login", element: withAcademySuspense(<PortalLogin />) },
       { path: "/services", element: <Services /> },
       { path: "/projects", element: <Projects /> },
       { path: "/contact", element: <Contact /> },
@@ -66,12 +107,40 @@ const router = createBrowserRouter([
       { path: "ratings", element: withAcademySuspense(<AdminRatings />) },
       { path: "insights", element: withAcademySuspense(<AdminInsights />) },
       { path: "settings", element: withAcademySuspense(<AdminSettings />) },
+      { path: "portal", element: withAcademySuspense(<AdminPortalOverview />) },
+      { path: "portal/students", element: withAcademySuspense(<AdminPortalStudents />) },
+      { path: "portal/instructors", element: withAcademySuspense(<AdminPortalInstructors />) },
+      { path: "portal/courses", element: withAcademySuspense(<AdminPortalCourses />) },
+      { path: "portal/grades", element: withAcademySuspense(<AdminPortalGrades />) },
+      { path: "portal/attendance", element: withAcademySuspense(<AdminPortalAttendance />) },
+      { path: "portal/fees", element: withAcademySuspense(<AdminPortalFees />) },
+      { path: "portal/certificates", element: withAcademySuspense(<AdminPortalCertificates />) },
       { path: "assistant", element: withAcademySuspense(<AdminAssistantOverview />) },
       { path: "assistant/conversations", element: withAcademySuspense(<AdminAssistantConversations />) },
       { path: "assistant/insights", element: withAcademySuspense(<AdminAssistantInsights />) },
       { path: "assistant/unanswered", element: withAcademySuspense(<AdminUnanswered />) },
       { path: "assistant/documents", element: withAcademySuspense(<AdminAdmissionDocuments />) },
       { path: "assistant/settings", element: withAcademySuspense(<AdminAssistantSettings />) },
+    ],
+  },
+  {
+    path: "/academy/portal/student",
+    element: withAcademySuspense(<PortalLayout role="student" />),
+    children: [
+      { index: true, element: withAcademySuspense(<StudentDashboard />) },
+      { path: "grades", element: withAcademySuspense(<StudentGrades />) },
+      { path: "attendance", element: withAcademySuspense(<StudentAttendance />) },
+      { path: "fees", element: withAcademySuspense(<StudentFees />) },
+      { path: "certificates", element: withAcademySuspense(<StudentCertificates />) },
+    ],
+  },
+  {
+    path: "/academy/portal/instructor",
+    element: withAcademySuspense(<PortalLayout role="instructor" />),
+    children: [
+      { index: true, element: withAcademySuspense(<InstructorDashboard />) },
+      { path: "courses", element: withAcademySuspense(<InstructorCourses />) },
+      { path: "students", element: withAcademySuspense(<InstructorStudents />) },
     ],
   },
 ]);

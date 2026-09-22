@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import Mainlayout from "../layout/Mainlayout";
 import Home from "../pages/Home";
 import About from "../pages/About";
@@ -8,85 +8,91 @@ import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
 import Team from "../pages/Team";
 import NotFound from "../pages/NotFound";
+import RouteError from "../components/RouteError";
+import { lazyWithRetry } from "../utils/lazyWithRetry";
 
-const Academy = lazy(() => import("../pages/Academy"));
-const AcademyCourse = lazy(() => import("../pages/AcademyCourse"));
-const AcademyEnroll = lazy(() => import("../pages/AcademyEnroll"));
-const AcademyLogin = lazy(() => import("../pages/AcademyLogin"));
-const AcademyApplicationsRedirect = lazy(() => import("../pages/AcademyApplicationsRedirect"));
-const AcademyVerifyCertificate = lazy(() => import("../pages/AcademyVerifyCertificate"));
-const AdminLayout = lazy(() => import("../components/admin/AdminLayout"));
-const AdminOverview = lazy(() => import("../pages/admin/AdminOverview"));
-const AdminEnrollments = lazy(() => import("../pages/admin/AdminEnrollments"));
-const AdminRatings = lazy(() => import("../pages/admin/AdminRatings"));
-const AdminInsights = lazy(() => import("../pages/admin/AdminInsights"));
-const AdminSettings = lazy(() => import("../pages/admin/AdminSettings"));
-const AdminAssistantOverview = lazy(() => import("../pages/admin/assistant/AdminAssistantOverview"));
-const AdminAssistantConversations = lazy(() => import("../pages/admin/assistant/AdminAssistantConversations"));
-const AdminAssistantInsights = lazy(() => import("../pages/admin/assistant/AdminAssistantInsights"));
-const AdminUnanswered = lazy(() => import("../pages/admin/assistant/AdminUnanswered"));
-const AdminAdmissionDocuments = lazy(() => import("../pages/admin/assistant/AdminAdmissionDocuments"));
-const AdminAssistantSettings = lazy(() => import("../pages/admin/assistant/AdminAssistantSettings"));
-const AdminPortalOverview = lazy(() => import("../pages/admin/portal/AdminPortalOverview"));
-const AdminPortalStudents = lazy(() => import("../pages/admin/portal/AdminPortalStudents"));
-const AdminPortalInstructors = lazy(() => import("../pages/admin/portal/AdminPortalInstructors"));
-const AdminPortalCourses = lazy(() => import("../pages/admin/portal/AdminPortalCourses"));
-const AdminPortalGrades = lazy(() =>
+const Academy = lazyWithRetry(() => import("../pages/Academy"));
+const AcademyCourse = lazyWithRetry(() => import("../pages/AcademyCourse"));
+const AcademyEnroll = lazyWithRetry(() => import("../pages/AcademyEnroll"));
+const AcademyLogin = lazyWithRetry(() => import("../pages/AcademyLogin"));
+const AcademyApplicationsRedirect = lazyWithRetry(() => import("../pages/AcademyApplicationsRedirect"));
+const AcademyVerifyCertificate = lazyWithRetry(() => import("../pages/AcademyVerifyCertificate"));
+const AdminLayout = lazyWithRetry(() => import("../components/admin/AdminLayout"));
+const AdminOverview = lazyWithRetry(() => import("../pages/admin/AdminOverview"));
+const AdminEnrollments = lazyWithRetry(() => import("../pages/admin/AdminEnrollments"));
+const AdminRatings = lazyWithRetry(() => import("../pages/admin/AdminRatings"));
+const AdminInsights = lazyWithRetry(() => import("../pages/admin/AdminInsights"));
+const AdminSettings = lazyWithRetry(() => import("../pages/admin/AdminSettings"));
+const AdminAssistantOverview = lazyWithRetry(() => import("../pages/admin/assistant/AdminAssistantOverview"));
+const AdminAssistantConversations = lazyWithRetry(() =>
+  import("../pages/admin/assistant/AdminAssistantConversations")
+);
+const AdminAssistantInsights = lazyWithRetry(() => import("../pages/admin/assistant/AdminAssistantInsights"));
+const AdminUnanswered = lazyWithRetry(() => import("../pages/admin/assistant/AdminUnanswered"));
+const AdminAdmissionDocuments = lazyWithRetry(() =>
+  import("../pages/admin/assistant/AdminAdmissionDocuments")
+);
+const AdminAssistantSettings = lazyWithRetry(() => import("../pages/admin/assistant/AdminAssistantSettings"));
+const AdminPortalOverview = lazyWithRetry(() => import("../pages/admin/portal/AdminPortalOverview"));
+const AdminPortalStudents = lazyWithRetry(() => import("../pages/admin/portal/AdminPortalStudents"));
+const AdminPortalInstructors = lazyWithRetry(() => import("../pages/admin/portal/AdminPortalInstructors"));
+const AdminPortalCourses = lazyWithRetry(() => import("../pages/admin/portal/AdminPortalCourses"));
+const AdminPortalGrades = lazyWithRetry(() =>
   import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.default }))
 );
-const AdminPortalAttendance = lazy(() =>
+const AdminPortalAttendance = lazyWithRetry(() =>
   import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.AdminPortalAttendance }))
 );
-const AdminPortalFees = lazy(() =>
+const AdminPortalFees = lazyWithRetry(() =>
   import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.AdminPortalFees }))
 );
-const AdminPortalCertificates = lazy(() =>
+const AdminPortalCertificates = lazyWithRetry(() =>
   import("../pages/admin/portal/AdminPortalRecords").then((m) => ({ default: m.AdminPortalCertificates }))
 );
-const PortalLogin = lazy(() => import("../pages/portal/PortalLogin"));
-const PortalLayout = lazy(() => import("../components/portal/PortalLayout"));
-const StudentDashboard = lazy(() => import("../pages/portal/StudentPages"));
-const StudentGrades = lazy(() =>
+const PortalLogin = lazyWithRetry(() => import("../pages/portal/PortalLogin"));
+const PortalLayout = lazyWithRetry(() => import("../components/portal/PortalLayout"));
+const StudentDashboard = lazyWithRetry(() => import("../pages/portal/StudentPages"));
+const StudentGrades = lazyWithRetry(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentGrades }))
 );
-const StudentAttendance = lazy(() =>
+const StudentAttendance = lazyWithRetry(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentAttendance }))
 );
-const StudentFees = lazy(() =>
+const StudentFees = lazyWithRetry(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentFees }))
 );
-const StudentCertificates = lazy(() =>
+const StudentCertificates = lazyWithRetry(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentCertificates }))
 );
-const StudentAssignments = lazy(() =>
+const StudentAssignments = lazyWithRetry(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentAssignments }))
 );
-const StudentClassroom = lazy(() =>
+const StudentClassroom = lazyWithRetry(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentClassroom }))
 );
-const InstructorDashboard = lazy(() => import("../pages/portal/InstructorPages"));
-const InstructorCourses = lazy(() =>
+const InstructorDashboard = lazyWithRetry(() => import("../pages/portal/InstructorPages"));
+const InstructorCourses = lazyWithRetry(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorCourses }))
 );
-const InstructorStudents = lazy(() =>
+const InstructorStudents = lazyWithRetry(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorStudents }))
 );
-const InstructorAttendance = lazy(() =>
+const InstructorAttendance = lazyWithRetry(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorAttendance }))
 );
-const InstructorGrades = lazy(() =>
+const InstructorGrades = lazyWithRetry(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorGrades }))
 );
-const InstructorAssignments = lazy(() =>
+const InstructorAssignments = lazyWithRetry(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorAssignments }))
 );
-const InstructorClassroom = lazy(() =>
+const InstructorClassroom = lazyWithRetry(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorClassroom }))
 );
-const AdminPortalClassroom = lazy(() =>
+const AdminPortalClassroom = lazyWithRetry(() =>
   import("../pages/admin/portal/AdminPortalLearning").then((m) => ({ default: m.AdminPortalClassroom }))
 );
-const AdminPortalAssignments = lazy(() =>
+const AdminPortalAssignments = lazyWithRetry(() =>
   import("../pages/admin/portal/AdminPortalLearning").then((m) => ({
     default: m.AdminPortalAssignments,
   }))
@@ -107,6 +113,7 @@ function withAcademySuspense(element) {
 const router = createBrowserRouter([
   {
     element: <Mainlayout />,
+    errorElement: <RouteError />,
     children: [
       { path: "/", element: <Home /> },
       { path: "/about", element: <About /> },
@@ -127,6 +134,7 @@ const router = createBrowserRouter([
   {
     path: "/academy/admin",
     element: withAcademySuspense(<AdminLayout />),
+    errorElement: <RouteError />,
     children: [
       { index: true, element: withAcademySuspense(<AdminOverview />) },
       { path: "enrollments", element: withAcademySuspense(<AdminEnrollments />) },
@@ -154,6 +162,7 @@ const router = createBrowserRouter([
   {
     path: "/academy/portal/student",
     element: withAcademySuspense(<PortalLayout role="student" />),
+    errorElement: <RouteError />,
     children: [
       { index: true, element: withAcademySuspense(<StudentDashboard />) },
       { path: "grades", element: withAcademySuspense(<StudentGrades />) },
@@ -167,6 +176,7 @@ const router = createBrowserRouter([
   {
     path: "/academy/portal/instructor",
     element: withAcademySuspense(<PortalLayout role="instructor" />),
+    errorElement: <RouteError />,
     children: [
       { index: true, element: withAcademySuspense(<InstructorDashboard />) },
       { path: "courses", element: withAcademySuspense(<InstructorCourses />) },

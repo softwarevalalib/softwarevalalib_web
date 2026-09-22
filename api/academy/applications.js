@@ -1,5 +1,11 @@
 import { getSql, setCors, cleanText, parseBody, requireAdmin } from "./_lib.js";
 
+function resolveEnrollmentId(raw) {
+  const value = cleanText(String(raw ?? ""), 80);
+  if (!value || value === "NaN") return "";
+  return value;
+}
+
 /** Admin-only student application management (no public student self-service). */
 export default async function handler(req, res) {
   setCors(res);
@@ -11,7 +17,7 @@ export default async function handler(req, res) {
     if (!admin) return res.status(401).json({ error: "Admin login required." });
 
     if (req.method === "GET") {
-      const id = Number(req.query?.id);
+      const id = resolveEnrollmentId(req.query?.id);
       const referenceNumber = cleanText(req.query?.referenceNumber, 40);
       if (id || referenceNumber) {
         const rows = id
@@ -46,8 +52,12 @@ export default async function handler(req, res) {
       const body = parseBody(req);
       if (body.website) return res.status(200).json({ ok: true });
       const action = cleanText(body.action, 40);
-      const id = Number(body.id);
+      const id = resolveEnrollmentId(body.id);
       const referenceNumber = cleanText(body.referenceNumber, 40);
+
+      if (!id && !referenceNumber) {
+        return res.status(400).json({ error: "Provide id or referenceNumber." });
+      }
 
       const rows = id
         ? await sql`SELECT * FROM academy_enrollments WHERE id = ${id} LIMIT 1`

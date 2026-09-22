@@ -9,28 +9,31 @@ function isChunkLoadError(error) {
     /Importing a module script failed/i.test(msg) ||
     /error loading dynamically imported module/i.test(msg) ||
     /Loading chunk [\d]+ failed/i.test(msg) ||
+    /Unable to preload CSS/i.test(msg) ||
     error?.name === "ChunkLoadError"
   );
 }
 
-/** One hard reload after a deploy when an old hashed chunk 404s. */
+/** Hard reload once after a deploy when an old hashed chunk 404s. */
 export function recoverFromChunkError(error) {
   if (!isChunkLoadError(error) || typeof window === "undefined") return false;
   try {
     const last = sessionStorage.getItem(RELOAD_KEY);
-    const now = String(Date.now());
-    // Avoid reload loops within 15s
-    if (last && now - Number(last) < 15000) return false;
-    sessionStorage.setItem(RELOAD_KEY, now);
+    const now = Date.now();
+    // Avoid reload loops within 20s
+    if (last && now - Number(last) < 20000) return false;
+    sessionStorage.setItem(RELOAD_KEY, String(now));
   } catch {
-    // sessionStorage blocked — still try once via location reload
+    // continue
   }
-  window.location.reload();
+  const url = new URL(window.location.href);
+  url.searchParams.set("_svl_refresh", String(Date.now()));
+  window.location.replace(url.toString());
   return true;
 }
 
 /**
- * lazy() with one retry, then hard reload on stale Vite chunk hashes after deploy.
+ * lazy() with retry, then hard reload on stale Vite chunk hashes after deploy.
  */
 export function lazyWithRetry(importer) {
   return lazy(async () => {
@@ -38,9 +41,9 @@ export function lazyWithRetry(importer) {
       return await importer();
     } catch (first) {
       if (!isChunkLoadError(first)) throw first;
-      // Brief wait then retry (CDN/propagation)
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 500));
       try {
+        // Bust HTTP cache on the module graph by forcing a document reload path
         return await importer();
       } catch (second) {
         recoverFromChunkError(second);
@@ -48,6 +51,17 @@ export function lazyWithRetry(importer) {
       }
     }
   });
+}
+
+/** Listen for chunk failures outside React Router (e.g. prefetch). */
+export function installChunkErrorRecovery() {
+  if (typeof window === "undefined") return;
+  const onError = (event) => {
+    const err = event?.reason || event?.error || event;
+    recoverFromChunkError(err);
+  };
+  window.addEventListener("unhandledrejection", onError);
+  window.addEventListener("error", onError);
 }
 
 export { isChunkLoadError };

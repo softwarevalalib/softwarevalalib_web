@@ -18,7 +18,14 @@ export default function PortalLogin() {
       if (data.user.role === "instructor") navigate("/academy/portal/instructor", { replace: true });
       else navigate("/academy/portal/student", { replace: true });
     } catch (err) {
-      setError(err.message);
+      const msg = String(err?.message || "");
+      if (/invalid|unauthorized|401|login required|credentials/i.test(msg)) {
+        setError("Invalid email/username or password. Students use enrollment email and SVL + last name.");
+      } else if (/timeout|network|failed to fetch|timed out/i.test(msg)) {
+        setError("Connection timed out. Please try again in a moment.");
+      } else {
+        setError(msg || "Unable to sign in.");
+      }
     } finally {
       setBusy(false);
     }

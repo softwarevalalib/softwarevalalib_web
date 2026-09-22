@@ -65,12 +65,44 @@ async function parseJson(res) {
   return data;
 }
 
+function isTransientNetworkError(err) {
+  const msg = String(err?.message || err || "");
+  return (
+    err?.name === "AbortError" ||
+    /Failed to fetch|NetworkError|network|timeout|ERR_TIMED_OUT|Load failed/i.test(msg)
+  );
+}
+
+async function fetchWithRetry(url, options = {}, { retries = 2, delayMs = 800 } = {}) {
+  let lastError;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      // Retry cold-start / gateway timeouts
+      if ((res.status === 408 || res.status === 502 || res.status === 503 || res.status === 504) && attempt < retries) {
+        await new Promise((r) => setTimeout(r, delayMs * (attempt + 1)));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      lastError = err;
+      if (!isTransientNetworkError(err) || attempt >= retries) throw err;
+      await new Promise((r) => setTimeout(r, delayMs * (attempt + 1)));
+    }
+  }
+  throw lastError || new Error("Request failed");
+}
+
 export async function portalLogin(username, password) {
-  const res = await fetch("/api/academy/portal?action=login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ action: "login", username, password, website: "" }),
-  });
+  const res = await fetchWithRetry(
+    "/api/academy/portal?action=login",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ action: "login", username, password, website: "" }),
+    },
+    { retries: 2, delayMs: 1000 },
+  );
   const data = await parseJson(res);
   setPortalSession({ token: data.token, user: data.user });
   return data;

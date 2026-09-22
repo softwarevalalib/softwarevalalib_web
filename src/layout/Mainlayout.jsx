@@ -4,6 +4,7 @@ import WhatsAppFloating from "../components/WhatsAppFloating";
 import BackToTop from "../components/BackToTop";
 import ScrollToTop from "../components/ScrollToTop";
 import AcademyEnrollFloat from "../components/academy/AcademyEnrollFloat";
+import AcademyAssistant from "../components/assistant/AcademyAssistant";
 import { Outlet } from "react-router-dom";
 
 function Mainlayout() {
@@ -19,6 +20,7 @@ function Mainlayout() {
         <Outlet />
       </main>
       <AcademyEnrollFloat />
+      <AcademyAssistant />
       <WhatsAppFloating />
       <BackToTop />
     </div>

@@ -10,6 +10,7 @@ import {
   Menu,
   X,
   GraduationCap,
+  Bot,
 } from "lucide-react";
 import {
   clearAdminSession,
@@ -24,6 +25,7 @@ const NAV = [
   { to: "/academy/admin/enrollments", label: "Enrollments", icon: Users },
   { to: "/academy/admin/ratings", label: "Ratings", icon: Star },
   { to: "/academy/admin/insights", label: "Insights", icon: LineChart },
+  { to: "/academy/admin/assistant", end: true, label: "AI Assistant", icon: Bot },
   { to: "/academy/admin/settings", label: "Settings", icon: Settings },
 ];
 

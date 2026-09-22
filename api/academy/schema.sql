@@ -87,3 +87,9 @@ CREATE TABLE IF NOT EXISTS academy_events (
 CREATE INDEX IF NOT EXISTS academy_events_name_created_idx ON academy_events (event_name, created_at DESC);
 CREATE INDEX IF NOT EXISTS academy_events_created_idx ON academy_events (created_at DESC);
 CREATE INDEX IF NOT EXISTS academy_events_visitor_idx ON academy_events (visitor_id, created_at DESC);
+
+-- AI Assistant / admissions (see Neon migrations applied live)
+-- academy_chat_sessions, academy_chat_messages, academy_chat_events
+-- academy_enrollment_drafts, academy_unanswered_questions
+-- academy_knowledge_articles, academy_admission_documents
+-- academy_assistant_settings

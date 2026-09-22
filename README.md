@@ -31,13 +31,13 @@ Visitors can submit ratings and reviews on the homepage. Submissions are stored 
 
 ## SVL Training Academy
 
-Integrated Academy experience at `/academy` with course catalogue, course detail pages, multi-course enrollment, live course ratings, analytics tracking, and an admin dashboard.
+Integrated Academy experience at `/academy` with course catalogue, course detail pages, multi-course enrollment, live course ratings, analytics tracking, AI Admissions Assistant, and an admin dashboard.
 
 - Routes: `/academy`, `/academy/courses/:slug`, `/academy/enroll`, `/academy/login`, `/academy/admin`
-- APIs: `/api/academy/ratings`, `/api/academy/enroll`, `/api/academy/insights`, `/api/academy/dashboard`, `/api/academy/auth`
-- Assets: `public/assets/academy/` (logo, information sheet PDF, hero slides, course placeholders)
-- Env: `DATABASE_URL` (required). Bootstrap admin with `ACADEMY_ADMIN_EMAIL` + `ACADEMY_ADMIN_PASSWORD` if no admin row exists.
-- Admin login: email/password → session token. Reset password under Admin → Settings.
+- APIs: `/api/academy/ratings`, `/enroll`, `/insights`, `/dashboard`, `/auth`, `/assistant`, `/assistant-admin`, `/admission`
+- AI Assistant: floating chat (bottom-left) on Academy learner pages; retrieval-grounded course advice + conversational enrollment
+- Admission letters: server-side PDF (`pdf-lib`), secure token download, admin generate/resend
+- Env: `DATABASE_URL` (required). Optional: `OPENAI_API_KEY`, `RESEND_API_KEY`, `ACADEMY_FROM_EMAIL`. Bootstrap admin with `ACADEMY_ADMIN_EMAIL` + `ACADEMY_ADMIN_PASSWORD`.
 
 ## Production Build
 

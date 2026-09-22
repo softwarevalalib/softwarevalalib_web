@@ -3,6 +3,7 @@
 export const ACADEMY_ASSETS = {
   logo: "/assets/academy/svl_academy_logo.jpeg",
   informationSheet: "/assets/academy/svl_academy_information_sheet.pdf",
+  admissionLetterTemplate: "/assets/academy/templates/admission_letter_master.pdf",
   placeholderImage: "/assets/academy/courses/digital-skills.svg",
 };
 

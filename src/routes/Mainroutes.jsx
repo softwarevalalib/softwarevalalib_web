@@ -19,6 +19,12 @@ const AdminEnrollments = lazy(() => import("../pages/admin/AdminEnrollments"));
 const AdminRatings = lazy(() => import("../pages/admin/AdminRatings"));
 const AdminInsights = lazy(() => import("../pages/admin/AdminInsights"));
 const AdminSettings = lazy(() => import("../pages/admin/AdminSettings"));
+const AdminAssistantOverview = lazy(() => import("../pages/admin/assistant/AdminAssistantOverview"));
+const AdminAssistantConversations = lazy(() => import("../pages/admin/assistant/AdminAssistantConversations"));
+const AdminAssistantInsights = lazy(() => import("../pages/admin/assistant/AdminAssistantInsights"));
+const AdminUnanswered = lazy(() => import("../pages/admin/assistant/AdminUnanswered"));
+const AdminAdmissionDocuments = lazy(() => import("../pages/admin/assistant/AdminAdmissionDocuments"));
+const AdminAssistantSettings = lazy(() => import("../pages/admin/assistant/AdminAssistantSettings"));
 
 function AcademyFallback() {
   return (
@@ -58,6 +64,12 @@ const router = createBrowserRouter([
       { path: "ratings", element: withAcademySuspense(<AdminRatings />) },
       { path: "insights", element: withAcademySuspense(<AdminInsights />) },
       { path: "settings", element: withAcademySuspense(<AdminSettings />) },
+      { path: "assistant", element: withAcademySuspense(<AdminAssistantOverview />) },
+      { path: "assistant/conversations", element: withAcademySuspense(<AdminAssistantConversations />) },
+      { path: "assistant/insights", element: withAcademySuspense(<AdminAssistantInsights />) },
+      { path: "assistant/unanswered", element: withAcademySuspense(<AdminUnanswered />) },
+      { path: "assistant/documents", element: withAcademySuspense(<AdminAdmissionDocuments />) },
+      { path: "assistant/settings", element: withAcademySuspense(<AdminAssistantSettings />) },
     ],
   },
 ]);

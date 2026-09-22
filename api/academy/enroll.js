@@ -123,7 +123,6 @@ export default async function handler(req, res) {
         message:
           "Application submitted successfully. Your admission letter is being prepared (usually ready within 10–30 minutes).",
         admissionDownload: admission?.downloadPath || null,
-        applicationsUrl: "/academy/applications",
       });
     }
 

@@ -299,14 +299,14 @@ export default function AcademyAssistant() {
 
   const panelOpen = open && !minimized;
   const panelClass = maximized
-    ? "fixed z-50 inset-3 sm:inset-6 rounded-2xl"
-    : "fixed z-50 left-3 right-3 sm:left-4 sm:right-auto bottom-[5.25rem] sm:bottom-24 w-auto sm:w-[400px] h-[min(70vh,580px)] sm:h-[600px] rounded-2xl";
+    ? "fixed z-[60] inset-3 sm:inset-6 rounded-2xl"
+    : "fixed z-[60] left-3 right-3 sm:left-6 sm:right-auto bottom-[9.5rem] sm:bottom-[5.5rem] w-auto sm:w-[min(400px,calc(100vw-3rem))] h-[min(62vh,520px)] sm:h-[min(560px,calc(100vh-8rem))] rounded-2xl";
 
   return (
     <>
       {greeting && !open ? (
         <div
-          className="fixed z-40 left-3 sm:left-4 bottom-[7.5rem] sm:bottom-24 w-[min(340px,calc(100vw-1.5rem))] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl"
+          className="fixed z-[45] left-3 sm:left-6 bottom-[11rem] sm:bottom-[6.5rem] w-[min(340px,calc(100vw-1.5rem))] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl"
           role="status"
           aria-live="polite"
         >
@@ -475,32 +475,27 @@ export default function AcademyAssistant() {
         </section>
       ) : null}
 
-      {/* Launcher — bottom LEFT, clear of Enroll CTA on the right */}
-      <button
-        type="button"
-        onClick={() => {
-          if (open && minimized) {
-            setMinimized(false);
-            setTimeout(() => inputRef.current?.focus(), 100);
-          } else if (open) closeChat();
-          else openChat();
-        }}
-        className="fixed z-40 left-3 sm:left-4 bottom-20 sm:bottom-8 inline-flex items-center gap-2 min-h-12 pl-2.5 pr-3.5 rounded-full bg-[#00274c] text-white text-sm font-bold shadow-lg shadow-[#00274c]/30 hover:bg-[#001a33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c10020]"
-        aria-label={
-          open && !minimized
-            ? "Close SVL Academy Assistant"
-            : open && minimized
-              ? "Restore SVL Academy Assistant"
-              : "Open SVL Academy Assistant"
-        }
-        aria-expanded={panelOpen}
-        aria-controls={panelOpen ? titleId : undefined}
-      >
-        <span className="grid place-items-center h-8 w-8 rounded-full bg-[#c10020]" aria-hidden>
-          {panelOpen ? <X size={16} /> : <MessageCircle size={16} />}
-        </span>
-        <span className="pr-0.5">Assistant</span>
-      </button>
+      {/* Launcher — hidden while chat panel is open to avoid overlap */}
+      {!panelOpen ? (
+        <button
+          type="button"
+          onClick={() => {
+            if (open && minimized) {
+              setMinimized(false);
+              setTimeout(() => inputRef.current?.focus(), 100);
+            } else openChat();
+          }}
+          className="fixed z-[45] left-3 sm:left-6 bottom-[7.25rem] sm:bottom-6 inline-flex items-center gap-2 min-h-11 sm:min-h-12 pl-2 pr-3 sm:pl-2.5 sm:pr-3.5 rounded-full bg-[#00274c] text-white text-sm font-bold shadow-lg shadow-[#00274c]/30 hover:bg-[#001a33] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c10020]"
+          aria-label={open && minimized ? "Restore SVL Academy Assistant" : "Open SVL Academy Assistant"}
+          aria-expanded={open && minimized}
+          aria-controls={titleId}
+        >
+          <span className="grid place-items-center h-8 w-8 rounded-full bg-[#c10020]" aria-hidden>
+            {open && minimized ? <MessageCircle size={16} /> : <MessageCircle size={16} />}
+          </span>
+          <span className="pr-0.5">Assistant</span>
+        </button>
+      ) : null}
     </>
   );
 }

@@ -5,8 +5,8 @@ import {
   requireAdmin,
   parseBody,
 } from "./_lib.js";
-import { getCourseDetails, ACADEMY_KNOWLEDGE } from "./knowledge.js";
-import { generateAdmissionPdf } from "./admissionPdf.js";
+import { getCourseDetails } from "./knowledge.js";
+import { generateAdmissionPdf, buildAdmissionMerge } from "./admissionPdf.js";
 import { randomBytes } from "node:crypto";
 
 function newKey(prefix = "adm") {
@@ -128,54 +128,45 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, emailStatus: status });
       }
 
-      if (action === "generate") {
+      if (action === "generate" || action === "regenerate") {
         const ref = cleanText(body.referenceNumber, 40);
+        const force = action === "regenerate" || body.force === true;
         const enrollments = await sql`
           SELECT * FROM academy_enrollments WHERE reference_number = ${ref} LIMIT 1
         `;
         const enrollment = enrollments[0];
         if (!enrollment) return res.status(404).json({ error: "Enrollment not found" });
 
-        // Idempotency: return existing
         const existing = await sql`
           SELECT id, reference_number, file_name, access_token, status
           FROM academy_admission_documents WHERE reference_number = ${ref} LIMIT 1
         `;
-        if (existing[0]) return res.status(200).json({ document: existing[0], existing: true });
+        if (existing[0] && !force) {
+          return res.status(200).json({ document: existing[0], existing: true });
+        }
 
         const codes = Array.isArray(enrollment.course_codes) ? enrollment.course_codes : [];
         const courses = codes.map((c) => getCourseDetails(c)).filter(Boolean);
-        const issueDate = new Date().toISOString().slice(0, 10);
-        const merge = {
-          issue_date: issueDate,
-          reference_number: enrollment.reference_number,
-          student_full_name: enrollment.full_name,
-          student_first_name: String(enrollment.full_name).split(/\s+/)[0],
-          student_address: [enrollment.county, enrollment.country].filter(Boolean).join(", "),
-          city: enrollment.county || "",
-          country: enrollment.country || "Liberia",
-          student_id: enrollment.reference_number,
-          program_courses: courses.map((c) => ({
-            title: c.title,
-            code: c.code,
-            duration: c.duration,
-            tuition: c.tuition,
-            registrationFee: c.registrationFee,
-            session: enrollment.preferred_session || c.sessionGroup || "TBC",
-          })),
-          study_mode: "100% Online (Live + Self-paced)",
-          commencement_date: ACADEMY_KNOWLEDGE.cohort.classesBegin,
-          registration_deadline: ACADEMY_KNOWLEDGE.cohort.enrollment,
-          orientation_date: ACADEMY_KNOWLEDGE.cohort.orientation,
-          orientation_venue: "Online",
-          registration_fee: courses.map((c) => `US$${c.registrationFee || 0}`).join("; "),
-          first_installment: "Official payment details shared after Admissions confirmation",
-          director_name: "Solomon Borkai",
-          director_title: "Director / General Manager",
-          template_version: "official-master-v1",
-        };
+        const merge = buildAdmissionMerge(enrollment, courses);
         const pdf = await generateAdmissionPdf(merge);
-        const accessToken = newKey("adm");
+        const accessToken = existing[0]?.access_token || newKey("adm");
+
+        if (existing[0] && force) {
+          const rows = await sql`
+            UPDATE academy_admission_documents SET
+              merge_data = ${JSON.stringify(merge)},
+              file_name = ${pdf.fileName},
+              file_base64 = ${pdf.bytes.toString("base64")},
+              template_version = ${pdf.templateVersion},
+              status = 'GENERATED',
+              generated_at = NOW(),
+              email_delivery_status = 'PENDING'
+            WHERE id = ${existing[0].id}
+            RETURNING id, reference_number, file_name, access_token, status, generated_at
+          `;
+          return res.status(200).json({ document: rows[0], regenerated: true });
+        }
+
         const rows = await sql`
           INSERT INTO academy_admission_documents (
             enrollment_id, reference_number, student_full_name, student_email,

@@ -22,7 +22,7 @@ import {
 
 const NAV = [
   { to: "/academy/admin", end: true, label: "Overview", icon: LayoutDashboard },
-  { to: "/academy/admin/enrollments", label: "Enrollments", icon: Users },
+  { to: "/academy/admin/enrollments", label: "Students", icon: Users },
   { to: "/academy/admin/ratings", label: "Ratings", icon: Star },
   { to: "/academy/admin/insights", label: "Insights", icon: LineChart },
   { to: "/academy/admin/assistant", end: true, label: "AI Assistant", icon: Bot },

@@ -13,7 +13,7 @@ const Academy = lazy(() => import("../pages/Academy"));
 const AcademyCourse = lazy(() => import("../pages/AcademyCourse"));
 const AcademyEnroll = lazy(() => import("../pages/AcademyEnroll"));
 const AcademyLogin = lazy(() => import("../pages/AcademyLogin"));
-const AcademyApplications = lazy(() => import("../pages/AcademyApplications"));
+const AcademyApplicationsRedirect = lazy(() => import("../pages/AcademyApplicationsRedirect"));
 const AdminLayout = lazy(() => import("../components/admin/AdminLayout"));
 const AdminOverview = lazy(() => import("../pages/admin/AdminOverview"));
 const AdminEnrollments = lazy(() => import("../pages/admin/AdminEnrollments"));
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
       { path: "/academy", element: withAcademySuspense(<Academy />) },
       { path: "/academy/courses/:slug", element: withAcademySuspense(<AcademyCourse />) },
       { path: "/academy/enroll", element: withAcademySuspense(<AcademyEnroll />) },
-      { path: "/academy/applications", element: withAcademySuspense(<AcademyApplications />) },
+      { path: "/academy/applications", element: withAcademySuspense(<AcademyApplicationsRedirect />) },
       { path: "/academy/login", element: withAcademySuspense(<AcademyLogin />) },
       { path: "/services", element: <Services /> },
       { path: "/projects", element: <Projects /> },

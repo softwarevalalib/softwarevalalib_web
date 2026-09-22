@@ -15,7 +15,7 @@ import {
   getFaqAnswer,
   courseCardPayload,
 } from "./knowledge.js";
-import { generateAdmissionPdf } from "./admissionPdf.js";
+import { generateAdmissionPdf, buildAdmissionMerge } from "./admissionPdf.js";
 
 const EMAIL_DISCLOSURE =
   "We'll use this email for your enrollment communication and to send your admission letter and other important Academy information related to your application.";
@@ -324,36 +324,7 @@ async function generateAndStoreAdmission(sql, enrollment, settings) {
   const courses = codes.map((code) => getCourseDetails(code)).filter(Boolean);
   const fullName = enrollment.full_name;
   const firstName = String(fullName).split(/\s+/)[0];
-  const issueDate = new Date().toISOString().slice(0, 10);
-  const merge = {
-    issue_date: issueDate,
-    reference_number: enrollment.reference_number,
-    student_full_name: fullName,
-    student_first_name: firstName,
-    student_address: [enrollment.county, enrollment.country].filter(Boolean).join(", ") || "Liberia",
-    city: enrollment.county || "",
-    country: enrollment.country || "Liberia",
-    student_id: enrollment.reference_number,
-    program_courses: courses.map((c) => ({
-      title: c.title,
-      code: c.code,
-      duration: c.duration,
-      tuition: c.tuition,
-      registrationFee: c.registrationFee,
-      session: enrollment.preferred_session || c.sessionGroup || "TBC",
-    })),
-    study_mode: "100% Online (Live + Self-paced)",
-    commencement_date: ACADEMY_KNOWLEDGE.cohort.classesBegin,
-    registration_deadline: ACADEMY_KNOWLEDGE.cohort.enrollment,
-    orientation_date: ACADEMY_KNOWLEDGE.cohort.orientation,
-    orientation_time: "",
-    orientation_venue: "Online",
-    registration_fee: courses.map((c) => `US$${c.registrationFee || 0} (${c.code})`).join("; ") || "Per programme",
-    first_installment: "Official payment details shared after Admissions confirmation",
-    director_name: "Solomon Borkai",
-    director_title: "Director / General Manager",
-    template_version: "official-master-v1",
-  };
+  const merge = buildAdmissionMerge(enrollment, courses);
 
   const pdf = await generateAdmissionPdf(merge);
   const accessToken = newKey("adm");
@@ -505,7 +476,7 @@ function ruleBasedReply(text, context) {
         "3. Share your personal details (name, email, phone, and a few optional fields).",
         "4. Review the summary and confirm submission.",
         "5. You receive an application reference. Your admission letter is prepared automatically (usually within 10–30 minutes) and emailed to you — admin approval is not required before the letter is sent.",
-        "6. You can view, edit, or delete a pending application and download your letter anytime at /academy/applications.",
+        "6. Your admission letter is emailed to you automatically (usually within 10–30 minutes). Academy staff manage applications in the admin dashboard.",
         "",
         "Would you like me to recommend a course, or start enrollment now?",
       ].join("\n"),
@@ -513,7 +484,7 @@ function ruleBasedReply(text, context) {
         buttons: [
           { label: "Find a Course", action: "quick", value: "Help me find a course for my goals" },
           { label: "Enroll With Assistant", action: "start_assistant_enroll" },
-          { label: "My Applications", href: "/academy/applications" },
+          { label: "Contact Admissions", action: "handoff" },
         ],
       },
     };
@@ -544,6 +515,7 @@ function ruleBasedReply(text, context) {
         "",
         "Technology / skills courses: tuition is typically US$125–US$175 per course (exact amount is on each course card), plus any listed registration fee.",
         "",
+        "Tuition is paid in three installments: 40% first payment, 30% second payment, and 30% final payment.",
         ACADEMY_KNOWLEDGE.payments?.[0] ||
           "Payment guidance is shared after Admissions processes your application.",
         "Official merchant / mobile-money numbers are never published in chat until Admissions confirms your application.",
@@ -996,7 +968,7 @@ export default async function handler(req, res) {
           : admission.message ||
             "Your admission letter is being prepared and is usually ready within 10–30 minutes.",
         "",
-        "You can view, edit, or delete this pending application and download your admission letter at /academy/applications using your email and reference number.",
+        "Your admission letter will be emailed to you at the address you provided. Keep your reference number for Admissions follow-up.",
         "",
         "Admissions may still follow up within 24–48 hours about orientation and payment.",
       ]
@@ -1008,7 +980,7 @@ export default async function handler(req, res) {
         referenceNumber: result.enrollment.reference_number,
         admission,
         buttons: [
-          { label: "My Applications", href: "/academy/applications" },
+          { label: "Contact Admissions", action: "handoff" },
           { label: "Return to Academy", href: "/academy" },
           ...(admission.downloadPath
             ? [{ label: "Download Admission Letter", href: admission.downloadPath }]

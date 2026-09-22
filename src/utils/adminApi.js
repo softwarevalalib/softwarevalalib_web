@@ -108,6 +108,53 @@ export async function fetchEnrollments() {
   return parseJson(res);
 }
 
+export async function fetchEnrollmentDetail(id) {
+  const res = await fetch(`/api/academy/applications?id=${encodeURIComponent(id)}`, {
+    headers: authHeaders(),
+  });
+  return parseJson(res);
+}
+
+export async function updateEnrollment(id, patch) {
+  const res = await fetch("/api/academy/applications", {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ action: "update", id, patch, website: "" }),
+  });
+  return parseJson(res);
+}
+
+export async function deleteEnrollment(id) {
+  const res = await fetch("/api/academy/applications", {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ action: "delete", id, website: "" }),
+  });
+  return parseJson(res);
+}
+
+export async function generateAdmissionLetter(referenceNumber, { regenerate = false } = {}) {
+  const res = await fetch("/api/academy/admission", {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({
+      action: regenerate ? "regenerate" : "generate",
+      referenceNumber,
+      website: "",
+    }),
+  });
+  return parseJson(res);
+}
+
+export async function resendAdmissionLetter(documentId) {
+  const res = await fetch("/api/academy/admission", {
+    method: "POST",
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ action: "resend", id: documentId, website: "" }),
+  });
+  return parseJson(res);
+}
+
 export async function fetchRatingsAdmin() {
   const res = await fetch("/api/academy/ratings", {
     headers: { Accept: "application/json" },

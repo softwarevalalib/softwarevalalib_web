@@ -3,17 +3,22 @@ import StarRating from "../StarRating";
 import AcademyImage from "./AcademyImage";
 import { trackAcademyEvent } from "../../utils/academyApi";
 
+function isPhotoImage(src = "") {
+  return /\.(jpe?g|png|webp)$/i.test(src);
+}
+
 export default function CourseCard({ course, rating }) {
   const average = rating?.averageRating || 0;
   const count = rating?.ratingCount || 0;
+  const photo = isPhotoImage(course.image);
 
   return (
     <article className="lift h-full flex flex-col bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-      <div className="relative aspect-[16/10] bg-[#00274c] overflow-hidden">
+      <div className={`relative aspect-[16/10] overflow-hidden ${photo ? "bg-white" : "bg-[#00274c]"}`}>
         <AcademyImage
           src={course.image}
           alt={course.imageAlt || course.title}
-          className="w-full h-full object-cover"
+          className={`w-full h-full ${photo ? "object-contain" : "object-cover"}`}
         />
         <span className="absolute top-3 left-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold text-[#00274c]">
           {course.code}

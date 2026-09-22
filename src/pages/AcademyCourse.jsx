@@ -209,11 +209,11 @@ export default function AcademyCourse() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl">
+              <div className="rounded-2xl overflow-hidden border border-white/10 bg-white shadow-2xl">
                 <AcademyImage
                   src={course.image}
                   alt={course.imageAlt || course.title}
-                  className="w-full aspect-[16/10] object-cover"
+                  className={`w-full ${/\.(jpe?g|png|webp)$/i.test(course.image || "") ? "aspect-square object-contain bg-white" : "aspect-[16/10] object-cover"}`}
                 />
               </div>
             </Reveal>

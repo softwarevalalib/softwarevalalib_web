@@ -4,8 +4,16 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { COMPANY_WHATSAPP } from "../config/company";
+import { getStoredPortalUser } from "../utils/portalApi";
 
 const WHATSAPP_URL = `https://wa.me/${COMPANY_WHATSAPP}?text=Hi%20SVL%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20services.`;
+
+function portalHomeFor(user) {
+  if (!user) return "/academy/portal/login";
+  return user.role === "instructor"
+    ? "/academy/portal/instructor"
+    : "/academy/portal/student";
+}
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -28,6 +36,10 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const location = useLocation();
+  const onAcademy = location.pathname.startsWith("/academy");
+  const portalUser = onAcademy ? getStoredPortalUser() : null;
+  const portalHref = portalHomeFor(portalUser);
+  const portalLabel = portalUser ? "My Dashboard" : "Portal Login";
 
   useEffect(() => {
     setIsOpen(false);
@@ -129,6 +141,14 @@ function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2 z-10">
+          {onAcademy ? (
+            <Link
+              to={portalHref}
+              className="hidden sm:inline-flex items-center rounded-full border border-[#00274c]/20 px-3 py-2 text-xs sm:text-sm font-semibold text-[#00274c] hover:bg-[#00274c]/5 transition-colors"
+            >
+              {portalLabel}
+            </Link>
+          ) : null}
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -200,11 +220,20 @@ function Navbar() {
               </Link>
             )
           )}
+          {onAcademy ? (
+            <Link
+              to={portalHref}
+              onClick={() => setIsOpen(false)}
+              className="mt-4 w-full inline-flex items-center justify-center rounded-full border border-[#00274c]/20 px-4 py-3 text-base font-semibold text-[#00274c] hover:bg-[#00274c]/5"
+            >
+              {portalLabel}
+            </Link>
+          ) : null}
           <a
             href={WHATSAPP_URL}
             target="_blank"
             rel="noreferrer"
-            className="btn-primary mt-4 w-full"
+            className="btn-primary mt-3 w-full"
             onClick={() => setIsOpen(false)}
           >
             Get Started

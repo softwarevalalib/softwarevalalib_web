@@ -30,17 +30,19 @@ export default function PortalLogin() {
         <p className="text-xs font-semibold uppercase tracking-wider text-[#c10020]">SVL Training Academy</p>
         <h1 className="mt-2 font-display text-2xl font-bold text-[#00274c]">Portal Login</h1>
         <p className="mt-2 text-sm text-slate-500">
-          Students and instructors sign in with credentials issued by Academy Admin after enrollment approval.
+          Students: enrollment email + password <span className="font-mono text-xs">SVL</span> + last name.
+          Instructors use the username and password issued by Admin.
         </p>
         <form onSubmit={onSubmit} className="mt-6 space-y-4">
           <label className="block text-sm font-semibold text-[#00274c]">
-            Username or email
+            Email (students) or username (instructors)
             <input
               className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-[#c10020]"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
               autoComplete="username"
+              placeholder="you@example.com"
             />
           </label>
           <label className="block text-sm font-semibold text-[#00274c]">

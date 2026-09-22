@@ -17,6 +17,8 @@ export default function AdminPortalCourses() {
     instructorId: "",
   });
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [syncInfo, setSyncInfo] = useState(null);
 
   const load = useCallback(async () => {
     const [c, i] = await Promise.all([
@@ -24,6 +26,7 @@ export default function AdminPortalCourses() {
       portalAdmin("list-users", { role: "instructor" }, "GET"),
     ]);
     setCourses(c.courses || []);
+    setSyncInfo(c.sync || null);
     setInstructors(i.users || []);
   }, []);
 
@@ -33,11 +36,41 @@ export default function AdminPortalCourses() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-[#00274c]">Portal Courses</h1>
-        <p className="text-sm text-slate-500">Manage courses assigned in the Academy Portal.</p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-[#00274c]">Portal Courses</h1>
+          <p className="text-sm text-slate-500">
+            Catalogue courses sync into the portal automatically. Edit here to update the live Academy
+            catalogue and assign instructors.
+          </p>
+          {syncInfo ? (
+            <p className="mt-1 text-xs text-slate-400">
+              Last sync: {syncInfo.total} catalogue courses · {syncInfo.inserted} newly inserted
+            </p>
+          ) : null}
+        </div>
+        <button
+          type="button"
+          className="btn-outline !py-2 !px-4 !text-sm"
+          onClick={async () => {
+            setError("");
+            try {
+              const data = await portalAdmin("sync-courses");
+              setCourses(data.courses || []);
+              setSyncInfo(data.sync || null);
+              setMessage(
+                `Synced catalogue. ${data.sync?.inserted ?? 0} new course(s) added; existing admin edits preserved.`
+              );
+            } catch (err) {
+              setError(err.message);
+            }
+          }}
+        >
+          Sync from catalogue
+        </button>
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
 
       <form
         className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm grid gap-3 sm:grid-cols-2"
@@ -59,6 +92,7 @@ export default function AdminPortalCourses() {
               registrationFee: "",
               instructorId: "",
             });
+            setMessage("Course saved. Public catalogue updates immediately.");
             await load();
           } catch (err) {
             setError(err.message);
@@ -119,19 +153,39 @@ export default function AdminPortalCourses() {
                 {c.code} — {c.title}
               </p>
               <p className="text-xs text-slate-500">
-                US${c.tuition} + ${c.registration_fee} reg. · {c.instructor_name || "No instructor"}
+                US${c.tuition} + ${c.registration_fee} reg. · {c.instructor_name || "No instructor"} ·{" "}
+                {c.status}
               </p>
             </div>
-            <button
-              type="button"
-              className="text-xs font-bold text-red-600 underline"
-              onClick={async () => {
-                await portalAdmin("delete-course", { courseId: c.id });
-                await load();
-              }}
-            >
-              Delete
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                className="text-xs font-bold text-[#00274c] underline"
+                onClick={() =>
+                  setForm({
+                    code: c.code || "",
+                    title: c.title || "",
+                    description: c.description || "",
+                    duration: c.duration || "",
+                    tuition: String(c.tuition ?? ""),
+                    registrationFee: String(c.registration_fee ?? ""),
+                    instructorId: c.instructor_id || "",
+                  })
+                }
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="text-xs font-bold text-red-600 underline"
+                onClick={async () => {
+                  await portalAdmin("delete-course", { courseId: c.id });
+                  await load();
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
         {!courses.length ? <p className="text-sm text-slate-500">No portal courses yet.</p> : null}

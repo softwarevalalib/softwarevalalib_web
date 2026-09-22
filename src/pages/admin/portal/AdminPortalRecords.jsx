@@ -16,6 +16,7 @@ export default function AdminPortalGrades() {
     assessmentType: "assignment",
   });
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   const load = useCallback(async () => {
     const [g, s] = await Promise.all([
@@ -30,10 +31,26 @@ export default function AdminPortalGrades() {
     load().catch((e) => setError(e.message));
   }, [load]);
 
+  const setGradeStatus = async (gradeId, status) => {
+    setError("");
+    setMessage("");
+    try {
+      await portalAdmin("approve-grade", { gradeId, status });
+      setMessage(status === "approved" ? "Grade approved — student can view and download PDF." : `Grade marked ${status}.`);
+      await load();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <Header title="Grades" subtitle="Record student assessment scores." />
+      <Header
+        title="Grades"
+        subtitle="Approve instructor submissions so students can see scores and download PDFs. You can also record grades directly."
+      />
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
       <form
         className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm grid gap-3 sm:grid-cols-2"
         onSubmit={async (e) => {
@@ -103,22 +120,67 @@ export default function AdminPortalGrades() {
           />
         </label>
         <button type="submit" className="btn-primary sm:col-span-2 !py-2">
-          Add grade
+          Add grade (auto-approved)
         </button>
       </form>
-      <DataTable
-        headers={["Student", "Course", "Title", "Score"]}
-        rows={grades.map((g) => [
-          g.student_name,
-          g.course_code,
-          g.title,
-          `${g.score}/${g.max_score}`,
-        ])}
-        onDelete={async (i) => {
-          await portalAdmin("delete-grade", { gradeId: grades[i].id });
-          await load();
-        }}
-      />
+      <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm overflow-x-auto">
+        <table className="w-full text-sm text-left">
+          <thead className="text-xs uppercase text-slate-400">
+            <tr>
+              <th className="pb-2">Student</th>
+              <th className="pb-2">Course</th>
+              <th className="pb-2">Title</th>
+              <th className="pb-2">Score</th>
+              <th className="pb-2">Status</th>
+              <th className="pb-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {grades.map((g) => (
+              <tr key={g.id} className="border-t border-slate-100">
+                <td className="py-3">{g.student_name}</td>
+                <td className="py-3">{g.course_code}</td>
+                <td className="py-3">{g.title}</td>
+                <td className="py-3">
+                  {g.score}/{g.max_score}
+                </td>
+                <td className="py-3 capitalize">{g.status || "approved"}</td>
+                <td className="py-3 space-x-2 whitespace-nowrap">
+                  {g.status === "pending" ? (
+                    <>
+                      <button
+                        type="button"
+                        className="text-xs font-bold text-emerald-700 underline"
+                        onClick={() => setGradeStatus(g.id, "approved")}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="text-xs font-bold text-amber-700 underline"
+                        onClick={() => setGradeStatus(g.id, "rejected")}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="text-xs font-bold text-red-600 underline"
+                    onClick={async () => {
+                      await portalAdmin("delete-grade", { gradeId: g.id });
+                      await load();
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {!grades.length ? <p className="text-sm text-slate-500 mt-2">No grades yet.</p> : null}
+      </div>
     </div>
   );
 }

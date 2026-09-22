@@ -3,6 +3,7 @@ import academyCourses from "../../data/academyCourses";
 import { ACADEMY_FILTERS } from "../../data/academyMeta";
 import CourseCard from "./CourseCard";
 import { fetchAcademyRatings, trackAcademyEvent } from "../../utils/academyApi";
+import { fetchPublicCourses } from "../../utils/portalApi";
 
 function useDebounced(value, delay = 250) {
   const [v, setV] = useState(value);
@@ -21,6 +22,7 @@ export default function CourseCatalogue({ ratingsMap = {}, embed = false }) {
   const [price, setPrice] = useState("All");
   const [visible, setVisible] = useState(12);
   const [ratings, setRatings] = useState(ratingsMap);
+  const [courses, setCourses] = useState(academyCourses);
   const debouncedQuery = useDebounced(query);
 
   useEffect(() => {
@@ -29,19 +31,31 @@ export default function CourseCatalogue({ ratingsMap = {}, embed = false }) {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    fetchPublicCourses()
+      .then((data) => {
+        if (Array.isArray(data.courses) && data.courses.length) {
+          setCourses(data.courses);
+        }
+      })
+      .catch(() => {
+        // Keep static catalogue fallback
+      });
+  }, []);
+
   const levels = useMemo(
-    () => ["All", ...new Set(academyCourses.map((c) => c.level))],
-    []
+    () => ["All", ...new Set(courses.map((c) => c.level).filter(Boolean))],
+    [courses]
   );
   const durations = useMemo(
-    () => ["All", ...new Set(academyCourses.map((c) => c.duration))],
-    []
+    () => ["All", ...new Set(courses.map((c) => c.duration).filter(Boolean))],
+    [courses]
   );
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
-    return academyCourses.filter((c) => {
-      if (c.status !== "published") return false;
+    return courses.filter((c) => {
+      if (c.status && c.status !== "published" && c.status !== "active") return false;
       if (filter !== "All Courses") {
         const match =
           c.category === filter ||
@@ -59,13 +73,13 @@ export default function CourseCatalogue({ ratingsMap = {}, embed = false }) {
       if (price === "Over 160" && c.tuition <= 160) return false;
       if (!q) return true;
       return (
-        c.title.toLowerCase().includes(q) ||
-        c.code.toLowerCase().includes(q) ||
-        c.category.toLowerCase().includes(q) ||
-        c.description.toLowerCase().includes(q)
+        (c.title || "").toLowerCase().includes(q) ||
+        (c.code || "").toLowerCase().includes(q) ||
+        (c.category || "").toLowerCase().includes(q) ||
+        (c.description || "").toLowerCase().includes(q)
       );
     });
-  }, [debouncedQuery, filter, level, duration, price]);
+  }, [courses, debouncedQuery, filter, level, duration, price]);
 
   useEffect(() => {
     setVisible(12);
@@ -132,7 +146,9 @@ export default function CourseCatalogue({ ratingsMap = {}, embed = false }) {
                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm"
               >
                 {levels.map((l) => (
-                  <option key={l} value={l}>{l}</option>
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
                 ))}
               </select>
             </label>
@@ -144,7 +160,9 @@ export default function CourseCatalogue({ ratingsMap = {}, embed = false }) {
                 className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm"
               >
                 {durations.map((d) => (
-                  <option key={d} value={d}>{d}</option>
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
                 ))}
               </select>
             </label>
@@ -186,7 +204,7 @@ export default function CourseCatalogue({ ratingsMap = {}, embed = false }) {
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.slice(0, visible).map((course) => (
                 <CourseCard
-                  key={course.id}
+                  key={course.id || course.code}
                   course={course}
                   rating={ratings[course.id] || ratings[course.code]}
                 />

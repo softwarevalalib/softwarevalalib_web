@@ -11,6 +11,8 @@ import {
   Menu,
   X,
   GraduationCap,
+  FileText,
+  Video,
 } from "lucide-react";
 import {
   clearPortalSession,
@@ -23,6 +25,8 @@ import {
 const STUDENT_NAV = [
   { to: "/academy/portal/student", end: true, label: "Dashboard", icon: LayoutDashboard },
   { to: "/academy/portal/student/grades", label: "Grades", icon: ClipboardList },
+  { to: "/academy/portal/student/assignments", label: "Assignments", icon: FileText },
+  { to: "/academy/portal/student/classroom", label: "ClassRoom", icon: Video },
   { to: "/academy/portal/student/attendance", label: "Attendance", icon: CalendarCheck },
   { to: "/academy/portal/student/fees", label: "Fees", icon: Wallet },
   { to: "/academy/portal/student/certificates", label: "Certificates", icon: Award },
@@ -32,6 +36,10 @@ const INSTRUCTOR_NAV = [
   { to: "/academy/portal/instructor", end: true, label: "Dashboard", icon: LayoutDashboard },
   { to: "/academy/portal/instructor/courses", label: "My Courses", icon: BookOpen },
   { to: "/academy/portal/instructor/students", label: "Students", icon: GraduationCap },
+  { to: "/academy/portal/instructor/attendance", label: "Attendance", icon: CalendarCheck },
+  { to: "/academy/portal/instructor/grades", label: "Grades", icon: ClipboardList },
+  { to: "/academy/portal/instructor/assignments", label: "Assignments", icon: FileText },
+  { to: "/academy/portal/instructor/classroom", label: "ClassRoom", icon: Video },
 ];
 
 export default function PortalLayout({ role }) {

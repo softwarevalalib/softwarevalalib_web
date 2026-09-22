@@ -18,6 +18,8 @@ import {
   Wallet,
   Award,
   UserCog,
+  FileText,
+  Video,
 } from "lucide-react";
 import {
   clearAdminSession,
@@ -36,6 +38,8 @@ const NAV = [
   { to: "/academy/admin/portal/courses", label: "Courses", icon: BookOpen },
   { to: "/academy/admin/portal/grades", label: "Grades", icon: ClipboardList },
   { to: "/academy/admin/portal/attendance", label: "Attendance", icon: CalendarCheck },
+  { to: "/academy/admin/portal/assignments", label: "Assignments", icon: FileText },
+  { to: "/academy/admin/portal/classroom", label: "ClassRoom", icon: Video },
   { to: "/academy/admin/portal/fees", label: "Fees Payments", icon: Wallet },
   { to: "/academy/admin/portal/certificates", label: "Certificates", icon: Award },
   { to: "/academy/admin/ratings", label: "Ratings", icon: Star },

@@ -8,6 +8,8 @@ import {
   CalendarCheck,
   Wallet,
   Award,
+  FileText,
+  Video,
 } from "lucide-react";
 import StatCard from "../../../components/admin/StatCard";
 import { portalAdmin } from "../../../utils/portalApi";
@@ -15,9 +17,11 @@ import { portalAdmin } from "../../../utils/portalApi";
 const LINKS = [
   { to: "/academy/admin/portal/students", label: "Students", icon: Users, hint: "Approve enrollments & credentials" },
   { to: "/academy/admin/portal/instructors", label: "Instructors", icon: GraduationCap, hint: "Create instructor accounts" },
-  { to: "/academy/admin/portal/courses", label: "Courses", icon: BookOpen, hint: "Manage portal courses" },
-  { to: "/academy/admin/portal/grades", label: "Grades", icon: ClipboardList, hint: "Record assessments" },
+  { to: "/academy/admin/portal/courses", label: "Courses", icon: BookOpen, hint: "Live catalogue & assign instructors" },
+  { to: "/academy/admin/portal/grades", label: "Grades", icon: ClipboardList, hint: "Approve instructor submissions" },
   { to: "/academy/admin/portal/attendance", label: "Attendance", icon: CalendarCheck, hint: "Session attendance" },
+  { to: "/academy/admin/portal/assignments", label: "Assignments", icon: FileText, hint: "All assignments & submissions" },
+  { to: "/academy/admin/portal/classroom", label: "ClassRoom", icon: Video, hint: "Meet/Zoom session history" },
   { to: "/academy/admin/portal/fees", label: "Fees Payments", icon: Wallet, hint: "40/30/30 installments" },
   { to: "/academy/admin/portal/certificates", label: "Certificates", icon: Award, hint: "Upload & issue certificates" },
 ];
@@ -34,8 +38,8 @@ export default function AdminPortalOverview() {
       <div>
         <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#00274c]">Academy Portal</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Approve enrollments, issue login credentials, and manage students, instructors, grades,
-          attendance, fees, and certificates.
+          Approve enrollments, manage live courses, review grades, and oversee classroom sessions,
+          assignments, attendance, fees, and certificates.
         </p>
       </div>
 

@@ -50,6 +50,15 @@ function authHeaders(extra = {}) {
   };
 }
 
+function adminHeaders(extra = {}) {
+  const token = getAdminTokenLocal();
+  return {
+    Accept: "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...extra,
+  };
+}
+
 async function parseJson(res) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || "Request failed");
@@ -97,6 +106,49 @@ export async function fetchInstructorDashboard() {
   return parseJson(res);
 }
 
+/** Authenticated portal action (student or instructor). */
+export async function portalAction(action, body = {}, method = "POST") {
+  const isGet = method === "GET";
+  const params = new URLSearchParams({ action });
+  if (isGet) {
+    Object.entries(body).forEach(([k, v]) => {
+      if (v != null && v !== "") params.set(k, String(v));
+    });
+  }
+  const res = await fetch(isGet ? `/api/academy/portal?${params}` : "/api/academy/portal", {
+    method,
+    headers: authHeaders(isGet ? {} : { "Content-Type": "application/json" }),
+    ...(isGet ? {} : { body: JSON.stringify({ action, ...body, website: "" }) }),
+  });
+  return parseJson(res);
+}
+
+export async function fetchPublicCourses() {
+  const res = await fetch("/api/academy/portal?action=public-list-courses", {
+    headers: { Accept: "application/json" },
+  });
+  return parseJson(res);
+}
+
+export function gradePdfUrl(gradeId) {
+  return `/api/academy/portal?action=download-grade-pdf&id=${encodeURIComponent(gradeId)}`;
+}
+
+export async function downloadGradePdf(gradeId) {
+  const res = await fetch(gradePdfUrl(gradeId), { headers: authHeaders() });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "Unable to download grade PDF");
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `SVL_Grade_${gradeId}.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export async function verifyCertificate(certificateId, email) {
   const res = await fetch("/api/academy/portal", {
     method: "POST",
@@ -106,24 +158,35 @@ export async function verifyCertificate(certificateId, email) {
   return parseJson(res);
 }
 
-function adminHeaders(extra = {}) {
-  const token = getAdminTokenLocal();
-  return {
-    Accept: "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...extra,
-  };
-}
-
 export async function portalAdmin(action, body = {}, method = "POST") {
   const isGet = method === "GET";
-  const url = isGet
-    ? `/api/academy/portal?action=${encodeURIComponent(action)}${body.role ? `&role=${encodeURIComponent(body.role)}` : ""}${body.id ? `&id=${encodeURIComponent(body.id)}` : ""}`
-    : "/api/academy/portal";
-  const res = await fetch(url, {
+  const params = new URLSearchParams({ action });
+  if (isGet) {
+    Object.entries(body).forEach(([k, v]) => {
+      if (v != null && v !== "") params.set(k, String(v));
+    });
+  }
+  const res = await fetch(isGet ? `/api/academy/portal?${params}` : "/api/academy/portal", {
     method,
     headers: adminHeaders(isGet ? {} : { "Content-Type": "application/json" }),
     ...(isGet ? {} : { body: JSON.stringify({ action, ...body, website: "" }) }),
   });
   return parseJson(res);
+}
+
+export function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      const base64 = result.includes(",") ? result.split(",")[1] : result;
+      resolve({
+        base64,
+        name: file.name,
+        mime: file.type || "application/octet-stream",
+      });
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
 }

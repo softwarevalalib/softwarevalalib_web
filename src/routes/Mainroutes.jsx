@@ -58,12 +58,38 @@ const StudentFees = lazy(() =>
 const StudentCertificates = lazy(() =>
   import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentCertificates }))
 );
+const StudentAssignments = lazy(() =>
+  import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentAssignments }))
+);
+const StudentClassroom = lazy(() =>
+  import("../pages/portal/StudentPages").then((m) => ({ default: m.StudentClassroom }))
+);
 const InstructorDashboard = lazy(() => import("../pages/portal/InstructorPages"));
 const InstructorCourses = lazy(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorCourses }))
 );
 const InstructorStudents = lazy(() =>
   import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorStudents }))
+);
+const InstructorAttendance = lazy(() =>
+  import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorAttendance }))
+);
+const InstructorGrades = lazy(() =>
+  import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorGrades }))
+);
+const InstructorAssignments = lazy(() =>
+  import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorAssignments }))
+);
+const InstructorClassroom = lazy(() =>
+  import("../pages/portal/InstructorPages").then((m) => ({ default: m.InstructorClassroom }))
+);
+const AdminPortalClassroom = lazy(() =>
+  import("../pages/admin/portal/AdminPortalLearning").then((m) => ({ default: m.AdminPortalClassroom }))
+);
+const AdminPortalAssignments = lazy(() =>
+  import("../pages/admin/portal/AdminPortalLearning").then((m) => ({
+    default: m.AdminPortalAssignments,
+  }))
 );
 
 function AcademyFallback() {
@@ -113,6 +139,8 @@ const router = createBrowserRouter([
       { path: "portal/courses", element: withAcademySuspense(<AdminPortalCourses />) },
       { path: "portal/grades", element: withAcademySuspense(<AdminPortalGrades />) },
       { path: "portal/attendance", element: withAcademySuspense(<AdminPortalAttendance />) },
+      { path: "portal/assignments", element: withAcademySuspense(<AdminPortalAssignments />) },
+      { path: "portal/classroom", element: withAcademySuspense(<AdminPortalClassroom />) },
       { path: "portal/fees", element: withAcademySuspense(<AdminPortalFees />) },
       { path: "portal/certificates", element: withAcademySuspense(<AdminPortalCertificates />) },
       { path: "assistant", element: withAcademySuspense(<AdminAssistantOverview />) },
@@ -129,6 +157,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: withAcademySuspense(<StudentDashboard />) },
       { path: "grades", element: withAcademySuspense(<StudentGrades />) },
+      { path: "assignments", element: withAcademySuspense(<StudentAssignments />) },
+      { path: "classroom", element: withAcademySuspense(<StudentClassroom />) },
       { path: "attendance", element: withAcademySuspense(<StudentAttendance />) },
       { path: "fees", element: withAcademySuspense(<StudentFees />) },
       { path: "certificates", element: withAcademySuspense(<StudentCertificates />) },
@@ -141,6 +171,10 @@ const router = createBrowserRouter([
       { index: true, element: withAcademySuspense(<InstructorDashboard />) },
       { path: "courses", element: withAcademySuspense(<InstructorCourses />) },
       { path: "students", element: withAcademySuspense(<InstructorStudents />) },
+      { path: "attendance", element: withAcademySuspense(<InstructorAttendance />) },
+      { path: "grades", element: withAcademySuspense(<InstructorGrades />) },
+      { path: "assignments", element: withAcademySuspense(<InstructorAssignments />) },
+      { path: "classroom", element: withAcademySuspense(<InstructorClassroom />) },
     ],
   },
 ]);

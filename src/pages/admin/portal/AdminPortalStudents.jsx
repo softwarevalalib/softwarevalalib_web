@@ -61,7 +61,9 @@ export default function AdminPortalStudents() {
       <div>
         <h1 className="font-display text-2xl font-bold text-[#00274c]">Portal Students</h1>
         <p className="text-sm text-slate-500">
-          Approve pending applications to create student usernames and passwords for the portal.
+          Approve pending applications to create portal logins. Students sign in with their enrollment
+          email and password <code className="font-mono text-xs">SVL</code> + last name (e.g. Jane Doe →{" "}
+          <code className="font-mono text-xs">SVLDoe</code>).
         </p>
       </div>
 
@@ -71,11 +73,12 @@ export default function AdminPortalStudents() {
         <div className="rounded-xl border border-[#00274c]/20 bg-[#00274c]/5 p-4 text-sm">
           <p className="font-bold text-[#00274c]">Login credentials</p>
           <p>
-            Username: <code className="font-mono">{creds.username}</code>
+            Email / username: <code className="font-mono">{creds.username}</code>
           </p>
           <p>
             Password: <code className="font-mono">{creds.password}</code>
           </p>
+          {creds.note ? <p className="mt-1 text-xs text-slate-600">{creds.note}</p> : null}
           <p className="mt-1 text-xs text-slate-500">
             Portal login: /academy/portal/login — student should change password after first login.
           </p>

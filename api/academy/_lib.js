@@ -108,6 +108,63 @@ export async function ensurePortalSchema(sql) {
   await sql`ALTER TABLE academy_enrollments ADD COLUMN IF NOT EXISTS portal_user_id UUID`;
   await sql`ALTER TABLE academy_enrollments ADD COLUMN IF NOT EXISTS approved_at TIMESTAMPTZ`;
   await sql`ALTER TABLE academy_enrollments ADD COLUMN IF NOT EXISTS approved_by UUID`;
+  await sql`ALTER TABLE academy_grades ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'approved'`;
+  await sql`ALTER TABLE academy_grades ADD COLUMN IF NOT EXISTS submitted_by UUID`;
+  await sql`ALTER TABLE academy_grades ADD COLUMN IF NOT EXISTS reviewed_by UUID`;
+  await sql`ALTER TABLE academy_grades ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE academy_portal_courses ADD COLUMN IF NOT EXISTS category TEXT`;
+  await sql`ALTER TABLE academy_portal_courses ADD COLUMN IF NOT EXISTS level TEXT`;
+  await sql`ALTER TABLE academy_portal_courses ADD COLUMN IF NOT EXISTS slug TEXT`;
+  await sql`ALTER TABLE academy_portal_courses ADD COLUMN IF NOT EXISTS image TEXT`;
+  await sql`ALTER TABLE academy_portal_courses ADD COLUMN IF NOT EXISTS programme_type TEXT`;
+  await sql`ALTER TABLE academy_portal_courses ADD COLUMN IF NOT EXISTS long_description TEXT`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_assignments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    course_code TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    due_at TIMESTAMPTZ,
+    attachment_name TEXT,
+    attachment_base64 TEXT,
+    attachment_mime TEXT,
+    created_by UUID REFERENCES academy_portal_users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_assignment_submissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    assignment_id UUID NOT NULL REFERENCES academy_assignments(id) ON DELETE CASCADE,
+    student_id UUID NOT NULL REFERENCES academy_portal_users(id) ON DELETE CASCADE,
+    content TEXT,
+    attachment_name TEXT,
+    attachment_base64 TEXT,
+    attachment_mime TEXT,
+    score NUMERIC(5,2),
+    max_score NUMERIC(5,2) DEFAULT 100,
+    feedback TEXT,
+    status TEXT NOT NULL DEFAULT 'submitted',
+    graded_by UUID,
+    graded_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (assignment_id, student_id)
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_classroom_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    course_code TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    session_date DATE NOT NULL,
+    start_time TEXT,
+    end_time TEXT,
+    meeting_url TEXT NOT NULL,
+    platform TEXT,
+    created_by UUID REFERENCES academy_portal_users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'scheduled',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
   portalSchemaReady = true;
 }
 

@@ -26,7 +26,9 @@ export const ACADEMY_KNOWLEDGE = {
     { q: "What equipment do I need?", a: "A personal laptop, basic computer knowledge, and reliable internet. Minimum 80% live-session attendance and 70% average score are recommended." },
     { q: "Can I pay in installments?", a: "Flexible installment options may be available after your application is reviewed. Final terms are confirmed during enrollment processing. Official merchant details are shared after approval — never invented online." },
     { q: "How do online classes work?", a: "About 3 hours/week live class plus about 3 hours/week self-paced activities for 12-week professional programmes." },
-    { q: "What happens after I submit?", a: "You receive a reference number immediately. Admissions typically follows up within 24–48 hours. Admission letters are issued according to Academy policy (usually after admin approval)." },
+    { q: "What happens after I submit?", a: "You receive a reference number immediately. Your admission letter is generated automatically (usually ready within 10–30 minutes) and emailed to you — admin approval is not required before the letter is sent. You can view, edit, or delete a pending application and download your letter at /academy/applications. Admissions may still follow up within 24–48 hours about orientation and payment." },
+    { q: "How does enrollment work?", a: "Choose a course, click Select to enroll (or use the enrollment form), share your personal details, review the summary, and confirm. After submission you get a reference number and an automatic admission letter within about 10–30 minutes." },
+    { q: "Where can I download my admission letter?", a: "Open /academy/applications, enter the email and reference number from your application, then use Download PDF when the letter is ready. Letters are usually available within 10–30 minutes." },
     { q: "Where is Software Vala Liberia located?", a: "ELWA Junction, Monrovia, Liberia." },
   ],
   programmes: [

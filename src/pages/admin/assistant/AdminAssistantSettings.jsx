@@ -82,9 +82,11 @@ export default function AdminAssistantSettings() {
             value={settings.admission_letter_trigger || "after_admin_approval"}
             onChange={(e) => setSettings({ ...settings, admission_letter_trigger: e.target.value })}
           >
-            <option value="immediately_after_valid_application">Immediately after valid application</option>
-            <option value="after_admin_approval">After admin approval (recommended)</option>
-            <option value="after_first_payment">After first payment confirmation</option>
+            <option value="immediately_after_valid_application">
+              Immediately after valid application (letters auto-issued; no admin approval)
+            </option>
+            <option value="after_admin_approval">After admin approval (legacy — auto-issue still runs)</option>
+            <option value="after_first_payment">After first payment confirmation (legacy — auto-issue still runs)</option>
           </select>
         </div>
         <div>

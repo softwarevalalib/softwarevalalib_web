@@ -5,6 +5,7 @@ import {
   requireAdmin,
   parseBody,
 } from "./_lib.js";
+import { generateAndStoreAdmission, notifyAdminAdmission } from "./assistant.js";
 
 function isLegacyAdmin(req) {
   const key = process.env.ACADEMY_ADMIN_KEY;
@@ -96,16 +97,33 @@ export default async function handler(req, res) {
           ${cleanText(body.notes, 1000) || null},
           'pending'
         )
-        RETURNING reference_number, full_name, course_codes, created_at
+        RETURNING id, reference_number, full_name, course_codes, created_at, email, county, country, preferred_session
       `;
 
       const row = rows[0];
+      let admission = null;
+      try {
+        const settingsRows = await sql`SELECT * FROM academy_assistant_settings WHERE id = 1`;
+        const settings = settingsRows[0] || {
+          admission_letter_trigger: "immediately_after_valid_application",
+          student_email_enabled: true,
+          human_support_email: "info@softwarevalalib.app",
+        };
+        admission = await generateAndStoreAdmission(sql, row, settings);
+        await notifyAdminAdmission(sql, row, admission, settings);
+      } catch (letterErr) {
+        console.error("admission letter after enroll:", letterErr);
+      }
+
       return res.status(201).json({
         referenceNumber: row.reference_number,
         fullName: row.full_name,
         courseCodes: row.course_codes,
         submittedAt: row.created_at,
-        message: "Application submitted successfully.",
+        message:
+          "Application submitted successfully. Your admission letter is being prepared (usually ready within 10–30 minutes).",
+        admissionDownload: admission?.downloadPath || null,
+        applicationsUrl: "/academy/applications",
       });
     }
 

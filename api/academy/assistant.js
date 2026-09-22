@@ -36,7 +36,32 @@ function parseBool(value) {
 
 async function getSettings(sql) {
   const rows = await sql`SELECT * FROM academy_assistant_settings WHERE id = 1`;
-  return rows[0] || { assistant_enabled: true, greeting_enabled: true, greeting_delay_ms: 5000, admission_letter_trigger: "after_admin_approval" };
+  return (
+    rows[0] || {
+      assistant_enabled: true,
+      greeting_enabled: true,
+      greeting_delay_ms: 5000,
+      admission_letter_trigger: "immediately_after_valid_application",
+      student_email_enabled: true,
+    }
+  );
+}
+
+function looksLikeQuestion(text) {
+  const q = String(text || "").trim().toLowerCase();
+  if (!q) return false;
+  if (q.includes("?")) return true;
+  return /^(what|why|how|when|where|who|which|can|do|does|is|are|tell|explain|describe|help)\b/.test(q);
+}
+
+function enrollmentProgress(data, courseCodes) {
+  const requiredTotal = ENROLLMENT_FIELDS.filter((f) => f.required).length + 1;
+  const completed =
+    (courseCodes?.length ? 1 : 0) +
+    ENROLLMENT_FIELDS.filter(
+      (f) => f.required && data?.[f.key] !== undefined && data?.[f.key] !== null && data?.[f.key] !== ""
+    ).length;
+  return { completed, total: requiredTotal };
 }
 
 async function ensureSession(sql, { sessionKey, visitorId, pageUrl }) {
@@ -212,15 +237,86 @@ async function submitDraftEnrollment(sql, draft) {
 }
 
 async function maybeGenerateAdmission(sql, enrollment, settings) {
-  const trigger = settings.admission_letter_trigger || "after_admin_approval";
-  if (trigger !== "immediately_after_valid_application") {
-    return {
-      deferred: true,
-      message:
-        "Your application has been received. If your application satisfies the Academy's admission requirements, your admission letter will be prepared and sent to your registered email.",
-    };
+  // Admission letters are issued automatically after a valid application —
+  // admin approval is not required before the letter is generated and emailed.
+  const trigger =
+    settings.admission_letter_trigger || "immediately_after_valid_application";
+  if (
+    trigger !== "immediately_after_valid_application" &&
+    trigger !== "after_first_payment"
+  ) {
+    // Force auto-issue even if an older setting still says "after_admin_approval".
   }
   return generateAndStoreAdmission(sql, enrollment, settings);
+}
+
+async function notifyAdminAdmission(sql, enrollment, admission, settings) {
+  const adminEmail =
+    settings.human_support_email ||
+    process.env.ACADEMY_ADMIN_EMAIL ||
+    process.env.ACADEMY_FROM_EMAIL ||
+    "";
+  const to = String(adminEmail)
+    .replace(/^.*<|>$/g, "")
+    .match(/[\w.+-]+@[\w.-]+\.\w+/)?.[0];
+  if (!to) return "SKIPPED_NO_ADMIN";
+
+  const courses = Array.isArray(enrollment.course_codes)
+    ? enrollment.course_codes.join(", ")
+    : "";
+  const body = [
+    "New SVL Training Academy application — admission letter auto-issued (no admin approval required).",
+    "",
+    `Reference: ${enrollment.reference_number}`,
+    `Student: ${enrollment.full_name}`,
+    `Email: ${enrollment.email}`,
+    `Courses: ${courses}`,
+    `Letter status: ${admission?.document?.status || "GENERATED"}`,
+    admission?.downloadPath
+      ? `Download: https://softwarevala.com${admission.downloadPath}`
+      : "",
+    "",
+    "Review in Admin → AI Assistant → Admission Documents.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const key = process.env.RESEND_API_KEY;
+  const from =
+    process.env.ACADEMY_FROM_EMAIL ||
+    "SVL Training Academy <onboarding@resend.dev>";
+
+  try {
+    if (key) {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from,
+          to: [to],
+          subject: `Admission letter issued — ${enrollment.reference_number}`,
+          text: body,
+        }),
+      });
+      return res.ok ? "SENT" : "FAILED";
+    }
+    await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        _subject: `Admission letter issued — ${enrollment.reference_number}`,
+        message: body,
+        _template: "box",
+        _captcha: "false",
+      }),
+    });
+    return "SENT_LINK";
+  } catch {
+    return "FAILED";
+  }
 }
 
 async function generateAndStoreAdmission(sql, enrollment, settings) {
@@ -398,24 +494,62 @@ function ruleBasedReply(text, context) {
   const q = text.toLowerCase();
   const ui = { buttons: [], courses: [], actions: [] };
 
-  if (/enroll|application|apply|register/.test(q)) {
+  // Prefer full explanations for information questions before course browsing.
+  if (/how does enrollment|enrollment work|how do i enroll|application process|admission process/.test(q)) {
+    return {
+      content: [
+        "Here's how enrollment works at SVL Training Academy:",
+        "",
+        "1. Choose a course (or ask me to recommend one based on your goals).",
+        "2. Click Select to enroll on the course you want — or use Enroll With Assistant / the full form at /academy/enroll.",
+        "3. Share your personal details (name, email, phone, and a few optional fields).",
+        "4. Review the summary and confirm submission.",
+        "5. You receive an application reference. Your admission letter is prepared automatically (usually within 10–30 minutes) and emailed to you — admin approval is not required before the letter is sent.",
+        "6. You can view, edit, or delete a pending application and download your letter anytime at /academy/applications.",
+        "",
+        "Would you like me to recommend a course, or start enrollment now?",
+      ].join("\n"),
+      ui: {
+        buttons: [
+          { label: "Find a Course", action: "quick", value: "Help me find a course for my goals" },
+          { label: "Enroll With Assistant", action: "start_assistant_enroll" },
+          { label: "My Applications", href: "/academy/applications" },
+        ],
+      },
+    };
+  }
+
+  if (/enroll|application|apply|register/.test(q) && !/how|what|explain/.test(q)) {
     const enrollButtons = [
       { label: "Complete Enrollment Form", action: "self_enroll", href: "/academy/enroll" },
       { label: "Enroll With Assistant", action: "start_assistant_enroll" },
     ];
     return {
       content:
-        "You can complete the enrollment form yourself, or I can guide you through the application here. I'll ask for the information required by the SVL Training Academy enrollment form, show you a summary, and only submit it after you confirm.",
+        "You can complete the enrollment form yourself, or I can guide you here. Once you select a course, I'll ask only for your personal details — I won't keep suggesting more courses. I'll show a summary and submit only after you confirm.",
       ui: { buttons: enrollButtons, type: "enrollment_options" },
     };
   }
 
-  if (/fee|tuition|price|cost|\$|payment/.test(q)) {
+  if (/fee|tuition|price|cost|\$|payment|instal+ment/.test(q)) {
     const programmes = ACADEMY_KNOWLEDGE.programmes
       .map((p) => `• ${p.name}: US$${p.tuition} + US$${p.registration} registration (${p.duration})`)
       .join("\n");
     return {
-      content: `Here are the professional programme fees from Academy records:\n\n${programmes}\n\nTechnology course tuition varies by course (typically US$125–US$175) and is listed on each course card. ${ACADEMY_KNOWLEDGE.payments[0]}. Official merchant numbers are never published until Admissions confirms your application.`,
+      content: [
+        "Here is a clear fee overview from Academy records:",
+        "",
+        "Professional programmes:",
+        programmes,
+        "",
+        "Technology / skills courses: tuition is typically US$125–US$175 per course (exact amount is on each course card), plus any listed registration fee.",
+        "",
+        ACADEMY_KNOWLEDGE.payments?.[0] ||
+          "Payment guidance is shared after Admissions processes your application.",
+        "Official merchant / mobile-money numbers are never published in chat until Admissions confirms your application.",
+        "",
+        "If you tell me a course name or skill goal, I can show the exact tuition for matching courses.",
+      ].join("\n"),
       ui: {
         buttons: [
           { label: "Browse Courses", href: "/academy#courses" },
@@ -425,35 +559,68 @@ function ruleBasedReply(text, context) {
     };
   }
 
-  if (/schedule|session|class time|when.*class/.test(q)) {
+  if (/schedule|session|class time|when.*class|timezone|orientation|cohort/.test(q)) {
     const sessions = ACADEMY_KNOWLEDGE.sessions
       .map((s) => `• ${s.label}: ${s.days}, ${s.time}`)
       .join("\n");
     return {
-      content: `Live session groups (${ACADEMY_KNOWLEDGE.timezone}):\n\n${sessions}\n\nCohort 1 classes begin ${ACADEMY_KNOWLEDGE.cohort.classesBegin}. Orientation: ${ACADEMY_KNOWLEDGE.cohort.orientation}.`,
+      content: [
+        `Live session groups (${ACADEMY_KNOWLEDGE.timezone}):`,
+        "",
+        sessions,
+        "",
+        `Cohort enrollment window: ${ACADEMY_KNOWLEDGE.cohort.enrollment}.`,
+        `Orientation: ${ACADEMY_KNOWLEDGE.cohort.orientation}.`,
+        `Classes begin: ${ACADEMY_KNOWLEDGE.cohort.classesBegin}.`,
+        "",
+        "You can note a preferred session group (A–D) during enrollment. Exact live-link details are shared after admission.",
+      ].join("\n"),
       ui: {},
     };
   }
 
-  if (/compare|difference|vs\.|versus/.test(q) || /beginner|intermediate|advanced|ai|react|excel|network|cyber|web|python/.test(q)) {
+  const faq = getFaqAnswer(text);
+  if (faq && looksLikeQuestion(text) && !/recommend|suggest|find a course|want to learn/.test(q)) {
+    return {
+      content: faq.a,
+      ui: {
+        buttons: [
+          { label: "Find a Course", action: "quick", value: "Help me find a course for my goals" },
+          { label: "Enroll With Assistant", action: "start_assistant_enroll" },
+        ],
+      },
+    };
+  }
+
+  if (
+    /compare|difference|vs\.|versus/.test(q) ||
+    /beginner|intermediate|advanced|ai|react|excel|network|cyber|web|python/.test(q)
+  ) {
     const maxTuition = /under\s*\$?\s*150|below\s*\$?\s*150/.test(q) ? 150 : undefined;
-    const level = /beginner/.test(q) ? "Beginner" : /intermediate/.test(q) ? "Intermediate" : /advanced/.test(q) ? "Advanced" : undefined;
+    const level = /beginner/.test(q)
+      ? "Beginner"
+      : /intermediate/.test(q)
+        ? "Intermediate"
+        : /advanced/.test(q)
+          ? "Advanced"
+          : undefined;
     const courses = searchAcademyCourses({ query: text, maxTuition, level, limit: 5 });
     if (!courses.length) {
       return {
         content:
-          "I don't have confirmed matching courses for that request yet. I can help you contact the SVL Training Academy admissions team.",
+          "I don't have confirmed matching courses for that request yet. I can explain enrolment, fees, or schedules — or connect you with Admissions.",
         ui: { buttons: [{ label: "Contact Admissions", action: "handoff" }] },
       };
     }
     return {
-      content: "Based on your question, these courses from the live Academy catalogue look relevant:",
+      content:
+        "Based on your question, these courses from the live Academy catalogue look relevant.\n\nClick Select to enroll on any course below. After you select one, I'll ask for your personal details only — I won't keep listing more courses.",
       ui: {
         type: "course_list",
         courses: courses.map((c) => courseCardPayload(c)),
         buttons: [
-          { label: "Enroll With Assistant", action: "start_assistant_enroll" },
           { label: "View Full Catalogue", href: "/academy#courses" },
+          { label: "Ask another question", action: "focus_input" },
         ],
       },
     };
@@ -470,7 +637,7 @@ function ruleBasedReply(text, context) {
     if (!recs.length) {
       return {
         content:
-          "Tell me a bit more: What would you like to learn, and are you looking for beginner, intermediate, or advanced training?",
+          "Tell me a bit more so I can recommend accurately: What would you like to learn, and are you looking for beginner, intermediate, or advanced training?",
         ui: {
           buttons: [
             { label: "Beginner", action: "quick", value: "I want beginner courses" },
@@ -482,31 +649,33 @@ function ruleBasedReply(text, context) {
     }
     return {
       content:
-        "Based on what you've told me, these courses appear relevant to the skills you want to build. Recommendations are based on the Academy catalogue — they do not guarantee employment or career outcomes.",
+        "Based on what you've told me, these courses appear relevant to the skills you want to build. Recommendations use the Academy catalogue only — they do not guarantee employment or career outcomes.\n\nClick Select to enroll on the course you want. Once selected, I'll collect your personal details to enroll you — I won't keep suggesting more courses.",
       ui: {
         type: "course_list",
         courses: recs.map((c) => courseCardPayload(c, c.why)),
         buttons: [
-          { label: "Enroll With Assistant", action: "start_assistant_enroll" },
           { label: "Complete Enrollment Form", href: "/academy/enroll" },
+          { label: "Ask a question", action: "focus_input" },
         ],
       },
     };
   }
 
-  const faq = getFaqAnswer(text);
   if (faq) {
-    return { content: faq.a, ui: { buttons: [{ label: "Find a Course", action: "quick", value: "Help me find a course" }] } };
+    return {
+      content: faq.a,
+      ui: { buttons: [{ label: "Find a Course", action: "quick", value: "Help me find a course" }] },
+    };
   }
 
   return {
     content:
-      "I can help you explore courses, compare programmes, understand fees and schedules, or guide enrollment. What would you like to learn or achieve?",
+      "I can help you explore courses, compare programmes, explain fees and schedules in detail, or guide enrollment. What would you like to learn or achieve?",
     ui: {
       buttons: [
         { label: "Find a Course", action: "quick", value: "Help me find a course for my goals" },
-        { label: "View Fees", action: "quick", value: "What are the tuition fees?" },
-        { label: "How Enrollment Works", action: "quick", value: "How does enrollment work?" },
+        { label: "View Fees", action: "quick", value: "Explain the tuition fees and payment options in detail" },
+        { label: "How Enrollment Works", action: "quick", value: "How does enrollment work? Please explain the steps." },
         { label: "Enroll Now", action: "start_assistant_enroll" },
       ],
     },
@@ -599,27 +768,129 @@ export default async function handler(req, res) {
 
     if (action === "consent") {
       await sql`UPDATE academy_chat_sessions SET consent_at = NOW() WHERE id = ${session.id}`;
+      const draft = await getOrCreateDraft(sql, session.id);
+      const data = draft.data || {};
+      const codes = Array.isArray(draft.course_codes) ? draft.course_codes : [];
+      const next = nextEnrollmentPrompt(data, codes);
+      const progress = enrollmentProgress(data, codes);
+      const text = next
+        ? codes.length
+          ? `Thank you. You're enrolling in ${codes.join(", ")}. I'll now collect your personal details only — I won't suggest more courses.\n\n${next.text}`
+          : `Thank you. We can continue your application.\n\n${next.text}`
+        : "Thank you. Please review your information before submitting.";
+      const msg = await addMessage(sql, session.id, "assistant", text, {
+        enrollment: { step: "collect", privacyAccepted: true, field: next?.field || null, progress },
+        buttons: next
+          ? [
+              { label: "Review Details", action: "review_draft" },
+              { label: "Cancel Application", action: "cancel_draft" },
+            ]
+          : [
+              { label: "Submit Enrollment", action: "confirm_submit" },
+              { label: "Edit Details", action: "edit_draft" },
+            ],
+      });
+      return res.status(200).json({
+        sessionKey: session.session_key,
+        messages: [msg],
+        awaitingField: next?.field || null,
+        progress,
+      });
+    }
+
+    if (action === "select_course") {
+      const rawCodes = Array.isArray(body.courseCodes)
+        ? body.courseCodes
+        : body.courseCode
+          ? [body.courseCode]
+          : [];
+      const codes = rawCodes
+        .map((c) => cleanText(String(c), 40))
+        .filter(Boolean);
+      if (!codes.length) {
+        return res.status(400).json({ error: "Select a course to continue enrollment." });
+      }
+      const valid = codes
+        .map((code) => getCourseDetails(code))
+        .filter(Boolean);
+      if (!valid.length) {
+        return res.status(400).json({ error: "That course code was not found in the catalogue." });
+      }
+      const selectedCodes = valid.map((c) => c.code);
+      await addEvent(sql, session.id, "ENROLLMENT_STARTED", { courseCodes: selectedCodes });
+      const draft = await getOrCreateDraft(sql, session.id);
+      await updateDraft(sql, draft.id, { courseCodes: selectedCodes });
+
+      const labels = valid.map((c) => `${c.code} — ${c.title}`).join("; ");
+
+      if (!session.consent_at) {
+        const privacyMsg = await addMessage(
+          sql,
+          session.id,
+          "assistant",
+          `You've selected: ${labels}.\n\n${PRIVACY_NOTICE}`,
+          {
+            type: "privacy",
+            selectedCourses: selectedCodes,
+            buttons: [{ label: "I Agree & Continue", action: "consent" }],
+          }
+        );
+        return res.status(200).json({
+          sessionKey: session.session_key,
+          messages: [privacyMsg],
+          draftId: draft.id,
+          awaitingField: null,
+        });
+      }
+
+      const refreshed = await getOrCreateDraft(sql, session.id);
+      const data = refreshed.data || {};
+      const next = nextEnrollmentPrompt(data, selectedCodes);
+      const progress = enrollmentProgress(data, selectedCodes);
       const msg = await addMessage(
         sql,
         session.id,
         "assistant",
-        "Thank you. We can continue your application. " + (nextEnrollmentPrompt({}, []).text || ""),
-        { enrollment: { step: "collect", privacyAccepted: true } }
+        next
+          ? `Course selected: ${labels}.\n\nI'll now ask for your personal details to complete enrollment — I won't keep suggesting courses.\n\n${next.text}`
+          : `Course selected: ${labels}. Your details look complete — please review and submit.`,
+        {
+          enrollment: { field: next?.field || null, progress },
+          buttons: next
+            ? [
+                { label: "Cancel Application", action: "cancel_draft" },
+              ]
+            : [
+                { label: "Submit Enrollment", action: "confirm_submit" },
+                { label: "Edit Details", action: "edit_draft" },
+              ],
+        }
       );
-      return res.status(200).json({ sessionKey: session.session_key, messages: [msg] });
+      return res.status(200).json({
+        sessionKey: session.session_key,
+        messages: [msg],
+        awaitingField: next?.field || null,
+        progress,
+      });
     }
 
     if (action === "start_assistant_enroll") {
       await addEvent(sql, session.id, "ENROLLMENT_STARTED", {});
       const draft = await getOrCreateDraft(sql, session.id);
       if (Array.isArray(body.courseCodes) && body.courseCodes.length) {
-        await updateDraft(sql, draft.id, { courseCodes: body.courseCodes.map((c) => cleanText(String(c), 40)) });
+        await updateDraft(sql, draft.id, {
+          courseCodes: body.courseCodes.map((c) => cleanText(String(c), 40)),
+        });
       }
       const privacyMsg = await addMessage(sql, session.id, "assistant", PRIVACY_NOTICE, {
         type: "privacy",
         buttons: [{ label: "I Agree & Continue", action: "consent" }],
       });
-      return res.status(200).json({ sessionKey: session.session_key, messages: [privacyMsg], draftId: draft.id });
+      return res.status(200).json({
+        sessionKey: session.session_key,
+        messages: [privacyMsg],
+        draftId: draft.id,
+      });
     }
 
     if (action === "set_draft_field") {
@@ -701,9 +972,15 @@ export default async function handler(req, res) {
       `;
 
       const admission = await maybeGenerateAdmission(sql, result.enrollment, settings);
+      let adminNotify = "SKIPPED";
       if (!admission.deferred) {
         await addEvent(sql, session.id, "ADMISSION_GENERATED", {
           reference: result.enrollment.reference_number,
+        });
+        adminNotify = await notifyAdminAdmission(sql, result.enrollment, admission, settings);
+        await addEvent(sql, session.id, "ADMISSION_ADMIN_NOTIFIED", {
+          reference: result.enrollment.reference_number,
+          status: adminNotify,
         });
       }
 
@@ -714,12 +991,14 @@ export default async function handler(req, res) {
         `Courses: ${(result.enrollment.course_codes || []).join(", ")}`,
         "Status: Application Received",
         "",
-        admission.message ||
-          (admission.document
-            ? `Your admission letter is ready. [Download PDF](${admission.downloadPath})`
-            : ""),
+        admission.document
+          ? "Your admission letter has been generated and is being emailed to you (typically arrives within 10–30 minutes). Admin approval is not required."
+          : admission.message ||
+            "Your admission letter is being prepared and is usually ready within 10–30 minutes.",
         "",
-        "Admissions typically follows up within 24–48 hours.",
+        "You can view, edit, or delete this pending application and download your admission letter at /academy/applications using your email and reference number.",
+        "",
+        "Admissions may still follow up within 24–48 hours about orientation and payment.",
       ]
         .filter(Boolean)
         .join("\n");
@@ -729,15 +1008,21 @@ export default async function handler(req, res) {
         referenceNumber: result.enrollment.reference_number,
         admission,
         buttons: [
+          { label: "My Applications", href: "/academy/applications" },
           { label: "Return to Academy", href: "/academy" },
-          { label: "View Courses", href: "/academy#courses" },
           ...(admission.downloadPath
             ? [{ label: "Download Admission Letter", href: admission.downloadPath }]
             : []),
         ],
       });
 
-      return res.status(200).json({ sessionKey: session.session_key, messages: [msg], enrollment: result.enrollment, admission });
+      return res.status(200).json({
+        sessionKey: session.session_key,
+        messages: [msg],
+        enrollment: result.enrollment,
+        admission,
+        adminNotify,
+      });
     }
 
     if (action === "cancel_draft") {
@@ -769,35 +1054,56 @@ export default async function handler(req, res) {
     const userText = cleanText(body.message || body.value || "", 2000);
     if (!userText) return res.status(400).json({ error: "Message is required." });
 
-    // If awaiting enrollment field, route to draft update
-    if (body.awaitingField) {
-      body.action = "set_draft_field";
-      body.field = body.awaitingField;
-      body.value = userText;
-      // recursive-ish: handle inline
-      req.body = { ...body, action: "set_draft_field" };
-    }
-
     await addMessage(sql, session.id, "user", userText, {});
     await addEvent(sql, session.id, "QUESTION_ASKED", { preview: userText.slice(0, 120) });
-
-    // Active enrollment field collection
-    if (session.consent_at && body.awaitingField) {
-      // handled below via synthetic path
-    }
 
     const draft = await getOrCreateDraft(sql, session.id).catch(() => null);
     const draftData = draft?.data || {};
     const draftCodes = Array.isArray(draft?.course_codes) ? draft.course_codes : [];
     const awaiting = body.awaitingField || null;
+    const inEnrollment =
+      Boolean(awaiting) ||
+      Boolean(
+        session.consent_at &&
+          draft &&
+          draft.status === "draft" &&
+          draftMissing(draftData, draftCodes).length
+      );
 
-    if (awaiting || (session.consent_at && draft && draft.status === "draft" && draftMissing(draftData, draftCodes).length)) {
-      // Interpret message as answer to next/current field
+    // Active enrollment: answer questions if needed, otherwise collect the next field — never re-suggest courses once selected.
+    if (inEnrollment) {
       let field = awaiting;
       if (!field) {
         const next = nextEnrollmentPrompt(draftData, draftCodes);
         field = next?.field;
       }
+
+      // If the learner asks an explanatory question mid-enrollment, answer then re-prompt the same field.
+      if (field && field !== "courseCodes" && looksLikeQuestion(userText) && !awaiting) {
+        const info = ruleBasedReply(userText, body.context || {});
+        const ui = draftCodes.length
+          ? { ...(info.ui || {}), courses: undefined, type: info.ui?.type === "course_list" ? undefined : info.ui?.type }
+          : info.ui || {};
+        const next = nextEnrollmentPrompt(draftData, draftCodes);
+        const progress = enrollmentProgress(draftData, draftCodes);
+        const msg = await addMessage(
+          sql,
+          session.id,
+          "assistant",
+          `${info.content}\n\n—\nBack to your application${draftCodes.length ? ` for ${draftCodes.join(", ")}` : ""}:\n${next?.text || "Please review and submit."}`,
+          {
+            ...ui,
+            enrollment: { field: next?.field || null, progress },
+          }
+        );
+        return res.status(200).json({
+          sessionKey: session.session_key,
+          messages: [msg],
+          awaitingField: next?.field || null,
+          progress,
+        });
+      }
+
       if (field === "courseCodes") {
         const found = searchAcademyCourses({ query: userText, limit: 3 });
         const codes = found.map((c) => c.code);
@@ -809,23 +1115,27 @@ export default async function handler(req, res) {
             sql,
             session.id,
             "assistant",
-            "I couldn't match that to a catalogue course yet. Try a skill keyword (AI, React, Excel) or a course code like SVL-DEV-201.",
+            "I couldn't match that to a catalogue course yet. Try a skill keyword (AI, React, Excel) or a course code like SVL-DEV-201 — or ask me to recommend courses first, then click Select to enroll.",
             { enrollment: { field: "courseCodes" } }
           );
-          return res.status(200).json({ sessionKey: session.session_key, messages: [msg], awaitingField: "courseCodes" });
+          return res.status(200).json({
+            sessionKey: session.session_key,
+            messages: [msg],
+            awaitingField: "courseCodes",
+          });
         }
         const updated = await updateDraft(sql, draft.id, { courseCodes: codes });
         const next = nextEnrollmentPrompt(updated.data || {}, codes);
+        const progress = enrollmentProgress(updated.data || {}, codes);
         const msg = await addMessage(
           sql,
           session.id,
           "assistant",
-          `Selected: ${codes.join(", ")}.\n\n${next?.text || "Ready to review."}`,
+          `Selected: ${codes.join(", ")}.\n\nI'll now collect your personal details only — I won't keep suggesting courses.\n\n${next?.text || "Ready to review."}`,
           {
-            courses: codes.map((code) => getCourseDetails(code)).filter(Boolean).map((c) => courseCardPayload(c)),
-            enrollment: { field: next?.field },
+            enrollment: { field: next?.field, progress },
             buttons: next
-              ? []
+              ? [{ label: "Cancel Application", action: "cancel_draft" }]
               : [
                   { label: "Submit Enrollment", action: "confirm_submit" },
                   { label: "Edit Details", action: "edit_draft" },
@@ -836,61 +1146,92 @@ export default async function handler(req, res) {
           sessionKey: session.session_key,
           messages: [msg],
           awaitingField: next?.field || null,
+          progress,
         });
       }
+
       if (field) {
-        let value = userText;
-        const meta = ENROLLMENT_FIELDS.find((f) => f.key === field);
-        if (meta?.boolean) value = parseBool(userText);
-        if (field === "email" && !userText.includes("@")) {
-          const msg = await addMessage(sql, session.id, "assistant", `Please provide a valid email.\n\n${EMAIL_DISCLOSURE}`, {
-            enrollment: { field: "email" },
-          });
-          return res.status(200).json({ sessionKey: session.session_key, messages: [msg], awaitingField: "email" });
-        }
-        const updated = await updateDraft(sql, draft.id, { data: { [field]: value } });
-        const data = updated.data || {};
-        const codes = Array.isArray(updated.course_codes) ? updated.course_codes : [];
-        const next = nextEnrollmentPrompt(data, codes);
-        if (!next) {
+        if (looksLikeQuestion(userText)) {
+          const info = ruleBasedReply(userText, body.context || {});
+          const ui = draftCodes.length
+            ? { ...(info.ui || {}), courses: undefined }
+            : info.ui || {};
+          const next = nextEnrollmentPrompt(draftData, draftCodes);
+          const progress = enrollmentProgress(draftData, draftCodes);
           const msg = await addMessage(
             sql,
             session.id,
             "assistant",
-            "Please review your information. By submitting, you confirm that these details are accurate and authorize the Academy to process this application.",
-            {
-              type: "enrollment_summary",
-              applicant: data.fullName,
-              email: data.email,
-              phone: data.phone,
-              courses: codes,
-              education: data.educationLevel,
-              preferredSession: data.preferredSession,
-              buttons: [
-                { label: "Edit Details", action: "edit_draft" },
-                { label: "Submit Enrollment", action: "confirm_submit" },
-              ],
-            }
+            `${info.content}\n\n—\nWhen you're ready, ${next?.text || "please continue your application."}`,
+            { ...ui, enrollment: { field: next?.field || field, progress } }
           );
-          return res.status(200).json({ sessionKey: session.session_key, messages: [msg] });
+          return res.status(200).json({
+            sessionKey: session.session_key,
+            messages: [msg],
+            awaitingField: next?.field || field,
+            progress,
+          });
         }
-        const requiredTotal = ENROLLMENT_FIELDS.filter((f) => f.required).length + 1;
-        const completed =
-          (codes.length ? 1 : 0) +
-          ENROLLMENT_FIELDS.filter((f) => f.required && data[f.key] !== undefined && data[f.key] !== "").length;
-        const msg = await addMessage(sql, session.id, "assistant", next.text, {
-          enrollment: { field: next.field, progress: { completed, total: requiredTotal } },
-        });
-        return res.status(200).json({
-          sessionKey: session.session_key,
-          messages: [msg],
-          awaitingField: next.field,
-          progress: { completed, total: requiredTotal },
-        });
+
+        {
+          let value = userText;
+          const meta = ENROLLMENT_FIELDS.find((f) => f.key === field);
+          if (meta?.boolean) value = parseBool(userText);
+          if (field === "email" && !userText.includes("@")) {
+            const msg = await addMessage(
+              sql,
+              session.id,
+              "assistant",
+              `Please provide a valid email.\n\n${EMAIL_DISCLOSURE}`,
+              { enrollment: { field: "email" } }
+            );
+            return res.status(200).json({
+              sessionKey: session.session_key,
+              messages: [msg],
+              awaitingField: "email",
+            });
+          }
+          const updated = await updateDraft(sql, draft.id, { data: { [field]: value } });
+          const data = updated.data || {};
+          const codes = Array.isArray(updated.course_codes) ? updated.course_codes : [];
+          const next = nextEnrollmentPrompt(data, codes);
+          const progress = enrollmentProgress(data, codes);
+          if (!next) {
+            const msg = await addMessage(
+              sql,
+              session.id,
+              "assistant",
+              "Please review your information. By submitting, you confirm that these details are accurate and authorize the Academy to process this application.",
+              {
+                type: "enrollment_summary",
+                applicant: data.fullName,
+                email: data.email,
+                phone: data.phone,
+                courses: codes,
+                education: data.educationLevel,
+                preferredSession: data.preferredSession,
+                buttons: [
+                  { label: "Edit Details", action: "edit_draft" },
+                  { label: "Submit Enrollment", action: "confirm_submit" },
+                ],
+              }
+            );
+            return res.status(200).json({ sessionKey: session.session_key, messages: [msg] });
+          }
+          const msg = await addMessage(sql, session.id, "assistant", next.text, {
+            enrollment: { field: next.field, progress },
+          });
+          return res.status(200).json({
+            sessionKey: session.session_key,
+            messages: [msg],
+            awaitingField: next.field,
+            progress,
+          });
+        }
       }
     }
 
-    // Retrieval-grounded reply (LLM optional)
+    // Retrieval-grounded reply (LLM optional) — outside active enrollment
     const retrievedCourses = searchAcademyCourses({ query: userText, limit: 5 });
     const faq = getFaqAnswer(userText);
     let reply = ruleBasedReply(userText, body.context || {});
@@ -911,7 +1252,7 @@ export default async function handler(req, res) {
             }))
           )}\nProgrammes: ${JSON.stringify(ACADEMY_KNOWLEDGE.programmes)}\nCohort: ${JSON.stringify(
             ACADEMY_KNOWLEDGE.cohort
-          )}\nSessions: ${JSON.stringify(ACADEMY_KNOWLEDGE.sessions)}`,
+          )}\nSessions: ${JSON.stringify(ACADEMY_KNOWLEDGE.sessions)}\nWhen suggesting courses, tell the user to click Select to enroll on a course card.`,
         },
         { role: "user", content: userText },
       ],
@@ -936,22 +1277,31 @@ export default async function handler(req, res) {
 
     if (openai?.choices?.[0]?.message?.content) {
       const content = openai.choices[0].message.content;
-      // Keep UI cards from rule-based when courses were found
+      const preferExplain =
+        looksLikeQuestion(userText) &&
+        !/recommend|suggest|find a course|want to learn|enroll me/.test(userText.toLowerCase());
       reply = {
         content,
-        ui: reply.ui?.courses?.length
-          ? reply.ui
-          : retrievedCourses.length
-            ? {
-                type: "course_list",
-                courses: retrievedCourses.slice(0, 4).map((c) => courseCardPayload(c)),
-                buttons: [
-                  { label: "Enroll With Assistant", action: "start_assistant_enroll" },
-                  { label: "Complete Enrollment Form", href: "/academy/enroll" },
-                ],
-              }
-            : reply.ui,
+        ui: preferExplain
+          ? reply.ui?.type === "course_list"
+            ? { buttons: reply.ui.buttons || [] }
+            : reply.ui
+          : reply.ui?.courses?.length
+            ? reply.ui
+            : retrievedCourses.length
+              ? {
+                  type: "course_list",
+                  courses: retrievedCourses.slice(0, 4).map((c) => courseCardPayload(c)),
+                  buttons: [
+                    { label: "View Full Catalogue", href: "/academy#courses" },
+                    { label: "Ask a Question", action: "focus_input" },
+                  ],
+                }
+              : reply.ui,
       };
+      if (reply.ui?.courses?.length && !/Select to enroll/i.test(content)) {
+        reply.content = `${content}\n\nClick Select to enroll on any course below to continue with your personal details.`;
+      }
     }
 
     if (reply.ui?.courses?.length) {
@@ -969,5 +1319,5 @@ export default async function handler(req, res) {
   }
 }
 
-// Export for admission admin regenerate
-export { generateAndStoreAdmission };
+// Export for admission admin regenerate + form enrollments
+export { generateAndStoreAdmission, notifyAdminAdmission };

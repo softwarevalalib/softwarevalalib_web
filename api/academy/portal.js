@@ -9,6 +9,7 @@ import {
   verifyPassword,
   newToken,
   getBearerToken,
+  ensurePortalSchema,
 } from "./_lib.js";
 
 const SESSION_DAYS = 30;
@@ -69,6 +70,7 @@ export default async function handler(req, res) {
 
   try {
     const sql = getSql();
+    await ensurePortalSchema(sql);
     const body = req.method === "GET" ? {} : parseBody(req);
     if (body.website) return res.status(200).json({ ok: true });
 

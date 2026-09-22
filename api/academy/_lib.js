@@ -10,6 +10,107 @@ export function getSql() {
   return neon(url);
 }
 
+let portalSchemaReady = false;
+
+/** Create Academy Portal tables if missing (safe to call repeatedly). */
+export async function ensurePortalSchema(sql) {
+  if (portalSchemaReady) return;
+  await sql`CREATE TABLE IF NOT EXISTS academy_portal_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    role TEXT NOT NULL CHECK (role IN ('student', 'instructor')),
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    full_name TEXT NOT NULL,
+    phone TEXT,
+    enrollment_id UUID,
+    course_codes JSONB NOT NULL DEFAULT '[]'::jsonb,
+    status TEXT NOT NULL DEFAULT 'active',
+    must_change_password BOOLEAN NOT NULL DEFAULT true,
+    created_by UUID,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_portal_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES academy_portal_users(id) ON DELETE CASCADE,
+    token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_portal_courses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    code TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    description TEXT,
+    duration TEXT,
+    tuition NUMERIC(10,2) DEFAULT 0,
+    registration_fee NUMERIC(10,2) DEFAULT 0,
+    instructor_id UUID REFERENCES academy_portal_users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_grades (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES academy_portal_users(id) ON DELETE CASCADE,
+    course_code TEXT NOT NULL,
+    assessment_type TEXT NOT NULL DEFAULT 'assignment',
+    title TEXT NOT NULL,
+    score NUMERIC(5,2),
+    max_score NUMERIC(5,2) DEFAULT 100,
+    grade_letter TEXT,
+    notes TEXT,
+    recorded_by UUID,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_attendance (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES academy_portal_users(id) ON DELETE CASCADE,
+    course_code TEXT NOT NULL,
+    session_date DATE NOT NULL,
+    status TEXT NOT NULL DEFAULT 'present',
+    notes TEXT,
+    recorded_by UUID,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_fee_payments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL REFERENCES academy_portal_users(id) ON DELETE CASCADE,
+    enrollment_id UUID,
+    course_code TEXT,
+    amount NUMERIC(10,2) NOT NULL,
+    installment_number SMALLINT,
+    payment_method TEXT,
+    reference TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    paid_at TIMESTAMPTZ,
+    notes TEXT,
+    recorded_by UUID,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS academy_certificates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    certificate_id TEXT NOT NULL UNIQUE,
+    student_id UUID REFERENCES academy_portal_users(id) ON DELETE SET NULL,
+    student_name TEXT NOT NULL,
+    student_email TEXT NOT NULL,
+    course_code TEXT,
+    course_title TEXT NOT NULL,
+    issue_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    file_name TEXT,
+    file_base64 TEXT,
+    file_mime TEXT DEFAULT 'application/pdf',
+    status TEXT NOT NULL DEFAULT 'issued',
+    uploaded_by UUID,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`;
+  await sql`ALTER TABLE academy_enrollments ADD COLUMN IF NOT EXISTS portal_user_id UUID`;
+  await sql`ALTER TABLE academy_enrollments ADD COLUMN IF NOT EXISTS approved_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE academy_enrollments ADD COLUMN IF NOT EXISTS approved_by UUID`;
+  portalSchemaReady = true;
+}
+
 export function setCors(res, extraHeaders = "") {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,OPTIONS");

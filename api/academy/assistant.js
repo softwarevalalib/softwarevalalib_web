@@ -14,8 +14,8 @@ import {
   recommendCourses,
   getFaqAnswer,
   courseCardPayload,
-} from "./knowledge.js";
-import { generateAdmissionPdf, buildAdmissionMerge } from "./admissionPdf.js";
+} from "./_knowledge.js";
+import { generateAdmissionPdf, buildAdmissionMerge } from "./_admissionPdf.js";
 
 const EMAIL_DISCLOSURE =
   "We'll use this email for your enrollment communication and to send your admission letter and other important Academy information related to your application.";

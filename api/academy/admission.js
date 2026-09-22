@@ -5,8 +5,8 @@ import {
   requireAdmin,
   parseBody,
 } from "./_lib.js";
-import { getCourseDetails } from "./knowledge.js";
-import { generateAdmissionPdf, buildAdmissionMerge } from "./admissionPdf.js";
+import { getCourseDetails } from "./_knowledge.js";
+import { generateAdmissionPdf, buildAdmissionMerge } from "./_admissionPdf.js";
 import { randomBytes } from "node:crypto";
 
 function newKey(prefix = "adm") {

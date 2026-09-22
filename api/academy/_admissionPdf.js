@@ -2,7 +2,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { ACADEMY_KNOWLEDGE } from "./knowledge.js";
+import { ACADEMY_KNOWLEDGE } from "./_knowledge.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BLACK = rgb(0.12, 0.16, 0.22);

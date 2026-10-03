@@ -8,6 +8,7 @@
     "dev:api": "node scripts/dev-api.mjs",
     "build": "vite build",
     "lint": "eslint .",
+    "test:recruitment": "node scripts/recruitment-rules.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -33,6 +34,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "jsqr": "^1.4.0",
+    "pngjs": "^7.0.0",
+    "qrcode": "^1.5.4",
     "vite": "^8.0.12"
   }
 }

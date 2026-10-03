@@ -10,6 +10,13 @@
       ]
     },
     {
+      "source": "/recruitment.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
       "source": "/",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
@@ -23,6 +30,11 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/((?!api/|assets/).*)",
+      "has": [{ "type": "host", "value": "application.softwarevalalib.app" }],
+      "destination": "/recruitment.html"
+    },
     {
       "source": "/((?!api/|assets/).*)",
       "destination": "/index.html"

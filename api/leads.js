@@ -1,6 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { requireAdmin } from "./academy/_lib.js";
 import { notifyInfoInbox } from "./_companyMail.js";
+import { handleRecruitment } from "./_recruitment.js";
 
 function getSql() {
   const url = process.env.DATABASE_URL;
@@ -155,6 +156,11 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(204).end();
 
   try {
+    const requestUrl = new URL(req.url || "", "http://localhost");
+    const area = requestUrl.searchParams.get("area") || req.query?.area || "";
+    if (area === "recruitment") {
+      return await handleRecruitment(req, res);
+    }
     const sql = getSql();
     await ensureLeads(sql);
 

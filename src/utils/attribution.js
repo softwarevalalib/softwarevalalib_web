@@ -18,6 +18,7 @@ export function captureAttribution() {
     utmMedium: params.get("utm_medium") || "",
     utmCampaign: params.get("utm_campaign") || "",
     utmContent: params.get("utm_content") || "",
+    utmTerm: params.get("utm_term") || "",
     referralAgentId: params.get("ref") || "",
     landingPath: window.location.pathname,
   };
@@ -42,6 +43,7 @@ export function getAttribution() {
     utmMedium: stored.utmMedium || "",
     utmCampaign: stored.utmCampaign || "",
     utmContent: stored.utmContent || "",
+    utmTerm: stored.utmTerm || "",
     referralAgentId: stored.referralAgentId || "",
     landingPath: stored.landingPath || "",
   };

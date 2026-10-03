@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getAttribution } from "../utils/attribution";
+import { sendToCompany } from "../utils/sendEmail";
 
 const NEEDS = [
   "Website",
@@ -136,6 +137,27 @@ export default function Consultation() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Unable to submit.");
+      await sendToCompany({
+        subject: `New consultation ${data.leadNumber} — ${form.companyName}`,
+        fields: {
+          form_type: "Consultation",
+          lead_number: data.leadNumber,
+          organization: form.companyName,
+          contact_person: form.contactName,
+          email: form.email,
+          phone: form.phone || "Not provided",
+          whatsapp: form.whatsapp || "Not provided",
+          industry: form.industry || "Not provided",
+          location: form.location || "Not provided",
+          services: form.servicesInterested.join(", "),
+          challenge: form.businessChallenge,
+          budget: form.budgetRange || "Not specified",
+          preferred_contact: form.preferredContactMethod,
+          referral_agent: attribution.referralAgentId || "None",
+          utm_source: attribution.utmSource || "Not provided",
+          utm_campaign: attribution.utmCampaign || "Not provided",
+        },
+      });
       navigate(`/thank-you?ref=${encodeURIComponent(data.leadNumber || "")}`, { replace: true });
     } catch (err) {
       setError(err.message || "Unable to submit.");

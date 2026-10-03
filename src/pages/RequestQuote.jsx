@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAttribution } from "../utils/attribution";
+import { sendToCompany } from "../utils/sendEmail";
 import { trackAction } from "../utils/trackAction";
 
 const inputClass = "mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-[#c10020]";
@@ -43,6 +44,24 @@ export default function RequestQuote() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Unable to submit.");
+      const attribution = getAttribution();
+      await sendToCompany({
+        subject: `New quote request ${data.leadNumber} — ${form.companyName}`,
+        fields: {
+          form_type: "Quote request",
+          lead_number: data.leadNumber,
+          organization: form.companyName,
+          contact_person: form.contactName,
+          email: form.email,
+          phone: form.phone,
+          service: form.service,
+          description: form.businessChallenge,
+          timeline: form.timeline || "Not provided",
+          budget: form.budgetRange,
+          preferred_contact: form.preferredContactMethod,
+          referral_agent: attribution.referralAgentId || "None",
+        },
+      });
       navigate(`/thank-you?ref=${encodeURIComponent(data.leadNumber || "")}`, { replace: true });
     } catch (err) {
       setError(err.message || "Unable to submit.");

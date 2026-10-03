@@ -4,8 +4,10 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/Mainroutes.jsx";
 import { installChunkErrorRecovery } from "./utils/lazyWithRetry";
+import { captureAttribution } from "./utils/attribution";
 
 installChunkErrorRecovery();
+captureAttribution();
 
 // Drop one-time cache-bust param after a chunk-reload recovery
 try {

@@ -22,6 +22,7 @@ const quickLinks = [
   { label: "About", to: "/about" },
   { label: "Academy", to: "/academy" },
   { label: "Services", to: "/services" },
+  { label: "Consultation", to: "/consultation" },
   { label: "Projects", to: "/projects" },
   { label: "Contact", to: "/contact" },
   { label: "Team", to: "/team" },

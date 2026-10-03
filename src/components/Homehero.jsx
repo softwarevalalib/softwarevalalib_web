@@ -3,15 +3,9 @@ import { motion } from "framer-motion";
 import Reveal from "../Animations/Reveal";
 import FloatingShapes from "./FloatingShapes";
 import VideoModal from "./VideoModal";
-import StarRating from "./StarRating";
-import {
-  COMPANY_EMAIL,
-  COMPANY_WHATSAPP,
-  YOUTUBE_SHOWREEL_ID,
-  YOUTUBE_SHOWREEL_URL,
-} from "../config/company";
-
-const WHATSAPP_URL = `https://wa.me/${COMPANY_WHATSAPP}?text=Hi%20SVL%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20services.`;
+import { Link } from "react-router-dom";
+import { YOUTUBE_SHOWREEL_ID, YOUTUBE_SHOWREEL_URL } from "../config/company";
+import { whatsappSpecialistUrl } from "../utils/whatsapp";
 
 export default function Homehero() {
   const [videoOpen, setVideoOpen] = useState(false);
@@ -44,62 +38,54 @@ export default function Homehero() {
         <div className="text-white text-center lg:text-left">
           <Reveal delay={0.1}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-1.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-white">
-              <span className="w-2 h-2 rounded-full bg-[#c10020] animate-pulse" aria-hidden="true" />
-              The Name of Trust
+              <span className="w-2 h-2 rounded-full bg-[#c10020]" aria-hidden="true" />
+              Software and digital solutions for modern organizations
             </span>
           </Reveal>
 
           <Reveal delay={0.2}>
             <h1
               id="hero-heading"
-              className="mt-5 font-display font-extrabold uppercase leading-[1.05] text-[clamp(2rem,8vw,4.5rem)]"
+              className="mt-5 font-display font-extrabold leading-[1.08] text-[clamp(1.85rem,5.5vw,3.4rem)]"
             >
-              Software Vala
-              <span className="block text-[#c10020] mt-1">Liberia</span>
+              Technology that helps your business work smarter and grow.
             </h1>
           </Reveal>
 
           <Reveal delay={0.35}>
             <p className="mt-6 text-white/90 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Building reliable websites, mobile apps, and enterprise management systems
-              for businesses and institutions across Liberia — with engineering excellence
-              you can trust.
+              Software Vala Liberia designs and delivers websites, custom software, business management systems,
+              mobile applications, cloud solutions, digital marketing, and technology services for businesses and
+              institutions in Liberia and beyond.
             </p>
           </Reveal>
 
           <Reveal delay={0.5}>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-              <a href={`mailto:${COMPANY_EMAIL}`} className="btn-primary w-full sm:w-auto">
-                Email Us
-              </a>
+            <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
+              <Link to="/consultation" className="btn-primary w-full sm:w-auto">
+                Request a free consultation
+              </Link>
+              <Link
+                to="/services"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold text-sm uppercase tracking-wide border-2 border-white text-white w-full sm:w-auto"
+              >
+                Explore our solutions
+              </Link>
               <a
-                href={WHATSAPP_URL}
+                href={whatsappSpecialistUrl({ page: "home" })}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm uppercase tracking-wide bg-green-500 text-white transition-all duration-300 hover:bg-green-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-500/30 w-full sm:w-auto"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm uppercase tracking-wide bg-green-600 text-white w-full sm:w-auto"
               >
-                WhatsApp
+                WhatsApp us
               </a>
             </div>
           </Reveal>
 
           <Reveal delay={0.6}>
-            <div className="mt-10 inline-flex items-center gap-3 rounded-2xl glass px-4 py-3 max-w-full">
-              <div className="relative shrink-0">
-                <span
-                  className="absolute inset-0 rounded-full bg-[#e11d48]/40 animate-ping"
-                  style={{ animation: "ping-ring 2s ease-out infinite" }}
-                  aria-hidden="true"
-                />
-                <div className="relative grid place-items-center w-10 h-10 rounded-full bg-[#c10020] text-white font-bold text-sm">
-                  450+
-                </div>
-              </div>
-              <div className="text-left min-w-0">
-                <StarRating count={5} />
-                <p className="text-xs text-slate-300 mt-0.5">reviews from happy clients</p>
-              </div>
-            </div>
+            <p className="mt-8 text-sm text-white/75">
+              The Name of Trust · Monrovia, Liberia
+            </p>
           </Reveal>
         </div>
 

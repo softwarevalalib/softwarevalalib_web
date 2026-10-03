@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { notifyInfoInbox } from "./_companyMail.js";
 
 function getSql() {
   const url = process.env.DATABASE_URL;
@@ -80,6 +81,20 @@ export default async function handler(req, res) {
         VALUES (${name}, ${company}, ${location}, ${rating}, ${review})
         RETURNING id, name, company, location, rating, review, created_at
       `;
+
+      await notifyInfoInbox({
+        subject: `New website review — ${name}`,
+        fields: {
+          form_type: "Client Review",
+          name,
+          company: company || "Not provided",
+          location: location || "Not provided",
+          rating: String(rating),
+          review,
+        },
+      }).catch((error) => {
+        console.error("review email error:", error);
+      });
 
       return res.status(201).json({ review: mapRow(rows[0]) });
     }

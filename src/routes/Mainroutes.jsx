@@ -6,6 +6,8 @@ import About from "../pages/About";
 import Services from "../pages/Services";
 import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
+import Consultation from "../pages/Consultation";
+import ThankYou from "../pages/ThankYou";
 import Team from "../pages/Team";
 import NotFound from "../pages/NotFound";
 import RouteError from "../components/RouteError";
@@ -127,6 +129,8 @@ const router = createBrowserRouter([
       { path: "/services", element: <Services /> },
       { path: "/projects", element: <Projects /> },
       { path: "/contact", element: <Contact /> },
+      { path: "/consultation", element: <Consultation /> },
+      { path: "/thank-you", element: <ThankYou /> },
       { path: "/team", element: <Team /> },
       { path: "*", element: <NotFound /> },
     ],

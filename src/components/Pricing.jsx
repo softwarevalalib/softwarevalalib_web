@@ -43,7 +43,8 @@ export default function Pricing() {
               Our awesome <span className="accent">Pricing Plan</span>
             </h2>
             <p className="mt-4 text-slate-600 text-base sm:text-lg">
-              Transparent, fixed pricing. Switch to yearly and save 25%.
+              These cards are standard website packages. Custom software, enterprise systems, and mobile
+              applications are quoted separately. Final pricing depends on project requirements.
             </p>
           </div>
         </Reveal>

@@ -1,12 +1,13 @@
+import { Link } from "react-router-dom";
 import { FiCheckCircle } from "react-icons/fi";
 import Reveal from "../Animations/Reveal";
 import GroupImage from "../images/group.png";
 
 const REASONS = [
-  "30-day money back guarantee",
-  "24/7 system monitoring & support",
-  "Fixed, transparent pricing",
-  "Local expertise, global standards",
+  "Local team in Monrovia",
+  "Custom solutions for each organization",
+  "Websites, software, and training under one company",
+  "Support and maintenance discussed per project",
 ];
 
 /**
@@ -55,9 +56,9 @@ export default function WhyChooseUs() {
               ))}
             </ul>
 
-            <a href="#contact" className="btn-primary mt-8">
-              Explore More
-            </a>
+            <Link to="/consultation" className="btn-primary mt-8">
+              Request a consultation
+            </Link>
           </Reveal>
         </div>
       </div>

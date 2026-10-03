@@ -26,7 +26,7 @@
   {
     "id": 3,
     "title": "Web Hosting",
-    "description": "Reliable and secure web hosting services with 99.9% uptime. Fast servers optimized for performance and scalability.",
+    "description": "Web hosting and upkeep for sites and systems. Capacity and support hours are confirmed in each agreement.",
     "icon": "☁️",
     "features": [
       "Cloud Hosting",
@@ -79,7 +79,7 @@
     "features": [
       "Staff Training",
       "Documentation",
-      "24/7 Support",
+      "Technical Support",
       "System Orientation"
     ]
   },

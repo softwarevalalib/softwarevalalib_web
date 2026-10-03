@@ -27,6 +27,7 @@ const navLinks = [
   },
   { label: "Academy", path: "/academy" },
   { label: "Services", path: "/services" },
+  { label: "Consultation", path: "/consultation" },
   { label: "Projects", path: "/projects", hideOnMd: true },
   { label: "Team", path: "/team", hideOnMd: true },
   { label: "Contact", path: "/contact" },

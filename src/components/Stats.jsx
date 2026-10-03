@@ -1,17 +1,12 @@
 import Counter from "./Counter";
 import Reveal from "../Animations/Reveal";
 import FloatingShapes from "./FloatingShapes";
+import { verifiedPublicStats } from "../data/companyStats";
 
-/**
- * Success-stats band with animated counters + a trust badge, digtek-style.
- */
+/** Renders only management-verified figures. Hidden when none are set. */
 export default function Stats() {
-  const stats = [
-    { end: 150, suffix: "+", label: "Total Projects Completed & Delivered" },
-    { end: 100000, suffix: "+", label: "Investment To Be Generated" },
-    { end: 200, suffix: "+", label: "Brands That Trust Us" },
-    { end: 98, suffix: "%", label: "Client Satisfaction" },
-  ];
+  const stats = verifiedPublicStats();
+  if (!stats.length) return null;
 
   return (
     <section className="relative overflow-hidden bg-[#00274c] section-padding">
@@ -19,8 +14,8 @@ export default function Stats() {
       <div className="section-container relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
           {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.1} className="flex justify-center">
-              <Counter end={s.end} suffix={s.suffix} label={s.label} />
+            <Reveal key={s.key} delay={i * 0.1} className="flex justify-center">
+              <Counter end={s.value} suffix={s.suffix} label={s.label} />
             </Reveal>
           ))}
         </div>

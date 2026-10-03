@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import Reveal from "../Animations/Reveal";
 import StarRating from "./StarRating";
@@ -82,16 +82,15 @@ function Clientfeedback() {
   };
 
   useEffect(() => {
-    loadReviews();
+    const start = setTimeout(() => loadReviews(), 0);
     const timer = setInterval(() => loadReviews({ silent: true }), 15000);
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(start);
+      clearInterval(timer);
+    };
   }, []);
 
   const displayItems = liveReviews;
-  const doubled = useMemo(
-    () => (displayItems.length > 1 ? [...displayItems, ...displayItems] : displayItems),
-    [displayItems]
-  );
   const reviewCountLabel =
     liveReviews.length > 0
       ? `${liveReviews.length} live review${liveReviews.length === 1 ? "" : "s"}`
@@ -169,9 +168,9 @@ function Clientfeedback() {
             No client reviews yet. Use the form below to share the first one.
           </p>
         ) : (
-          <div className={displayItems.length > 1 ? "carousel-track" : "flex justify-center gap-6 px-4"}>
-            {doubled.map((item, index) => (
-              <ReviewCard key={`${item.id}-${index}`} item={item} />
+          <div className="flex flex-wrap justify-center gap-6 px-4">
+            {displayItems.map((item) => (
+              <ReviewCard key={item.id} item={item} />
             ))}
           </div>
         )}

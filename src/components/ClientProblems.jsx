@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Reveal from "../Animations/Reveal";
 import { clientProblems } from "../data/clientProblems";
+import { trackAction } from "../utils/trackAction";
 
 export default function ClientProblems() {
   return (
@@ -13,7 +14,7 @@ export default function ClientProblems() {
               What technology challenge is your business facing?
             </h2>
             <p className="mt-4 text-slate-600 text-base sm:text-lg">
-              Choose the situation closest to yours. We will point you to the matching Software Vala Liberia service.
+              Choose the situation closest to yours. Each option opens the matching Software Vala Liberia solution.
             </p>
           </div>
         </Reveal>
@@ -21,7 +22,8 @@ export default function ClientProblems() {
           {clientProblems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.04}>
               <Link
-                to={`/consultation?need=${encodeURIComponent(item.services[0])}`}
+                to={item.to}
+                onClick={() => trackAction("problem_selected", item.to)}
                 className="block h-full rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-[#c10020] hover:-translate-y-0.5"
               >
                 <h3 className="font-display text-lg font-bold text-[#00274c]">{item.title}</h3>

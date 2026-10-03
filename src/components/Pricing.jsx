@@ -5,28 +5,22 @@ import Reveal from "../Animations/Reveal";
 
 const PLANS = [
   {
-    name: "Starter Plan",
+    name: "Starter website",
     monthly: 49,
     yearly: 39,
-    tagline: "For small businesses getting online",
-    features: ["Responsive Website", "Basic SEO", "Contact Form", "1 Month Support", "Domain Setup"],
+    tagline: "A small public website package",
+    features: ["Responsive website", "Basic SEO", "Contact form", "1 month support", "Domain setup"],
     popular: false,
+    quote: false,
   },
   {
-    name: "Premium Plan",
+    name: "Growth website",
     monthly: 99,
     yearly: 74,
-    tagline: "For growing brands that need more",
-    features: ["Custom Web App", "Advanced SEO", "CMS & Dashboard", "6 Months Support", "Hosting Included", "Analytics"],
+    tagline: "A larger website package",
+    features: ["Website with more pages", "SEO setup", "Content updates for the term", "6 months support", "Hosting for the term"],
     popular: true,
-  },
-  {
-    name: "Extended Plan",
-    monthly: 149,
-    yearly: 112,
-    tagline: "For enterprises & complex systems",
-    features: ["Full SaaS Platform", "API Integrations", "Dedicated PM", "12 Months Support", "Cloud & Security", "Training"],
-    popular: false,
+    quote: false,
   },
 ];
 
@@ -43,8 +37,9 @@ export default function Pricing() {
               Our awesome <span className="accent">Pricing Plan</span>
             </h2>
             <p className="mt-4 text-slate-600 text-base sm:text-lg">
-              These cards are standard website packages. Custom software, enterprise systems, and mobile
-              applications are quoted separately. Final pricing depends on project requirements.
+              The prices below are website packages already published by Software Vala Liberia. Custom software,
+              management systems, mobile apps, and enterprise work are quoted from your requirements.
+              Final pricing depends on project requirements.
             </p>
           </div>
         </Reveal>
@@ -95,14 +90,14 @@ export default function Pricing() {
                     <span className="mb-1 text-slate-500 font-medium">/ {yearly ? "mo, billed yearly" : "Month"}</span>
                   </div>
                   <Link
-                    to="/contact"
+                    to="/consultation"
                     className={`mt-6 block text-center rounded-xl font-semibold py-3 transition-all duration-300 ${
                       plan.popular
                         ? "bg-[#c10020] text-white hover:bg-[#a0001a] hover:-translate-y-0.5"
                         : "bg-slate-900 text-white hover:bg-[#c10020] "
                     }`}
                   >
-                    Get Started Now
+                    Request free consultation
                   </Link>
                   <ul className="mt-8 space-y-3">
                     {plan.features.map((f) => (
@@ -118,6 +113,18 @@ export default function Pricing() {
               </Reveal>
             );
           })}
+          <Reveal delay={0.2}>
+            <div className="rounded-3xl border border-[#00274c] bg-[#00274c] p-8 h-full text-white">
+              <h3 className="text-lg font-bold">Custom software and enterprise systems</h3>
+              <p className="mt-2 text-sm text-white/80">
+                Management systems, mobile apps, integrations, and other scoped builds. No monthly package price is published for this work.
+              </p>
+              <p className="mt-6 font-display text-3xl font-extrabold">Request a quotation</p>
+              <Link to="/request-quote" className="btn-primary mt-6">
+                Request a quote
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>

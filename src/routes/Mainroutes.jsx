@@ -8,6 +8,10 @@ import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
 import Consultation from "../pages/Consultation";
 import ThankYou from "../pages/ThankYou";
+import SolutionPage from "../pages/SolutionPage";
+import Portfolio from "../pages/Portfolio";
+import CaseStudy from "../pages/CaseStudy";
+import RequestQuote from "../pages/RequestQuote";
 import Team from "../pages/Team";
 import NotFound from "../pages/NotFound";
 import RouteError from "../components/RouteError";
@@ -25,6 +29,7 @@ const AdminEnrollments = lazyWithRetry(() => import("../pages/admin/AdminEnrollm
 const AdminRatings = lazyWithRetry(() => import("../pages/admin/AdminRatings"));
 const AdminInsights = lazyWithRetry(() => import("../pages/admin/AdminInsights"));
 const AdminSettings = lazyWithRetry(() => import("../pages/admin/AdminSettings"));
+const AdminWebsiteLeads = lazyWithRetry(() => import("../pages/admin/AdminWebsiteLeads"));
 const AdminAssistantOverview = lazyWithRetry(() => import("../pages/admin/assistant/AdminAssistantOverview"));
 const AdminAssistantConversations = lazyWithRetry(() =>
   import("../pages/admin/assistant/AdminAssistantConversations")
@@ -100,16 +105,18 @@ const AdminPortalAssignments = lazyWithRetry(() =>
   }))
 );
 
-function AcademyFallback() {
-  return (
-    <div className="section-container section-padding text-center text-slate-600" role="status">
-      Loading SVL Training Academy…
-    </div>
-  );
-}
-
 function withAcademySuspense(element) {
-  return <Suspense fallback={<AcademyFallback />}>{element}</Suspense>;
+  return (
+    <Suspense
+      fallback={
+        <div className="section-container section-padding text-center text-slate-600" role="status">
+          Loading SVL Training Academy…
+        </div>
+      }
+    >
+      {element}
+    </Suspense>
+  );
 }
 
 const router = createBrowserRouter([
@@ -128,8 +135,12 @@ const router = createBrowserRouter([
       { path: "/academy/portal/login", element: withAcademySuspense(<PortalLogin />) },
       { path: "/services", element: <Services /> },
       { path: "/projects", element: <Projects /> },
+      { path: "/portfolio", element: <Portfolio /> },
+      { path: "/portfolio/:slug", element: <CaseStudy /> },
+      { path: "/solutions/:slug", element: <SolutionPage /> },
       { path: "/contact", element: <Contact /> },
       { path: "/consultation", element: <Consultation /> },
+      { path: "/request-quote", element: <RequestQuote /> },
       { path: "/thank-you", element: <ThankYou /> },
       { path: "/team", element: <Team /> },
       { path: "*", element: <NotFound /> },
@@ -144,6 +155,7 @@ const router = createBrowserRouter([
       { path: "enrollments", element: withAcademySuspense(<AdminEnrollments />) },
       { path: "ratings", element: withAcademySuspense(<AdminRatings />) },
       { path: "insights", element: withAcademySuspense(<AdminInsights />) },
+      { path: "leads", element: withAcademySuspense(<AdminWebsiteLeads />) },
       { path: "settings", element: withAcademySuspense(<AdminSettings />) },
       { path: "portal", element: withAcademySuspense(<AdminPortalOverview />) },
       { path: "portal/students", element: withAcademySuspense(<AdminPortalStudents />) },

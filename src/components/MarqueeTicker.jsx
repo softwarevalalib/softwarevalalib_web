@@ -5,7 +5,7 @@ import { AiFillStar } from "react-icons/ai";
  * Content is duplicated so the -50% translate loops seamlessly.
  */
 export default function MarqueeTicker({
-  texts = ["THE BEST SOLUTION", "AWARD WINNING AGENCY", "TRUSTED BY 1K+ BRANDS"],
+  texts = ["SOFTWARE VALA LIBERIA", "THE NAME OF TRUST", "WEBSITES, SOFTWARE, AND SYSTEMS"],
   repeat = 6,
 }) {
   const items = Array.from({ length: repeat });

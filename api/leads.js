@@ -89,11 +89,27 @@ async function ensureLeads(sql) {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
+  await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS record_type TEXT NOT NULL DEFAULT 'consultation'`;
+  await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS assigned_to TEXT`;
+  await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS follow_up_at DATE`;
+  await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS priority TEXT`;
+  await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS timeline TEXT`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS website_events (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      event_name TEXT NOT NULL,
+      page TEXT,
+      utm_source TEXT,
+      utm_medium TEXT,
+      utm_campaign TEXT,
+      utm_content TEXT,
+      referral_agent_id TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
 }
 
-async function nextLeadNumber(sql) {
-  const year = new Date().getUTCFullYear();
-  const prefix = `SVL-LD-${year}-`;
+async function nextLeadNumber(sql, prefix) {
   const rows = await sql`
     SELECT lead_number FROM website_leads
     WHERE lead_number LIKE ${prefix + "%"}
@@ -148,7 +164,10 @@ export default async function handler(req, res) {
       const rows = await sql`
         SELECT * FROM website_leads ORDER BY created_at DESC LIMIT 200
       `;
-      return res.status(200).json({ leads: rows });
+      const events = await sql`
+        SELECT * FROM website_events ORDER BY created_at DESC LIMIT 100
+      `;
+      return res.status(200).json({ leads: rows, events });
     }
 
     if (req.method !== "POST") {
@@ -158,6 +177,46 @@ export default async function handler(req, res) {
 
     const body = parseBody(req);
     if (body.website) return res.status(200).json({ ok: true });
+
+    if (body.action === "track") {
+      const eventName = cleanText(body.event, 80);
+      if (!eventName) return res.status(400).json({ error: "Missing event." });
+      const ref = cleanText(body.referralAgentId, 20);
+      await sql`
+        INSERT INTO website_events (event_name, page, utm_source, utm_medium, utm_campaign, utm_content, referral_agent_id)
+        VALUES (
+          ${eventName},
+          ${cleanText(body.page, 200) || null},
+          ${cleanText(body.utmSource, 80) || null},
+          ${cleanText(body.utmMedium, 80) || null},
+          ${cleanText(body.utmCampaign, 120) || null},
+          ${cleanText(body.utmContent, 120) || null},
+          ${AGENT_RE.test(ref) ? ref : null}
+        )
+      `;
+      return res.status(200).json({ ok: true });
+    }
+
+    if (body.action === "update") {
+      const admin = await requireAdmin(req, sql).catch(() => null);
+      if (!admin) return res.status(401).json({ error: "Admin login required." });
+      const id = cleanText(body.id, 80);
+      const statuses = new Set(["NEW", "CONTACTED", "QUALIFIED", "MEETING_SCHEDULED", "PROPOSAL_PREPARATION", "PROPOSAL_SENT", "NEGOTIATION", "WON", "LOST", "FOLLOW_UP"]);
+      const status = statuses.has(body.status) ? body.status : null;
+      const followUp = cleanText(body.followUpAt, 20);
+      await sql`
+        UPDATE website_leads SET
+          status = COALESCE(${status}, status),
+          assigned_to = COALESCE(${cleanText(body.assignedTo, 120) || null}, assigned_to),
+          follow_up_at = COALESCE(${/^\d{4}-\d{2}-\d{2}$/.test(followUp) ? followUp : null}::date, follow_up_at),
+          priority = COALESCE(${cleanText(body.priority, 20) || null}, priority),
+          updated_at = NOW()
+        WHERE id = ${id}::uuid
+      `;
+      return res.status(200).json({ ok: true });
+    }
+
+    const recordType = body.action === "quote" ? "quote" : "consultation";
 
     const companyName = cleanText(body.companyName, 160);
     const contactName = cleanText(body.contactName, 120);
@@ -183,21 +242,25 @@ export default async function handler(req, res) {
     if (challenge.length < 10) return res.status(400).json({ error: "Describe the challenge in a few sentences." });
     if (!preferred) return res.status(400).json({ error: "Choose a preferred contact method." });
 
-    const leadNumber = await nextLeadNumber(sql);
+    const year = new Date().getUTCFullYear();
+    const prefix = recordType === "quote" ? `SVL-RQ-${year}-` : `SVL-LD-${year}-`;
+    const leadNumber = await nextLeadNumber(sql, prefix);
     const source = cleanText(body.source, 40) || "Website";
     const rows = await sql`
       INSERT INTO website_leads (
         lead_number, company_name, contact_name, email, phone, whatsapp,
         industry, location, services, business_challenge, budget_range,
         preferred_contact, source, campaign, utm_source, utm_medium,
-        utm_campaign, utm_content, referral_agent_id, landing_path, status
+        utm_campaign, utm_content, referral_agent_id, landing_path, status,
+        record_type, timeline
       ) VALUES (
         ${leadNumber}, ${companyName}, ${contactName}, ${email}, ${phone || null}, ${whatsapp || null},
         ${industry || null}, ${location || null}, ${JSON.stringify(services)}, ${challenge},
         ${budget || null}, ${preferred}, ${source}, ${cleanText(body.utmCampaign, 120) || null},
         ${cleanText(body.utmSource, 80) || null}, ${cleanText(body.utmMedium, 80) || null},
         ${cleanText(body.utmCampaign, 120) || null}, ${cleanText(body.utmContent, 120) || null},
-        ${referralAgentId || null}, ${cleanText(body.landingPath, 200) || null}, 'NEW'
+        ${referralAgentId || null}, ${cleanText(body.landingPath, 200) || null}, 'NEW',
+        ${recordType}, ${cleanText(body.timeline, 120) || null}
       )
       RETURNING id, lead_number
     `;
@@ -230,6 +293,7 @@ export default async function handler(req, res) {
     return res.status(201).json({
       id: rows[0].id,
       leadNumber: rows[0].lead_number,
+      referralAgentId: referralAgentId || null,
       status: "NEW",
       emailed: Boolean(notice.emailed),
       message: "Thank you for contacting Software Vala Liberia. Your request has been received and our team will review it.",

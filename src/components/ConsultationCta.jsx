@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { whatsappSpecialistUrl } from "../utils/whatsapp";
+import { trackAction } from "../utils/trackAction";
 
 export default function ConsultationCta({ page = "" }) {
   return (
@@ -15,14 +16,18 @@ export default function ConsultationCta({ page = "" }) {
             Our team will help you identify an appropriate technology solution.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <Link to="/consultation" className="btn-primary">
+            <Link to="/consultation" className="btn-primary" onClick={() => trackAction("request_consultation", page)}>
               Request free consultation
+            </Link>
+            <Link to="/request-quote" className="btn-outline" onClick={() => trackAction("request_quote", page)}>
+              Request a quote
             </Link>
             <a
               href={whatsappSpecialistUrl({ page })}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline"
+              onClick={() => trackAction("whatsapp_specialist", page)}
             >
               WhatsApp a specialist
             </a>

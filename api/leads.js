@@ -2,6 +2,7 @@ import { neon } from "@neondatabase/serverless";
 import { requireAdmin } from "./academy/_lib.js";
 import { notifyInfoInbox } from "./_companyMail.js";
 import { handleRecruitment } from "./_recruitment.js";
+import { forwardToManagement } from "./_managementSync.js";
 
 function getSql() {
   const url = process.env.DATABASE_URL;
@@ -295,6 +296,23 @@ export default async function handler(req, res) {
       console.error("consultation email error:", error);
       return { emailed: false };
     });
+
+    const servicesText = Array.isArray(services) ? services.join(", ") : String(services || "");
+    await forwardToManagement("/api/v1/public/leads", {
+      eventId: rows[0].lead_number,
+      reference: rows[0].lead_number,
+      name: contactName,
+      organization: companyName,
+      email,
+      phone: phone || whatsapp,
+      service: servicesText,
+      challenge,
+      source,
+      referralAgentReference: referralAgentId,
+      utmSource: cleanText(body.utmSource, 80),
+      utmMedium: cleanText(body.utmMedium, 80),
+      utmCampaign: cleanText(body.utmCampaign, 120),
+    }).catch(() => {});
 
     return res.status(201).json({
       id: rows[0].id,

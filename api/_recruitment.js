@@ -2,6 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { requireAdmin } from "./academy/_lib.js";
 import { notifyInfoInbox } from "./_companyMail.js";
+import { forwardToManagement } from "./_managementSync.js";
 import {
   APPLICATION_CLOSE_AT,
   CLOSED_MESSAGE,
@@ -628,6 +629,14 @@ export async function handleRecruitment(req, res) {
   });
   await sql`UPDATE marketing_agent_applications SET applicant_email_status = ${applicantEmailStatus} WHERE id = ${saved.id}`;
   await audit(sql, saved.id, "applicant", "application_submitted", { reference, emailStatus, applicantEmailStatus });
+  await forwardToManagement("/api/v1/public/applications", {
+    eventId: reference,
+    reference,
+    fullName,
+    email,
+    phone,
+    payload: { county, city, testRecord, source: "application.softwarevalalib.app" },
+  }).catch(() => {});
   return res.status(201).json({
     applicationReference: reference,
     firstName: fullName.split(" ")[0],

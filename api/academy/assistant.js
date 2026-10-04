@@ -16,6 +16,7 @@ import {
   courseCardPayload,
 } from "./_knowledge.js";
 import { generateAdmissionPdf, buildAdmissionMerge } from "./_admissionPdf.js";
+import { forwardEnrollment } from "../_managementSync.js";
 
 const EMAIL_DISCLOSURE =
   "We'll use this email for your enrollment communication and to send your admission letter and other important Academy information related to your application.";
@@ -232,6 +233,8 @@ async function submitDraftEnrollment(sql, draft) {
   await sql`
     UPDATE academy_enrollment_drafts SET status = 'submitted', updated_at = NOW() WHERE id = ${draft.id}
   `;
+
+  await forwardEnrollment(rows[0], phone).catch(() => {});
 
   return { ok: true, enrollment: rows[0] };
 }

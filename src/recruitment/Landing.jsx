@@ -100,12 +100,12 @@ export default function Landing() {
           </div>
           <div className="mt-8 rounded-2xl bg-white/10 p-5">
             <p className="text-xs font-semibold uppercase tracking-wider">Applications close</p>
-            <p className="mt-1 font-display text-2xl font-bold">17 October 2026 · 11:59 PM GMT</p>
+            <p className="mt-1 font-display text-2xl font-bold">27 October 2026 · 11:59 PM GMT</p>
             {state === "open" && countdown.ready ? (
               <p className="mt-2 text-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s remaining</p>
             ) : null}
             {state === "closed" ? (
-              <p className="mt-2 text-sm">Applications for the current Software Vala Liberia Freelance Business Development & Marketing Agent recruitment closed on 17 October 2026 at 11:59 PM GMT. Submitted applications are now under review.</p>
+              <p className="mt-2 text-sm">Applications for the current Software Vala Liberia Freelance Business Development & Marketing Agent recruitment closed on 27 October 2026 at 11:59 PM GMT. Submitted applications are now under review.</p>
             ) : null}
             {state === "before" ? <p className="mt-2 text-sm">Applications open on 3 October 2026.</p> : null}
           </div>

@@ -204,7 +204,7 @@ async function confirmApplicant({ email, firstName, reference }) {
         from,
         to: [email],
         subject: `SVL Marketing Agent Application Received — ${reference}`,
-        text: `Dear ${firstName},\n\nThank you for applying to the Software Vala Liberia Freelance Business Development & Marketing Agent Program.\n\nYour application has been successfully received.\n\nApplication Reference:\n${reference}\n\nApplication Deadline:\n17 October 2026 at 11:59 PM GMT\n\nSubmitting an application does not automatically mean selection.\n\nShortlisted applicants will be contacted through SVL's official communication channels.\n\nPlease do not pay anyone an application, recruitment, onboarding or training fee in connection with this opportunity.\n\nRegards,\n\nSoftware Vala Liberia\nThe Name of Trust`,
+        text: `Dear ${firstName},\n\nThank you for applying to the Software Vala Liberia Freelance Business Development & Marketing Agent Program.\n\nYour application has been successfully received.\n\nApplication Reference:\n${reference}\n\nApplication Deadline:\n27 October 2026 at 11:59 PM GMT\n\nSubmitting an application does not automatically mean selection.\n\nShortlisted applicants will be contacted through SVL's official communication channels.\n\nPlease do not pay anyone an application, recruitment, onboarding or training fee in connection with this opportunity.\n\nRegards,\n\nSoftware Vala Liberia\nThe Name of Trust`,
       }),
     });
     return response.ok ? "SENT" : "FAILED";

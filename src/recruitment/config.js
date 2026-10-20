@@ -1,5 +1,5 @@
 export const APPLICATION_OPEN_AT = "2026-10-03T00:00:00Z";
-export const APPLICATION_CLOSE_AT = "2026-10-17T23:59:00Z";
+export const APPLICATION_CLOSE_AT = "2026-10-27T23:59:00Z";
 export const CLOSED_MESSAGE =
   "Applications for the current Software Vala Liberia Freelance Marketing Agent recruitment have closed.";
 

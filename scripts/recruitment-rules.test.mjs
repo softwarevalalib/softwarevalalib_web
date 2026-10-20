@@ -21,7 +21,7 @@ const sectors = ["Education", "Healthcare", "SMEs", "Retail / E-Commerce"];
 assert.equal(recruitmentWindow(Date.parse("2026-10-03T00:00:00Z")), "open");
 assert.equal(recruitmentWindow(Date.parse("2026-10-02T23:59:59Z")), "before");
 assert.equal(recruitmentWindow(Date.parse(APPLICATION_CLOSE_AT)), "open");
-assert.equal(recruitmentWindow(Date.parse("2026-10-17T23:59:01Z")), "closed");
+assert.equal(recruitmentWindow(Date.parse("2026-10-27T23:59:01Z")), "closed");
 assert.match(CLOSED_MESSAGE, /have closed/);
 
 assert.equal(isEmail("person@example.com"), true);

@@ -48,6 +48,24 @@ export default function AdminWebsiteLeads() {
     load().catch((err) => setError(err.message));
   };
 
+  const retrySync = async (lead) => {
+    setError("");
+    const res = await fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${getAdminToken()}` },
+      body: JSON.stringify({ action: "retry-sync", id: lead.id, website: "" }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setError(data.error || "Sync retry failed.");
+      return;
+    }
+    if (data.syncStatus !== "SYNCED") {
+      setError(data.error || "Management API did not accept this lead yet.");
+    }
+    load().catch((err) => setError(err.message));
+  };
+
   return (
     <div>
       <h1 className="font-display text-2xl font-bold text-[#00274c]">Website leads</h1>
@@ -63,6 +81,7 @@ export default function AdminWebsiteLeads() {
               <th className="px-3 py-2">Need</th>
               <th className="px-3 py-2">Source</th>
               <th className="px-3 py-2">Agent</th>
+              <th className="px-3 py-2">CRM Sync</th>
               <th className="px-3 py-2">Status</th>
               <th className="px-3 py-2">Assigned</th>
               <th className="px-3 py-2">Follow-up</th>
@@ -80,6 +99,15 @@ export default function AdminWebsiteLeads() {
                 <td className="px-3 py-2 max-w-xs">{lead.services}</td>
                 <td className="px-3 py-2 text-xs">{lead.source || "Website"}<br />{lead.utm_campaign || ""}</td>
                 <td className="px-3 py-2 font-mono text-xs">{lead.referral_agent_id || "—"}</td>
+                <td className="px-3 py-2 text-xs">
+                  <span className="font-semibold">{lead.sync_status || "PENDING"}</span>
+                  {lead.last_sync_error ? <p className="mt-1 max-w-48 text-slate-500">{lead.last_sync_error}</p> : null}
+                  {lead.sync_status !== "SYNCED" ? (
+                    <button type="button" className="mt-1 font-semibold text-[#c10020] hover:underline" onClick={() => retrySync(lead)}>
+                      Retry sync
+                    </button>
+                  ) : null}
+                </td>
                 <td className="px-3 py-2">
                   <select className="rounded border px-2 py-1" value={lead.status} onChange={(e) => save(lead, { status: e.target.value, assignedTo: lead.assigned_to || "", followUpAt: lead.follow_up_at ? String(lead.follow_up_at).slice(0, 10) : "" })}>
                     {STATUSES.map((status) => <option key={status}>{status}</option>)}

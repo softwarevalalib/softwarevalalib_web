@@ -29,6 +29,12 @@
       ]
     }
   ],
+  "crons": [
+    {
+      "path": "/api/leads",
+      "schedule": "0 3 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/((?!api/|assets/).*)",

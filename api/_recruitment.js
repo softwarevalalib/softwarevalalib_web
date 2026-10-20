@@ -2,7 +2,8 @@ import { createHash, randomBytes } from "node:crypto";
 import { neon } from "@neondatabase/serverless";
 import { requireAdmin } from "./academy/_lib.js";
 import { notifyInfoInbox } from "./_companyMail.js";
-import { forwardToManagement } from "./_managementSync.js";
+import { retryDueApplications, syncMarketingApplication } from "./_marketingSync.js";
+import { retryDueLeads } from "./_leadSync.js";
 import {
   APPLICATION_CLOSE_AT,
   CLOSED_MESSAGE,
@@ -151,6 +152,18 @@ async function ensureSchema(sql) {
     )
   `;
   await sql`ALTER TABLE marketing_agent_applications ADD COLUMN IF NOT EXISTS applicant_email_status TEXT`;
+  await sql`ALTER TABLE marketing_agent_applications ADD COLUMN IF NOT EXISTS sync_status TEXT NOT NULL DEFAULT 'PENDING'`;
+  await sql`ALTER TABLE marketing_agent_applications ADD COLUMN IF NOT EXISTS sync_attempts INTEGER NOT NULL DEFAULT 0`;
+  await sql`ALTER TABLE marketing_agent_applications ADD COLUMN IF NOT EXISTS last_sync_attempt TIMESTAMPTZ`;
+  await sql`ALTER TABLE marketing_agent_applications ADD COLUMN IF NOT EXISTS last_sync_error TEXT`;
+  await sql`ALTER TABLE marketing_agent_applications ADD COLUMN IF NOT EXISTS management_sync_timestamp TIMESTAMPTZ`;
+}
+
+export function cronAuthorized(req) {
+  const secret = String(process.env.CRON_SECRET || "");
+  if (!secret) return false;
+  const header = req.headers.authorization || "";
+  return header === `Bearer ${secret}`;
 }
 
 async function nextNumber(sql, column) {
@@ -254,6 +267,15 @@ async function notify(application) {
   });
 }
 
+export async function runMarketingSyncRetries(sql, limit = 10) {
+  await ensureSchema(sql);
+  const [applications, leads] = await Promise.all([
+    retryDueApplications(sql, limit),
+    retryDueLeads(sql, limit),
+  ]);
+  return { applications: applications.length, leads: leads.length };
+}
+
 export async function handleRecruitment(req, res) {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -261,8 +283,13 @@ export async function handleRecruitment(req, res) {
   const sql = sqlClient();
   await ensureSchema(sql);
   const url = new URL(req.url || "", "http://localhost");
-  const action = text(url.searchParams.get("action") || "", 40);
   const body = bodyOf(req);
+  const action = text(url.searchParams.get("action") || body.action || "", 40);
+
+  if (req.method === "GET" && action === "retry-due") {
+    if (!cronAuthorized(req)) return res.status(401).json({ error: "Unauthorized" });
+    return res.status(200).json(await runMarketingSyncRetries(sql));
+  }
 
   if (req.method === "GET" && action === "window") {
     return res.status(200).json({
@@ -279,7 +306,7 @@ export async function handleRecruitment(req, res) {
       const rows = await sql`
         SELECT id, application_reference, full_name, phone, email, county, professional_status,
                preferred_sectors, submitted_at, application_status, screening_score, assigned_reviewer,
-               test_record, email_notification_status, agent_id, conflict_flag
+               test_record, email_notification_status, agent_id, conflict_flag, sync_status
         FROM marketing_agent_applications
         ORDER BY submitted_at DESC
         LIMIT 500
@@ -366,7 +393,8 @@ export async function handleRecruitment(req, res) {
              interview_format, interviewer, interview_notes, strengths, concerns, recommendation, screening_notes,
              internal_notes, onboarding, agent_id, assigned_reviewer, email_notification_status,
              email_notification_sent_at, utm_source, utm_medium, utm_campaign, utm_content, utm_term,
-             test_record, submitted_at, updated_at
+             test_record, submitted_at, updated_at, sync_status, sync_attempts,
+             last_sync_attempt, last_sync_error, management_sync_timestamp
       FROM marketing_agent_applications WHERE id = ${id}::uuid LIMIT 1
     `;
     if (!rows[0]) return res.status(404).json({ error: "Application not found." });
@@ -390,13 +418,31 @@ export async function handleRecruitment(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  if (action === "retry-email" || action === "review") {
+  if (action === "retry-email" || action === "retry-sync" || action === "review") {
     const admin = await requireAdmin(req, sql).catch(() => null);
     if (!admin) return res.status(401).json({ error: "Admin login required." });
     const id = text(body.id, 80);
     const current = await sql`SELECT * FROM marketing_agent_applications WHERE id = ${id}::uuid LIMIT 1`;
     const application = current[0];
     if (!application) return res.status(404).json({ error: "Application not found." });
+
+    if (action === "retry-sync") {
+      const rows = await sql`
+        SELECT id, application_reference, full_name, phone, whatsapp, email, county, city_area,
+          professional_status, occupation, organization, education_level, professional_background,
+          experience_categories, experience_description, network_sectors, preferred_sectors,
+          network_description, outreach_methods, scenario_school_response, scenario_pricing_response,
+          scenario_website_response, weekly_availability, available_for_training, willing_to_report,
+          markets_other_technology_company, conflict_details, resume_file_key, resume_original_filename,
+          utm_source, utm_medium, utm_campaign, utm_content, utm_term, submitted_at, sync_status, sync_attempts
+        FROM marketing_agent_applications
+        WHERE id = ${application.id}::uuid
+        LIMIT 1
+      `;
+      const result = await syncMarketingApplication(sql, rows[0]);
+      await audit(sql, application.id, admin.email, "management_sync_retried", { syncStatus: result.syncStatus });
+      return res.status(200).json(result);
+    }
 
     if (action === "retry-email") {
       try {
@@ -629,14 +675,55 @@ export async function handleRecruitment(req, res) {
   });
   await sql`UPDATE marketing_agent_applications SET applicant_email_status = ${applicantEmailStatus} WHERE id = ${saved.id}`;
   await audit(sql, saved.id, "applicant", "application_submitted", { reference, emailStatus, applicantEmailStatus });
-  await forwardToManagement("/api/v1/public/applications", {
-    eventId: reference,
-    reference,
-    fullName,
-    email,
-    phone,
-    payload: { county, city, testRecord, source: "application.softwarevalalib.app" },
-  }).catch(() => {});
+  try {
+    await syncMarketingApplication(sql, {
+      id: saved.id,
+      application_reference: reference,
+      full_name: fullName,
+      phone,
+      whatsapp,
+      email,
+      county,
+      city_area: city,
+      professional_status: body.professionalStatus,
+      occupation: text(body.occupation, 160) || null,
+      organization: text(body.organization, 160) || null,
+      education_level: text(body.educationLevel, 160) || null,
+      professional_background: background,
+      experience_categories: experience.values,
+      experience_description: text(body.experienceDescription, 4000) || null,
+      network_sectors: sectors.values,
+      preferred_sectors: preferred.values,
+      network_description: text(body.networkDescription, 4000) || null,
+      outreach_methods: outreach.values,
+      scenario_school_response: school,
+      scenario_pricing_response: pricing,
+      scenario_website_response: website,
+      weekly_availability: body.weeklyAvailability,
+      available_for_training: true,
+      willing_to_report: true,
+      markets_other_technology_company: marketsOther,
+      conflict_details: conflict || null,
+      resume_file_key: fileKey,
+      resume_original_filename: cv.bytes ? text(body.resume.name, 180) : null,
+      utm_source: text(body.utmSource, 80) || null,
+      utm_medium: text(body.utmMedium, 80) || null,
+      utm_campaign: text(body.utmCampaign, 120) || null,
+      utm_content: text(body.utmContent, 120) || null,
+      submitted_at: saved.submitted_at,
+      sync_attempts: 0,
+    });
+  } catch {
+    console.info(JSON.stringify({
+      event: "marketing_application_sync",
+      applicationReference: reference,
+      attempt: 1,
+      timestamp: new Date().toISOString(),
+      httpStatus: null,
+      result: "PENDING",
+      error: "sync state update failed",
+    }));
+  }
   return res.status(201).json({
     applicationReference: reference,
     firstName: fullName.split(" ")[0],

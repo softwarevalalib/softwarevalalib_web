@@ -1,8 +1,8 @@
 import { neon } from "@neondatabase/serverless";
 import { requireAdmin } from "./academy/_lib.js";
 import { notifyInfoInbox } from "./_companyMail.js";
-import { handleRecruitment } from "./_recruitment.js";
-import { forwardToManagement } from "./_managementSync.js";
+import { cronAuthorized, handleRecruitment, runMarketingSyncRetries } from "./_recruitment.js";
+import { ensureLeadSyncColumns, syncWebsiteLead } from "./_leadSync.js";
 
 function getSql() {
   const url = process.env.DATABASE_URL;
@@ -96,6 +96,7 @@ async function ensureLeads(sql) {
   await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS follow_up_at DATE`;
   await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS priority TEXT`;
   await sql`ALTER TABLE website_leads ADD COLUMN IF NOT EXISTS timeline TEXT`;
+  await ensureLeadSyncColumns(sql);
   await sql`
     CREATE TABLE IF NOT EXISTS website_events (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -159,6 +160,9 @@ export default async function handler(req, res) {
   try {
     const requestUrl = new URL(req.url || "", "http://localhost");
     const area = requestUrl.searchParams.get("area") || req.query?.area || "";
+    if (req.method === "GET" && cronAuthorized(req)) {
+      return res.status(200).json(await runMarketingSyncRetries(getSql()));
+    }
     if (area === "recruitment") {
       return await handleRecruitment(req, res);
     }
@@ -223,6 +227,16 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
+    if (body.action === "retry-sync") {
+      const admin = await requireAdmin(req, sql).catch(() => null);
+      if (!admin) return res.status(401).json({ error: "Admin login required." });
+      const id = cleanText(body.id, 80);
+      const rows = await sql`SELECT * FROM website_leads WHERE id = ${id}::uuid LIMIT 1`;
+      if (!rows[0]) return res.status(404).json({ error: "Lead not found." });
+      const result = await syncWebsiteLead(sql, rows[0]);
+      return res.status(200).json(result);
+    }
+
     const recordType = body.action === "quote" ? "quote" : "consultation";
 
     const companyName = cleanText(body.companyName, 160);
@@ -258,7 +272,7 @@ export default async function handler(req, res) {
         lead_number, company_name, contact_name, email, phone, whatsapp,
         industry, location, services, business_challenge, budget_range,
         preferred_contact, source, campaign, utm_source, utm_medium,
-        utm_campaign, utm_content, referral_agent_id, landing_path, status,
+        utm_campaign, utm_content, utm_term, referral_agent_id, landing_path, status,
         record_type, timeline
       ) VALUES (
         ${leadNumber}, ${companyName}, ${contactName}, ${email}, ${phone || null}, ${whatsapp || null},
@@ -266,6 +280,7 @@ export default async function handler(req, res) {
         ${budget || null}, ${preferred}, ${source}, ${cleanText(body.utmCampaign, 120) || null},
         ${cleanText(body.utmSource, 80) || null}, ${cleanText(body.utmMedium, 80) || null},
         ${cleanText(body.utmCampaign, 120) || null}, ${cleanText(body.utmContent, 120) || null},
+        ${cleanText(body.utmTerm, 120) || null},
         ${referralAgentId || null}, ${cleanText(body.landingPath, 200) || null}, 'NEW',
         ${recordType}, ${cleanText(body.timeline, 120) || null}
       )
@@ -297,22 +312,36 @@ export default async function handler(req, res) {
       return { emailed: false };
     });
 
-    const servicesText = Array.isArray(services) ? services.join(", ") : String(services || "");
-    await forwardToManagement("/api/v1/public/leads", {
-      eventId: rows[0].lead_number,
-      reference: rows[0].lead_number,
-      name: contactName,
-      organization: companyName,
+    await syncWebsiteLead(sql, {
+      id: rows[0].id,
+      lead_number: rows[0].lead_number,
+      company_name: companyName,
+      contact_name: contactName,
       email,
-      phone: phone || whatsapp,
-      service: servicesText,
-      challenge,
+      phone: phone || null,
+      whatsapp: whatsapp || null,
+      industry: industry || null,
+      location: location || null,
+      services,
+      business_challenge: challenge,
+      budget_range: budget || null,
+      preferred_contact: preferred || null,
+      timeline: cleanText(body.timeline, 120) || null,
       source,
-      referralAgentReference: referralAgentId,
-      utmSource: cleanText(body.utmSource, 80),
-      utmMedium: cleanText(body.utmMedium, 80),
-      utmCampaign: cleanText(body.utmCampaign, 120),
-    }).catch(() => {});
+      campaign: cleanText(body.utmCampaign, 120) || null,
+      record_type: recordType,
+      utm_source: cleanText(body.utmSource, 80) || null,
+      utm_medium: cleanText(body.utmMedium, 80) || null,
+      utm_campaign: cleanText(body.utmCampaign, 120) || null,
+      utm_content: cleanText(body.utmContent, 120) || null,
+      utm_term: cleanText(body.utmTerm, 120) || null,
+      landing_path: cleanText(body.landingPath, 200) || null,
+      referral_agent_id: referralAgentId || null,
+      created_at: new Date().toISOString(),
+      sync_attempts: 0,
+    }).catch((error) => {
+      console.error("lead sync error:", error);
+    });
 
     return res.status(201).json({
       id: rows[0].id,

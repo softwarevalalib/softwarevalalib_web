@@ -40,6 +40,21 @@ Integrated Academy experience at `/academy` with course catalogue, enrollment, A
 - Admission letters: official template from `public/assets/academy/templates/admission_letter_master.pdf`
 - Env: `DATABASE_URL` (required). Optional: `OPENAI_API_KEY`, `RESEND_API_KEY`, `ACADEMY_FROM_EMAIL`. Bootstrap admin with `ACADEMY_ADMIN_EMAIL` + `ACADEMY_ADMIN_PASSWORD`.
 
+
+## Marketing & Sales lead sync
+
+Consultation and quote submissions are saved to `website_leads` first, then forwarded from the server to the SVL Marketing & Sales API. Browser code never receives the integration secret.
+
+- Leads: `POST {SVL_MANAGEMENT_API_URL}/api/marketing-agents/sync/leads`
+- Agent applications: `POST {SVL_MANAGEMENT_API_URL}/api/marketing-agents/sync/applications`
+- Header: `x-marketing-sync-key: MARKETING_SYNC_SECRET`
+- Lead tracking: `website_leads`; application tracking: `marketing_agent_applications`. Both store `sync_status`, `sync_attempts`, `last_sync_attempt`, `last_sync_error`, `management_sync_timestamp`.
+- `SYNCED` and `ALREADY_SYNCED` both close the record. `PENDING` records retry with the original reference; `FAILED` records stay until an admin retries them.
+- Referral links (`?ref=SVL-MA-0001`) are sent as `referral_agent_code`. An invalid or inactive agent keeps the lead in the CRM with attribution marked for review.
+- Server-only variables: `SVL_MANAGEMENT_API_URL`, `MARKETING_SYNC_SECRET`, `CRON_SECRET`. Never prefix them with `VITE_`.
+
+Retry cron: `/api/leads` runs daily around 03:00 UTC (Hobby may invoke it any time in that hour) and reuses the existing function to stay within Hobby's 12-function limit. Vercel Hobby only allows daily cron jobs. On Pro, change `vercel.json` to `*/10 * * * *` for ten-minute retries, or point an external scheduler at `/api/leads` (or `/api/leads?area=recruitment&action=retry-due`) with `Authorization: Bearer $CRON_SECRET`.
+
 ## Production Build
 
 ```bash

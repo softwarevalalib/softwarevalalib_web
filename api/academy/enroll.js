@@ -6,7 +6,6 @@ import {
   parseBody,
 } from "./_lib.js";
 import { generateAndStoreAdmission, notifyAdminAdmission } from "./assistant.js";
-import { forwardEnrollment } from "../_managementSync.js";
 
 function isLegacyAdmin(req) {
   const key = process.env.ACADEMY_ADMIN_KEY;
@@ -115,8 +114,6 @@ export default async function handler(req, res) {
       } catch (letterErr) {
         console.error("admission letter after enroll:", letterErr);
       }
-
-      await forwardEnrollment(row, phone).catch(() => {});
 
       return res.status(201).json({
         referenceNumber: row.reference_number,

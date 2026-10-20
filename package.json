@@ -9,6 +9,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "test:recruitment": "node scripts/recruitment-rules.test.mjs",
+    "test:sync": "node --test scripts/sync.test.mjs",
+    "test": "npm run test:recruitment && npm run test:sync",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -265,7 +265,7 @@ export default function AdminPortal() {
       </div>
       <div className="mt-4 overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-sm">
-          <thead><tr className="border-b">{["Reference", "Applicant", "Phone", "Email", "County", "Status", "Score", "Reviewer"].map((heading) => <th key={heading} className="py-2 pr-3">{heading}</th>)}</tr></thead>
+          <thead><tr className="border-b">{["Reference", "Applicant", "Phone", "Email", "County", "Status", "Management Sync", "Score", "Reviewer"].map((heading) => <th key={heading} className="py-2 pr-3">{heading}</th>)}</tr></thead>
           <tbody>
             {rows.map((row) => (
               <tr key={row.id} className="border-b">
@@ -275,6 +275,7 @@ export default function AdminPortal() {
                 <td className="pr-3">{row.email}</td>
                 <td className="pr-3">{row.county}</td>
                 <td className="pr-3">{row.application_status}</td>
+                <td className="pr-3">{row.sync_status || "PENDING"}</td>
                 <td className="pr-3">{row.screening_score ?? "—"}</td>
                 <td>{row.assigned_reviewer || "—"}</td>
               </tr>
@@ -289,6 +290,7 @@ export default function AdminPortal() {
           <p>{application.county}, {application.city_area} · {application.professional_status} · {application.occupation || "Occupation not provided"}</p>
           <p>Screening score: {application.screening_score ?? "Not scored"}{application.screening_score == null ? "" : ` · ${band(application.screening_score)}`}. Interview score: {application.interview_score ?? "Not scored"}.</p>
           <p>Email notification: {application.email_notification_status}</p>
+          <p>Management Sync: {application.sync_status || "PENDING"}{application.sync_attempts ? ` · ${application.sync_attempts} attempt${application.sync_attempts === 1 ? "" : "s"}` : ""}{application.last_sync_error ? ` · ${application.last_sync_error}` : ""}</p>
           {application.agent_id ? <p>Agent ID: {application.agent_id} · Referral: https://softwarevalalib.app/consultation?ref={application.agent_id}</p> : null}
           <p>Preferred sectors: {asList(application.preferred_sectors).join(", ")}</p>
           <p>Experience: {asList(application.experience_categories).join(", ")}</p>
@@ -353,6 +355,7 @@ export default function AdminPortal() {
             <button className="btn-primary" type="button" onClick={() => save().catch((saveError) => setError(saveError.message))}>Save review</button>
             <button className="btn-navy" type="button" onClick={() => save({ activateAgent: true }).catch((saveError) => setError(saveError.message))}>Activate agent</button>
             <button className="rounded-xl border px-4 py-3 text-sm" type="button" onClick={() => recruitment("/api/leads?area=recruitment", { method: "POST", body: JSON.stringify({ action: "retry-email", id: application.id }) }).then(() => loadBoard()).catch((saveError) => setError(saveError.message))}>Retry notification</button>
+            <button className="rounded-xl border px-4 py-3 text-sm" type="button" onClick={() => recruitment("/api/leads?area=recruitment", { method: "POST", body: JSON.stringify({ action: "retry-sync", id: application.id }) }).then((data) => setApplication((current) => ({ ...current, sync_status: data.syncStatus, last_sync_error: data.error || null, sync_attempts: (current?.sync_attempts || 0) + 1 }))).then(() => loadBoard()).catch((saveError) => setError(saveError.message))}>Retry Sync</button>
           </div>
           <div>
             <h3 className="font-semibold">Status history</h3>

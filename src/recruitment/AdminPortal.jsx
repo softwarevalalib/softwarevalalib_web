@@ -82,6 +82,7 @@ export default function AdminPortal() {
   const [sectorFilter, setSectorFilter] = useState("");
   const [reviewerFilter, setReviewerFilter] = useState("");
   const [draft, setDraft] = useState({});
+  const [syncHealth, setSyncHealth] = useState(null);
 
   async function loadBoard() {
     const data = await recruitment("/api/leads?area=recruitment&action=list");
@@ -93,6 +94,9 @@ export default function AdminPortal() {
     const timer = setTimeout(() => {
       fetchAdminMe().then((data) => setAdmin(data.admin)).catch(() => setAdmin(null));
       loadBoard().catch((loadError) => setError(loadError.message));
+      recruitment("/api/leads?area=recruitment&action=sync-health")
+        .then((data) => setSyncHealth(data))
+        .catch(() => setSyncHealth(null));
     }, 0);
     return () => clearTimeout(timer);
   }, []);
@@ -227,6 +231,19 @@ export default function AdminPortal() {
         </div>
       </div>
       {error ? <p className="mt-4 text-red-700" role="alert">{error}</p> : null}
+      {syncHealth && !syncHealth.configured ? (
+        <div className="mt-4 rounded-xl border border-red-300 bg-red-50 p-4 text-sm text-red-800" role="alert">
+          <p className="font-semibold">Applications are not syncing to the management system.</p>
+          <p className="mt-1">
+            Missing environment variable{syncHealth.missing?.length === 1 ? "" : "s"}:{" "}
+            <strong>{(syncHealth.missing || []).join(", ")}</strong>.
+          </p>
+          <p className="mt-1">
+            {syncHealth.pending || 0} application{syncHealth.pending === 1 ? "" : "s"} waiting to sync.
+            Set the value(s) in the Vercel project environment and redeploy, then use “Retry Sync”.
+          </p>
+        </div>
+      ) : null}
       <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ["Total applications", total],

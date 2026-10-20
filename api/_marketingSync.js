@@ -8,6 +8,22 @@ export function managementSyncConfig(env = process.env) {
   return { base, key };
 }
 
+export function managementSyncDiagnostics(env = process.env) {
+  const base = String(env.SVL_MANAGEMENT_API_URL || "").trim();
+  const key = String(env.MARKETING_SYNC_SECRET || "").trim();
+  return {
+    configured: Boolean(base && key),
+    hasUrl: Boolean(base),
+    hasSecret: Boolean(key),
+    url: base || null,
+    missing: [
+      !base ? "SVL_MANAGEMENT_API_URL" : null,
+      !key ? "MARKETING_SYNC_SECRET" : null,
+    ].filter(Boolean),
+    hint: "Set the missing variables in the Vercel project environment and redeploy.",
+  };
+}
+
 export function retryDelayMs(attempts) {
   const index = Math.min(Math.max(Number(attempts) || 0, 0), BACKOFF_MS.length - 1);
   return BACKOFF_MS[index];

@@ -3,6 +3,7 @@ import { neon } from "@neondatabase/serverless";
 import { requireAdmin } from "./academy/_lib.js";
 import { notifyInfoInbox } from "./_companyMail.js";
 import { retryDueApplications, syncMarketingApplication } from "./_marketingSync.js";
+import { managementSyncDiagnostics } from "./_marketingSync.js";
 import { retryDueLeads } from "./_leadSync.js";
 import {
   APPLICATION_CLOSE_AT,
@@ -297,6 +298,17 @@ export async function handleRecruitment(req, res) {
       openAt: "2026-10-03T00:00:00Z",
       closeAt: APPLICATION_CLOSE_AT,
     });
+  }
+
+  if (req.method === "GET" && action === "sync-health") {
+    const admin = await requireAdmin(req, sql).catch(() => null);
+    if (!admin) return res.status(401).json({ error: "Admin login required." });
+    const diagnostics = managementSyncDiagnostics();
+    const pending = await sql`
+      SELECT COUNT(*)::int AS total FROM marketing_agent_applications
+      WHERE COALESCE(sync_status, 'PENDING') = 'PENDING'
+    `;
+    return res.status(200).json({ ...diagnostics, pending: pending[0]?.total || 0 });
   }
 
   if (req.method === "GET" && (action === "list" || action === "one" || action === "cv" || action === "export" || action === "audit")) {
